@@ -1,0 +1,187 @@
+/* .centralize{
+    border: 1px solid red;
+    width: calc(100% - 14rem);
+  
+} */
+.icon-shake{
+     animation: shake-icon-animation 0.5s ease-in-out 0.1s; 
+}
+
+@keyframes shake-icon-animation{
+    0%{transform: rotate(0deg);}
+    16%{transform: rotate(5deg);}
+    32%{transform: rotate(-5deg);}
+    48%{transform: rotate(0deg);}
+    64%{transform: rotate(5deg);}
+    80%{transform: rotate(-5deg);}
+    100%{transform: rotate(0deg);}
+}
+
+
+.icon-container{
+    overflow:hidden
+}
+.relatorioButton{
+    position: relative;
+    transition: all 0.2s ease-in-out;
+    background-color: transparent;
+    width: 20%;
+    color: black !important;
+    transition: all 1s ease ;
+    
+}
+
+.relatorioButton::before{
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-top: 2px solid #4b5a50;
+    border-bottom: 2px solid #4b5a50;
+   /*  transform: scaleY(2); */
+    top:0rem;
+    left:0rem;
+    opacity: 0;
+    transition: all 0.2s ease-in-out;
+    
+
+}
+.relatorioButton::after{
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: #4b5a50;
+    transform: scale(0);
+    z-index: -1;
+    top:2px;
+    left:0;
+    transition: all 0.2s ease-in-out 0.2s;
+    
+
+}
+
+.relatorioButton:hover:before{
+  transform: scale(1);
+  opacity: 1;
+}
+.relatorioButton:hover:after{
+    transform: scale(1);
+  opacity: 1;
+}
+
+.relatorioButton:hover{
+    color:white!important;
+    font-weight: bold;
+}
+.buttonLabel{
+    font-weight: bold !important;
+}
+.buttonLabel:hover::after{
+    
+    position: absolute;
+    padding-left: 1rem;
+
+}
+
+.coverEffect{
+    /* transform: rotate(300deg) !important; */
+    height:32rem !important;
+    width:32rem !important;
+      top: -7.5rem !important;
+    left: -2.5rem !important; 
+    z-index: -2; 
+   
+}
+.category-banner-lazer, .category-banner-casa, .category-banner-educacao{
+  width: 15rem;
+  height: 15rem;
+  transform: translate(-6.5rem,-70%) rotate(356deg);
+  position: absolute;
+  top: 0;
+  border-radius: 10rem;
+  transition: all 0.3s ease-in-out;
+}
+
+
+.category-banner-casa{
+    background: linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(9,9,103,1) 36%, rgba(16,162,191,1) 100%);
+  
+}
+.category-banner-lazer{
+    background: linear-gradient(90deg, rgba(163,99,29,1) 0%, rgba(232,166,94,1) 46%, rgba(245,200,151,1) 100%);
+}
+.category-banner-educacao{
+    background: linear-gradient(90deg, rgba(17,92,17,1) 0%, rgba(100,141,100,1) 47%, rgba(191,219,191,1) 100%);
+}
+ 
+.modal-atividade-container{
+background-color:  #f0f0f0;
+padding: 0.5rem 0.4rem;
+margin: 0.55rem 0  1rem 0;
+
+position: relative;
+    
+} 
+.modal-atividade-label{
+    position: absolute;
+    top: -1.2rem;
+    z-index: 2;
+    background: white;
+    font-weight: bold !important;
+    line-height: 0.4rem;
+}
+.title{
+    transition: color 0.3s ease-in-out 0.1s;
+}
+.modal-atividade-content{
+
+}
+
+
+
+
+
+/* .category-banner::before, .category-banner-casa::before, .category-banner-educacao::before{
+    content: "";
+    background-color: var(--banner-color);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    top: 0.4rem;
+    left: -0.65rem;
+    width: 10rem;
+    height: 2rem;
+    z-index: 1;
+    border-top-right-radius: 2rem;
+    border-bottom-right-radius: 2rem; 
+
+    
+}
+
+.category-banner::after, .category-banner-casa::after, .category-banner-educacao::after{
+    content: "";
+    width: 1.8rem;
+    height: 1.8rem;
+    position: absolute;
+    top: 1.5rem;
+    left: -0.25rem;
+    transform: rotate(45deg);
+     z-index: -1; 
+    background-color: rgb(230, 170, 106);
+}
+.category-banner-casa::after{
+    background-color: #000000;
+  
+}
+.category-banner-educacao::after{
+    background-color: #345734;
+}
+ */
+/* .table{
+    border:"1px solid red";
+    height:30vh;
+    overflow: auto;
+} */

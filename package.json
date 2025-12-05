@@ -1,0 +1,11 @@
+{
+  "scripts": {
+    "both": "concurrently \"npm run dev --prefix client\" \"npm start --prefix server\""
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.1"
+  },
+  "dependencies": {
+    "dayjs": "^1.11.10"
+  }
+}
