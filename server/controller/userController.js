@@ -2,7 +2,7 @@ const asyncHandler = require('express-async-handler');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const User = require('../models/usersModel');
-const dotenv = require('dotenv').config();
+require('dotenv').config();
 
 const saltRounds = 10;
 
