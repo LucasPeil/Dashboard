@@ -1,5 +1,5 @@
-import CastForEducationOutlinedIcon from "@mui/icons-material/CastForEducationOutlined";
-import MenuBookOutlinedIcon from "@mui/icons-material/MenuBookOutlined";
+import CastForEducationOutlinedIcon from '@mui/icons-material/CastForEducationOutlined';
+import MenuBookOutlinedIcon from '@mui/icons-material/MenuBookOutlined';
 import {
   Box,
   Grid,
@@ -7,15 +7,15 @@ import {
   Paper,
   Stack,
   useMediaQuery,
-} from "@mui/material";
-import { toast } from "react-toastify";
-import { useTheme } from "@emotion/react";
-import DeleteTwoToneIcon from "@mui/icons-material/DeleteTwoTone";
-import EditTwoToneIcon from "@mui/icons-material/EditTwoTone";
-import React, { useEffect, useState } from "react";
-import DataTable from "react-data-table-component";
-import { useDispatch, useSelector } from "react-redux";
-import MotionDiv from "../../MotionDiv";
+} from '@mui/material';
+import { toast } from 'react-toastify';
+import { useTheme } from '@emotion/react';
+import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
+import EditTwoToneIcon from '@mui/icons-material/EditTwoTone';
+import React, { useEffect, useState } from 'react';
+import DataTable from 'react-data-table-component';
+import { useDispatch, useSelector } from 'react-redux';
+import MotionDiv from '../../MotionDiv';
 import {
   closeModalEducacao,
   getAllAtividadesEducacao,
@@ -25,14 +25,14 @@ import {
   resetRegisterEducacao,
   resetRemoveEducacao,
   setOpenModalEducacao,
-} from "../../features/educacao/educacaoSlice";
-import { customStyles } from "../../styles/stylesConst";
-import SingleAtividade from "../CasaPanels/SingleAtividade";
-import CategoryCards from "../CategoryCards";
-import DashboardsHeaders from "../DashboardsHeaders";
-import FormAtividade from "../FormAtividade";
-import ProgressComponent from "../ProgressComponent";
-import SearchBar from "../SearchBar";
+} from '../../features/educacao/educacaoSlice';
+import { customStyles } from '../../styles/stylesConst';
+import SingleAtividade from '../CasaPanels/SingleAtividade';
+import CategoryCards from '../CategoryCards';
+import DashboardsHeaders from '../DashboardsHeaders';
+import FormAtividade from '../FormAtividade';
+import ProgressComponent from '../ProgressComponent';
+import SearchBar from '../SearchBar';
 const EducacaoDashboard = ({ open }) => {
   const dispatch = useDispatch();
   const [openSingleAtividade, setOpenSingleAtividade] = useState(false);
@@ -41,8 +41,8 @@ const EducacaoDashboard = ({ open }) => {
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(10);
   const [sortDirection, setSortDirection] = useState(1);
-  const [prop, setProp] = useState("_id");
-  const [filter, setFilter] = useState("");
+  const [prop, setProp] = useState('_id');
+  const [filter, setFilter] = useState('');
   const [openModal, setOpenModal] = useState(false);
   const handleOpenModal = () => setOpenModal(true);
   const handleCloseModal = () => setOpenModal(false);
@@ -51,9 +51,9 @@ const EducacaoDashboard = ({ open }) => {
     false,
     false,
   ]);
-  const [categorySelected, setCategorySelected] = useState("");
+  const [categorySelected, setCategorySelected] = useState('');
   const theme = useTheme();
-  const downMd = useMediaQuery(theme.breakpoints.down("md"));
+  const downMd = useMediaQuery(theme.breakpoints.down('md'));
   const {
     atividadesEducacao,
     openModalEducacao,
@@ -95,23 +95,23 @@ const EducacaoDashboard = ({ open }) => {
   }, [register, remove, filter, categorySelected]);
   const tableColumns = [
     {
-      name: "Título",
+      name: 'Título',
       selector: (row) => row.nomeAtividade,
       sortable: true,
     },
     {
-      name: "Descrição",
+      name: 'Descrição',
       selector: (row) => row.descricaoAtividade,
       sortable: true,
     },
     {
-      name: "Ações",
-      width: "10%",
+      name: 'Ações',
+      width: '10%',
       cell: (row) => (
         <Box
           sx={{
-            display: "flex",
-            alignItems: "center",
+            display: 'flex',
+            alignItems: 'center',
           }}
         >
           <IconButton
@@ -136,25 +136,25 @@ const EducacaoDashboard = ({ open }) => {
   ];
 
   const cleanForm = (form) => {
-    form.setFieldValue("nomeAtividade", "");
-    form.setFieldValue("categoria", "");
-    form.setFieldValue("descricaoAtividade", "");
-    form.setFieldValue("tempoGasto", "");
-    form.setFieldValue("dinheiroGasto", "");
-    form.setFieldValue("nivelImportância", "");
+    form.setFieldValue('nomeAtividade', '');
+    form.setFieldValue('categoria', '');
+    form.setFieldValue('descricaoAtividade', '');
+    form.setFieldValue('tempoGasto', '');
+    form.setFieldValue('dinheiroGasto', '');
+    form.setFieldValue('nivelImportância', '');
   };
 
   return (
     <MotionDiv>
-      <Box sx={{ display: "flex", justifyContent: "end" }}>
+      <Box sx={{ display: 'flex', justifyContent: 'end' }}>
         <FormAtividade
           openModal={openModalEducacao}
           handleCloseModal={closeModalEducacao}
-          title={"Nova Atividade Educação"}
+          title={'Nova Atividade Educação'}
           btnColor="#648d64"
           btnHoverColor="#4E7A4E"
-          categoriaItens={["Cursos", "Livros"]}
-          card={"Educação"}
+          categoriaItens={['Cursos', 'Livros']}
+          card={'Educação'}
           cleanForm={cleanForm}
           data={selectedRow}
         />
@@ -164,14 +164,14 @@ const EducacaoDashboard = ({ open }) => {
             rowData={selectedRow}
             openSingleAtividade={openSingleAtividade}
             handleCloseSingleAtividade={handleCloseSingleAtividade}
-            iconColor={"#1D791D"}
+            iconColor={'#1D791D'}
             isAtividadeEducacao={true}
           />
         )}
         <Box
           sx={{
-            transition: "all 0.5s ease",
-            width: open ? "calc(100% - 14rem)" : "calc(100% - 6rem)",
+            transition: 'all 0.5s ease',
+            width: open ? 'calc(100% - 14rem)' : 'calc(100% - 6rem)',
           }}
         >
           <Paper
@@ -179,11 +179,11 @@ const EducacaoDashboard = ({ open }) => {
             elevation={6}
             sx={{
               px: 2,
-              boxSizing: "border-box",
-              width: "calc(100% - 4rem)",
-              margin: "2rem auto",
-              minHeight: "90vh",
-              position: "relative",
+              boxSizing: 'border-box',
+              width: 'calc(100% - 4rem)',
+              margin: '2rem auto',
+              minHeight: '90vh',
+              position: 'relative',
             }}
             style={{}}
           >
@@ -192,20 +192,20 @@ const EducacaoDashboard = ({ open }) => {
               categorySelected={categorySelected}
               active={categoryCardSelected}
               setActive={setCategoryCardSelected}
-              title={"DETALHES SOBRE SUA EDUCAÇÃO"}
+              title={'DETALHES SOBRE SUA EDUCAÇÃO'}
               openModal={() => dispatch(setOpenModalEducacao())}
             />
 
             <Stack
-              direction={downMd ? "column" : "row"}
+              direction={downMd ? 'column' : 'row'}
               spacing={10}
               sx={{
                 mt: 7,
                 mb: 2,
                 mx: 2,
-                position: "relative",
+                position: 'relative',
                 zIndex: 10,
-                width: "50%",
+                width: '50%',
               }}
             >
               <CategoryCards
@@ -218,13 +218,13 @@ const EducacaoDashboard = ({ open }) => {
                 categorySelected={categorySelected}
                 setCategorySelected={setCategorySelected}
                 title="Cursos"
-                description={"Veja quais cursos você assistiu..."}
-                bgcolor={"#648d64"}
+                description={'Veja quais cursos você assistiu...'}
+                bgcolor={'#648d64'}
                 icon={
                   <CastForEducationOutlinedIcon
                     sx={{
-                      position: "absolute",
-                      fontSize: "1.8rem",
+                      position: 'absolute',
+                      fontSize: '1.8rem',
                       ml: 2,
                     }}
                   />
@@ -240,13 +240,13 @@ const EducacaoDashboard = ({ open }) => {
                 categorySelected={categorySelected}
                 setCategorySelected={setCategorySelected}
                 title="Livros"
-                description={"Dê uma olhada nos livros lidos nesse mês..."}
-                bgcolor={"#648d64"}
+                description={'Dê uma olhada nos livros lidos nesse mês...'}
+                bgcolor={'#648d64'}
                 icon={
                   <MenuBookOutlinedIcon
                     sx={{
-                      position: "absolute",
-                      fontSize: "1.8rem",
+                      position: 'absolute',
+                      fontSize: '1.8rem',
                       ml: 2,
                     }}
                   />
@@ -257,35 +257,35 @@ const EducacaoDashboard = ({ open }) => {
             <Grid container>
               <Grid
                 sx={{
-                  display: "flex",
-                  position: "relative",
-                  flexDirection: "column",
-                  justifyContent: "start",
-                  alignItems: "start",
+                  display: 'flex',
+                  position: 'relative',
+                  flexDirection: 'column',
+                  justifyContent: 'start',
+                  alignItems: 'start',
                 }}
                 item
                 xs={12}
               >
                 <Box
                   sx={{
-                    boxSizing: "border-box",
+                    boxSizing: 'border-box',
                     p: 1,
-                    height: "53px",
+                    height: '53px',
                     // borderRadius: "0.8rem",
-                    display: "flex",
-                    justifyContent: "space-around",
-                    alignItems: "center",
-                    width: "100%",
+                    display: 'flex',
+                    justifyContent: 'space-around',
+                    alignItems: 'center',
+                    width: '100%',
                   }}
                 ></Box>
               </Grid>
-              <Grid item xs={12} sx={{ position: "relative", px: 2 }}>
+              <Grid item xs={12} sx={{ position: 'relative', px: 2 }}>
                 <DataTable
                   className="table"
                   columns={tableColumns}
                   data={atividadesEducacao.documents}
                   customStyles={customStyles({
-                    backgroundColor: "#CEF4CE",
+                    backgroundColor: '#CEF4CE',
                   })}
                   highlightOnHover
                   subHeader
@@ -306,10 +306,10 @@ const EducacaoDashboard = ({ open }) => {
                     setOpenSingleAtividade(true);
                   }}
                   paginationComponentOptions={{
-                    rowsPerPageText: "Itens por página",
-                    rangeSeparatorText: "de",
+                    rowsPerPageText: 'Itens por página',
+                    rangeSeparatorText: 'de',
                     selectAllRowsItem: true,
-                    selectAllRowsItemText: "Todos",
+                    selectAllRowsItemText: 'Todos',
                   }}
                   onChangePage={(newPage) => {
                     dispatch(

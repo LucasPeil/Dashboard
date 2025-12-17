@@ -1,4 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import PersonIcon from '@mui/icons-material/Person';
+import RocketLaunchOutlinedIcon from '@mui/icons-material/RocketLaunchOutlined';
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import {
   Box,
   Button,
@@ -10,16 +13,12 @@ import {
   OutlinedInput,
   Paper,
   Stack,
-  TextField,
   Typography,
 } from '@mui/material';
-import { useDispatch, useSelector } from 'react-redux';
 import { motion } from 'framer-motion';
+import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import RocketLaunchOutlinedIcon from '@mui/icons-material/RocketLaunchOutlined';
-import PersonIcon from '@mui/icons-material/Person';
-import Visibility from '@mui/icons-material/Visibility';
-import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { login, reset } from '../features/auth/authSlice';
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -75,7 +74,7 @@ const Login = () => {
         >
           Dashboard
         </Divider>
-        {/* type={showPassword ? "text" : "password"} */}
+
         <form>
           <FormControl fullWidth sx={{ mt: 3 }} variant="outlined">
             <InputLabel htmlFor="login">Login </InputLabel>

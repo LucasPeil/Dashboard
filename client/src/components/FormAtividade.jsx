@@ -1,5 +1,5 @@
-import KeyboardReturnIcon from "@mui/icons-material/KeyboardReturn";
-import SaveIcon from "@mui/icons-material/Save";
+import KeyboardReturnIcon from '@mui/icons-material/KeyboardReturn';
+import SaveIcon from '@mui/icons-material/Save';
 import {
   Dialog,
   DialogActions,
@@ -14,97 +14,102 @@ import {
   MenuItem,
   FormControl,
   Select,
-} from "@mui/material";
-import { useState, useEffect } from "react";
-import { Field, Form, Formik, FormikProvider, useFormik } from "formik";
-import React from "react";
-import { useDispatch } from "react-redux";
-import * as Yup from "yup";
+} from '@mui/material';
+import { closeModalCasa } from '../features/casa/casaSlice';
+import { useState, useEffect, memo } from 'react';
+import { Field, Form, Formik, FormikProvider, useFormik } from 'formik';
+import React from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import * as Yup from 'yup';
 import {
   resetRegisterCasa,
   setNewAtividadeCasa,
-} from "../features/casa/casaSlice";
+} from '../features/casa/casaSlice';
 import {
   resetRegisterLazer,
   setNewAtividadeLazer,
-} from "../features/lazer/lazerSlice";
+} from '../features/lazer/lazerSlice';
 import {
   resetRegisterEducacao,
   setNewAtividadeEducacao,
-} from "../features/educacao/educacaoSlice";
-import dayjs from "dayjs";
+} from '../features/educacao/educacaoSlice';
+import dayjs from 'dayjs';
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Zoom ref={ref} {...props} />;
 });
 const months = [
-  "January",
-  "February",
-  "March",
-  "April",
-  "May",
-  "June",
-  "July",
-  "August",
-  "September",
-  "October",
-  "November",
-  "December",
+  'January',
+  'February',
+  'March',
+  'April',
+  'May',
+  'June',
+  'July',
+  'August',
+  'September',
+  'October',
+  'November',
+  'December',
 ];
-const FormAtividade = ({
-  openModal,
-  handleCloseModal,
+const FormAtividade = memo(function FormAtividade({
   data,
   title,
   btnColor,
   btnHoverColor,
   categoriaItens,
   card,
-  cleanForm,
-}) => {
+}) {
   const dispatch = useDispatch();
   const [dataWasSubmitted, setDataWasSubmitted] = useState(false);
   const ValidationSchema = Yup.object({
     nomeAtividade: Yup.string()
       .trim()
-      .required("Nome da Atividade é obrigatório"),
-    categoria: Yup.string().trim().required("Categoria é obrigatório"),
+      .required('Nome da Atividade é obrigatório'),
+    categoria: Yup.string().trim().required('Categoria é obrigatório'),
     tempoGasto: Yup.number()
-      .required("Tempo gasto para exercer a atividade é obrigatório")
+      .required('Tempo gasto para exercer a atividade é obrigatório')
       .positive()
       .integer()
       .min(1),
     descricaoAtividade: Yup.string()
       .nullable()
       .test(
-        "string-length",
-        "Máximo de 1000 caracteres",
+        'string-length',
+        'Máximo de 1000 caracteres',
         (value) => value?.length <= 1000
       ),
   });
-
+  const cleanForm = (form) => {
+    form.setFieldValue('nomeAtividade', '');
+    form.setFieldValue('categoria', '');
+    form.setFieldValue('descricaoAtividade', '');
+    form.setFieldValue('tempoGasto', '');
+    form.setFieldValue('dinheiroGasto', '');
+    form.setFieldValue('nivelImportância', '');
+  };
   const formik = useFormik({
     enableReinitialize: true,
     initialValues: {
-      _id: data?._id || "",
-      nomeAtividade: data?.nomeAtividade || "",
-      tempoGasto: data?.tempoGasto || "",
-      dinheiroGasto: data?.dinheiroGasto || "",
-      descricaoAtividade: data?.descricaoAtividade || "",
-      categoria: data?.categoria || "",
-      nivelImportancia: data?.nivelImportancia || "",
-      mesInsercao: "",
+      _id: data?._id || '',
+      nomeAtividade: data?.nomeAtividade || '',
+      tempoGasto: data?.tempoGasto || '',
+      dinheiroGasto: data?.dinheiroGasto || '',
+      descricaoAtividade: data?.descricaoAtividade || '',
+      categoria: data?.categoria || '',
+      nivelImportancia: data?.nivelImportancia || '',
+      mesInsercao: '',
       anoInsercao: 1900,
     },
     //validationSchema: ValidationSchema,
     onSubmit: (values) => {
       values.mesInsercao = months[new Date().getMonth()];
       values.anoInsercao = new Date().getFullYear();
-      card == "Casa"
+      card == 'Casa'
         ? dispatch(setNewAtividadeCasa(values))
-        : card == "Lazer"
+        : card == 'Lazer'
         ? dispatch(setNewAtividadeLazer(values))
         : dispatch(setNewAtividadeEducacao(values));
-      dispatch(handleCloseModal());
+      dispatch(closeModalCasa());
 
       setDataWasSubmitted(true);
       dispatch(resetRegisterEducacao());
@@ -113,25 +118,30 @@ const FormAtividade = ({
       formik.resetForm();
     },
   });
+  // Select ONLY the primitive value we need.
+  // If we select the whole slice object, any update to that slice triggers a re-render.
+  const openModalCasa = useSelector(
+    (state) => state.atividadesCasa.openModalCasa
+  );
 
   return (
     <Dialog
-      open={openModal}
+      open={openModalCasa}
       TransitionComponent={Transition}
       keepMounted
       onClose={() => {
-        dispatch(handleCloseModal());
+        dispatch(closeModalCasa());
         cleanForm(formik);
       }}
       fullWidth
-      maxWidth={"md"}
+      maxWidth={'md'}
     >
       <DialogTitle>{title}</DialogTitle>
       <DialogContent dividers>
         <FormikProvider value={formik}>
           <Form noValidate onSubmit={formik.handleSubmit}>
             <Field
-              {...formik.getFieldProps("nomeAtividade")}
+              {...formik.getFieldProps('nomeAtividade')}
               as={TextField}
               type="text"
               label="Nome da atividade"
@@ -143,7 +153,7 @@ const FormAtividade = ({
                 Categoria
               </InputLabel>
               <Field
-                {...formik.getFieldProps("categoria")}
+                {...formik.getFieldProps('categoria')}
                 as={Select}
                 labelId="categoria"
                 id="categoria"
@@ -159,7 +169,7 @@ const FormAtividade = ({
             </FormControl>
 
             <Field
-              {...formik.getFieldProps("descricaoAtividade")}
+              {...formik.getFieldProps('descricaoAtividade')}
               as={TextField}
               multiline
               type="text"
@@ -171,14 +181,14 @@ const FormAtividade = ({
               style={{ marginTop: 30, marginBottom: 30 }}
             />
 
-            {card == "Educação" && (
+            {card == 'Educação' && (
               <FormControl
                 fullWidth
                 style={{ marginTop: 30, marginBottom: 10 }}
               >
                 <InputLabel id="categoria">Nível de prioridade</InputLabel>
                 <Field
-                  {...formik.getFieldProps("nivelImportancia")}
+                  {...formik.getFieldProps('nivelImportancia')}
                   as={Select}
                   labelId="categoria"
                   id="categoria"
@@ -193,12 +203,9 @@ const FormAtividade = ({
             )}
 
             <Field
-              {...formik.getFieldProps("dinheiroGasto")}
+              {...formik.getFieldProps('dinheiroGasto')}
               as={TextField}
               type="number"
-              startAdorments={
-                <InputAdornment position="start">$</InputAdornment>
-              }
               InputProps={{
                 inputProps: { min: 0 },
                 startAdornment: (
@@ -212,7 +219,7 @@ const FormAtividade = ({
               style={{ marginTop: 30, marginBottom: 10 }}
             />
             <Field
-              {...formik.getFieldProps("tempoGasto")}
+              {...formik.getFieldProps('tempoGasto')}
               as={TextField}
               type="number"
               InputProps={{ inputProps: { min: 0 } }}
@@ -225,10 +232,10 @@ const FormAtividade = ({
 
             <DialogActions
               sx={{
-                display: "flex",
-                justifyContent: "space-between",
+                display: 'flex',
+                justifyContent: 'space-between',
                 mt: 5,
-                position: "relative",
+                position: 'relative',
                 zIndex: 100,
               }}
             >
@@ -237,10 +244,10 @@ const FormAtividade = ({
                 sx={{
                   backgroundColor: btnColor,
                   borderRadius: 0,
-                  color: "white",
-                  width: "45%",
-                  transition: "all 0.4s ease",
-                  "&:hover": { backgroundColor: btnHoverColor },
+                  color: 'white',
+                  width: '45%',
+                  transition: 'all 0.4s ease',
+                  '&:hover': { backgroundColor: btnHoverColor },
                   gap: 2,
                 }}
               >
@@ -250,16 +257,16 @@ const FormAtividade = ({
 
               <IconButton
                 onClick={() => {
-                  dispatch(handleCloseModal());
+                  dispatch(closeModalCasa());
                   cleanForm(formik);
                 }}
                 sx={{
                   backgroundColor: btnColor,
                   borderRadius: 0,
-                  color: "white",
-                  width: "45%",
-                  transition: "all 0.4s ease",
-                  "&:hover": { backgroundColor: btnHoverColor },
+                  color: 'white',
+                  width: '45%',
+                  transition: 'all 0.4s ease',
+                  '&:hover': { backgroundColor: btnHoverColor },
                   gap: 2,
                 }}
               >
@@ -272,6 +279,6 @@ const FormAtividade = ({
       </DialogContent>
     </Dialog>
   );
-};
+});
 
 export default FormAtividade;

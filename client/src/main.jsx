@@ -5,6 +5,7 @@ import './index.css';
 import { createTheme, ThemeProvider, styled } from '@mui/material/styles';
 import { Provider } from 'react-redux';
 import store from './store.js';
+import { StyleSheetManager } from 'styled-components';
 
 import 'react-toastify/dist/ReactToastify.css';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
@@ -56,25 +57,27 @@ const theme = createTheme({
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <Provider store={store}>
-      <ThemeProvider theme={theme}>
-        <BrowserRouter basename={import.meta.env.BASE_URL}>
-          <Routes>
-            <Route exact path="/login" element={<Login />} />
-            <Route exact path="/cadastrar" element={<Cadastrar />} />
-            {/*   <Route path="/resetPassword" element={<Login />} /> */}
-            <Route
-              exact
-              path="*"
-              element={
-                <ProtectedRoutes>
-                  <App />
-                </ProtectedRoutes>
-              }
-            />
-          </Routes>
-        </BrowserRouter>
-      </ThemeProvider>
-    </Provider>
+    <StyleSheetManager shouldForwardProp={(prop) => prop !== 'sortActive'}>
+      <Provider store={store}>
+        <ThemeProvider theme={theme}>
+          <BrowserRouter basename={import.meta.env.BASE_URL}>
+            <Routes>
+              <Route exact path="/login" element={<Login />} />
+              <Route exact path="/cadastrar" element={<Cadastrar />} />
+              {/*   <Route path="/resetPassword" element={<Login />} /> */}
+              <Route
+                exact
+                path="*"
+                element={
+                  <ProtectedRoutes>
+                    <App />
+                  </ProtectedRoutes>
+                }
+              />
+            </Routes>
+          </BrowserRouter>
+        </ThemeProvider>
+      </Provider>
+    </StyleSheetManager>
   </React.StrictMode>
 );
