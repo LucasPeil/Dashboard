@@ -100,8 +100,9 @@ export const getOutrosQty = createAsyncThunk(
 export const getAllAtividadesLazer = createAsyncThunk(
   "atividadesLazer/get",
   async (params, thunkAPI) => {
+    const token = thunkAPI.getState().auth.user.token;
     try {
-      return await lazerService.getAllAtividadesLazer(params);
+      return await lazerService.getAllAtividadesLazer(params, token);
     } catch (error) {
       const message =
         (error.response &&
@@ -117,8 +118,9 @@ export const getAllAtividadesLazer = createAsyncThunk(
 export const setNewAtividadeLazer = createAsyncThunk(
   "atividadesLazer/post",
   async (data, thunkAPI) => {
+    const token = thunkAPI.getState().auth.user.token;
     try {
-      return await lazerService.setNewAtividadeLazer(data);
+      return await lazerService.setNewAtividadeLazer(data, token);
     } catch (error) {
       const message =
         (error.response &&
@@ -134,8 +136,9 @@ export const setNewAtividadeLazer = createAsyncThunk(
 export const getSingleAtividadeLazer = createAsyncThunk(
   "atividadesLazer/getId",
   async (id, thunkAPI) => {
+    const token = thunkAPI.getState().auth.user.token;
     try {
-      return await lazerService.getSingleAtividadeLazer(id);
+      return await lazerService.getSingleAtividadeLazer(id, token);
     } catch (error) {
       const message =
         (error.response &&
@@ -151,8 +154,9 @@ export const getSingleAtividadeLazer = createAsyncThunk(
 export const removeSingleAtividadeLazer = createAsyncThunk(
   "atividadesLazer/delete",
   async (id, thunkAPI) => {
+    const token = thunkAPI.getState().auth.user.token;
     try {
-      return await lazerService.removeSingleAtividadeLazer(id);
+      return await lazerService.removeSingleAtividadeLazer(id, token);
     } catch (error) {
       const message =
         (error.response &&

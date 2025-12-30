@@ -1,10 +1,11 @@
 import axios from "axios";
-const API_URL = "http://localhost:5101/api/atividades-lazer/";
+const API_URL = import.meta.env.VITE_ENV === 'development' ? 'http://localhost:5101/api/atividades-lazer' : `${window.location.origin}/api/atividades-lazer` ;
 
-const setNewAtividadeLazer = async (data) => {
+const setNewAtividadeLazer = async (data, token) => {
   const config = {
     headers: {
       "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
     },
   };
 
@@ -14,41 +15,41 @@ const setNewAtividadeLazer = async (data) => {
   return response.data;
 };
 
-const getAllAtividadesLazer = async (options) => {
-  const config = { params: { ...options } };
+const getAllAtividadesLazer = async (options, token) => {
+  const config = { params: { ...options }, headers: { Authorization: `Bearer ${token}` } };
 
   const response = await axios.get(API_URL, config);
 
   return response.data;
 };
-const getSingleAtividadeLazer = async (id) => {
-  const config = {};
-  const response = await axios.get(API_URL + `/${id}`);
+const getSingleAtividadeLazer = async (id, token) => {
+  const config = { headers: { Authorization: `Bearer ${token}` } };
+  const response = await axios.get(API_URL + `/${id}`, config);
   return response.data;
 };
 
-const removeSingleAtividadeLazer = async (id) => {
-  const config = {};
-  const response = await axios.delete(API_URL + `/${id}`);
+const removeSingleAtividadeLazer = async (id, token) => {
+  const config = { headers: { Authorization: `Bearer ${token}` } };
+  const response = await axios.delete(API_URL + `/${id}`, config);
   return response.data;
 };
-const getCulturaQty = async () => {
-  const config = {};
+const getCulturaQty = async (token) => {
+ 
   const response = await axios.get(API_URL + `/quantidadeCultura`);
   return response.data;
 };
 const getEmGrupoQty = async () => {
-  const config = {};
+ 
   const response = await axios.get(API_URL + `/quantidadeEmGrupo`);
   return response.data;
 };
 const getJogosQty = async () => {
-  const config = {};
+
   const response = await axios.get(API_URL + `/quantidadeJogos`);
   return response.data;
 };
 const getOutrosQty = async () => {
-  const config = {};
+
   const response = await axios.get(API_URL + `/quantidadeOutros`);
   return response.data;
 };

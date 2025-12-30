@@ -37,8 +37,9 @@ const initialState = {
 export const setNewAtividadeCasa = createAsyncThunk(
   "atividadeCasa/post",
   async (data, thunkAPI) => {
+     const token = thunkAPI.getState().auth.user.token;
     try {
-      return await casaService.setNewAtividadeCasa(data);
+      return await casaService.setNewAtividadeCasa(data, token);
     } catch (error) {
       const message =
         (error.response &&
@@ -53,8 +54,9 @@ export const setNewAtividadeCasa = createAsyncThunk(
 export const getAllAtividadesCasa = createAsyncThunk(
   "atividadesCasa/getAll",
   async (params, thunkAPI) => {
+    const token = thunkAPI.getState().auth.user.token;
     try {
-      return await casaService.getAllAtividadesCasa(params);
+      return await casaService.getAllAtividadesCasa(params, token);
     } catch (error) {
       const message =
         (error.response &&
@@ -70,8 +72,9 @@ export const getAllAtividadesCasa = createAsyncThunk(
 export const getSingleAtividade = createAsyncThunk(
   "atividadesCasa/singleAtividade",
   async (id, thunkAPI) => {
+    const token = thunkAPI.getState().auth.user.token;
     try {
-      return await casaService.getSingleAtividade(id);
+      return await casaService.getSingleAtividade(id, token);
     } catch (error) {
       const message =
         (error.response &&
@@ -86,8 +89,9 @@ export const getSingleAtividade = createAsyncThunk(
 export const removeSingleAtividade = createAsyncThunk(
   "atividadesCasa/remove",
   async (id, thunkAPI) => {
+    const token = thunkAPI.getState().auth.user.token;
     try {
-      return await casaService.removeSingleAtividade(id);
+      return await casaService.removeSingleAtividade(id, token);
     } catch (error) {
       const message =
         (error.response &&

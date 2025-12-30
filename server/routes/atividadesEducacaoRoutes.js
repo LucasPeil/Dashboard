@@ -11,6 +11,7 @@ const router = express.Router();
 const AtividadesEducacao = require("../models/atividadesEducacaoModel");
 const paginationHandler = require("../middlewares/paginationMiddleware");
 const filter = require("../filterFunction");
+const protect = require("../middlewares/authMiddleware");
 
 const arrSearch = [
   "nomeAtividade",
@@ -21,17 +22,17 @@ const arrSearch = [
 
 router
   .route("/")
-  .get(
+  .get(protect,
     paginationHandler(AtividadesEducacao, filter(arrSearch)),
     getAllAtividadesEducacao
   )
-  .post(setNewAtividadeEducacao);
+  .post(protect,setNewAtividadeEducacao);
 router.route("/quantidadeCursos").get(getCursosQty);
 router.route("/quantidadeLivros").get(getLivrosQty);
 
 router
   .route("/:id")
-  .get(getSingleAtividadeEducacao)
-  .delete(deleteAtividadeEducacao);
+  .get(protect, getSingleAtividadeEducacao)
+  .delete(protect,deleteAtividadeEducacao);
 
 module.exports = router;

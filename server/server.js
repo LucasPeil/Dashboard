@@ -5,12 +5,17 @@ const dotenv = require("dotenv").config();
 const bodyParser = require("body-parser");
 const errorHandler = require("./middlewares/errorHandler");
 const connectDb = require("./db");
-
 const PORT = process.env.PORT || 5030;
 
 connectDb();
 const app = express();
-app.use(cors());
+app.use(cors({
+    origin: [
+        'http://localhost:5173',  // Porta padrão do Vite
+        'http://127.0.0.1:5173'
+    ],
+    credentials: true
+}));
 app.use(bodyParser.json());
 
 app.use(
@@ -31,5 +36,8 @@ app.use(
 app.use("/api/visao-geral", require("./routes/visaoGeralRoutes"));
 
 app.use(errorHandler);
+if(process.env.NODE_ENV !=='production'){
 
-app.listen(PORT, () => console.log("Server started on port " + PORT));
+  app.listen(PORT, () => console.log("Server started on port " + PORT));
+}
+module.exports = app;

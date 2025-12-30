@@ -22,8 +22,7 @@ import PersonIcon from '@mui/icons-material/Person';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { cadastrar, login, reset } from '../features/auth/authSlice';
-import { Form, FormikProvider, useFormik } from 'formik';
-import * as Yup from 'yup';
+
 const Cadastrar = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -38,9 +37,12 @@ const Cadastrar = () => {
 
   useEffect(() => {
     if (isSuccess) {
-      navigate('/');
+      navigate('/visao-geral');
     }
-    dispatch(reset());
+    return ()=>{
+      dispatch(reset());
+    }
+
   }, [user]);
   return (
     <Box
@@ -186,19 +188,6 @@ const Cadastrar = () => {
                     username: usernameValue,
                   })
                 );
-                /*  if (!passwordValue) setPasswordError(true);
-                if (!emailValue) setEmailError(true);
-                if (!usernameValue) setUsernameError(true);
-                if (!confirmPasswordValue) setConfirmPasswordError(true);
-
-                if (
-                  passwordValue &&
-                  emailValue &&
-                  usernameValue &&
-                  confirmPasswordValue
-                ) {
-                 
-                } */
               }}
               variant="contained"
               sx={{

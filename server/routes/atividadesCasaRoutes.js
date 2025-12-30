@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-
+const protect = require("../middlewares/authMiddleware");
 const {
   getAllAtividadesCasa,
   getSingleAtividade,
@@ -20,16 +20,16 @@ const arrSearch = [
   "mesInsercao",
 ];
 
-router.route("/newAtividade").post(setNewAtividadeCasa);
+router.route("/newAtividade").post(protect,setNewAtividadeCasa);
 router
   .route("/")
-  .get(
+  .get(protect,
     paginationHandler(AtividadesCasa, filter(arrSearch)),
     getAllAtividadesCasa
   );
 router.route("/quantidadeCompras").get(getComprasQty);
 router.route("/quantidadeLimpeza").get(getLimpezaQty);
 router.route("/quantidadeRefeicoes").get(getRefeicoesQty);
-router.route("/:id").get(getSingleAtividade).delete(deleteAtividade);
+router.route("/:id").get(protect,getSingleAtividade).delete(protect,deleteAtividade);
 
 module.exports = router;

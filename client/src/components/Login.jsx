@@ -14,6 +14,7 @@ import {
   Paper,
   Stack,
   Typography,
+  Alert
 } from '@mui/material';
 import { motion } from 'framer-motion';
 import React, { useEffect, useState } from 'react';
@@ -26,18 +27,27 @@ const Login = () => {
   const [passwordValue, setPasswordValue] = useState('');
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [showError, setShowError] = useState(false);
   const { user, isSuccess, message, isError } = useSelector(
     (state) => state.auth
   );
 
   useEffect(() => {
     if (isSuccess) {
-      navigate('/');
+     navigate('/')
     }
-    setTimeout(() => {
-      dispatch(reset());
-    }, 3000);
-  }, [user, isSuccess, isError]);
+    return () => {
+       dispatch(reset());
+     
+    };
+  }, [user, isSuccess]);
+
+  useEffect(() => {
+    if(isError){
+      setShowError(true);
+    }
+   
+  }, [user, isError]);
   return (
     <Box
       component={motion.div}
@@ -75,7 +85,10 @@ const Login = () => {
           Dashboard
         </Divider>
 
-        <form>
+        <form onSubmit={(e) => {
+          e.preventDefault(); 
+          dispatch(login({ password: passwordValue, email: loginValue }))
+          }}>
           <FormControl fullWidth sx={{ mt: 3 }} variant="outlined">
             <InputLabel htmlFor="login">Login </InputLabel>
             <OutlinedInput
@@ -112,31 +125,36 @@ const Login = () => {
               label="Password"
             />
           </FormControl>
-          <Typography variant="subtitle2" color={'error'} textAlign={'center'}>
-            {message}
-          </Typography>
-        </form>
-        <Stack
-          direction={'column'}
-          justifyContent={'center'}
-          alignItems={'center'}
-        >
-          <Button
+          {showError && (
+              <Alert
+                severity="error"
+                closeText="fechar"
+                onClose={() => setShowError(false)}
+              >
+                {message}
+              </Alert>
+            )}
+            <Button
             /*  disabled={!loginValue || !passwordValue} */
-            onClick={() =>
-              dispatch(login({ password: passwordValue, email: loginValue }))
-            }
+            type="submit"
             variant="contained"
             sx={{
               backgroundColor: '#C10FE9',
               mt: 2,
-              width: '10rem',
+              width: '100%',
               fontWeight: 'bold',
               letterSpacing: '0.2rem',
             }}
           >
             Login
           </Button>
+        </form>
+        <Stack
+          direction={'column'}
+          justifyContent={'center'}
+          alignItems={'center'}
+        >
+        
           <Button
             onClick={() => navigate('/cadastrar')}
             variant="text"

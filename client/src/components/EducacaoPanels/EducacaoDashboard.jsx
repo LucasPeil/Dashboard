@@ -12,7 +12,7 @@ import { toast } from 'react-toastify';
 import { useTheme } from '@emotion/react';
 import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
 import EditTwoToneIcon from '@mui/icons-material/EditTwoTone';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import DataTable from 'react-data-table-component';
 import { useDispatch, useSelector } from 'react-redux';
 import MotionDiv from '../../MotionDiv';
@@ -33,36 +33,56 @@ import DashboardsHeaders from '../DashboardsHeaders';
 import FormAtividade from '../FormAtividade';
 import ProgressComponent from '../ProgressComponent';
 import SearchBar from '../SearchBar';
+
 const EducacaoDashboard = ({ open }) => {
   const dispatch = useDispatch();
   const [openSingleAtividade, setOpenSingleAtividade] = useState(false);
-  const handleOpenSingleAtividade = () => setOpenSingleAtividade(true);
-  const handleCloseSingleAtividade = () => setOpenSingleAtividade(false);
+
+  const handleCloseSingleAtividade = useCallback(
+    () => setOpenSingleAtividade(false),
+    []
+  );
+
+  const [selectedRow, setSelectedRow] = useState();
+  const [categorySelected, setCategorySelected] = useState('');
+
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(10);
   const [sortDirection, setSortDirection] = useState(1);
   const [prop, setProp] = useState('_id');
   const [filter, setFilter] = useState('');
-  const [openModal, setOpenModal] = useState(false);
-  const handleOpenModal = () => setOpenModal(true);
-  const handleCloseModal = () => setOpenModal(false);
-  const [selectedRow, setSelectedRow] = useState();
+
+  const theme = useTheme();
+  const downMd = useMediaQuery(theme.breakpoints.down('md'));
+
   const [categoryCardSelected, setCategoryCardSelected] = useState([
     false,
     false,
   ]);
-  const [categorySelected, setCategorySelected] = useState('');
-  const theme = useTheme();
-  const downMd = useMediaQuery(theme.breakpoints.down('md'));
+
   const {
     atividadesEducacao,
-    openModalEducacao,
     isLoading,
     register,
     remove,
     quantidadeCursos,
     quantidadeLivros,
   } = useSelector((state) => state.atividadesEducacao);
+
+  const handleCardClick = useCallback((idx, title) => {
+    setCategorySelected(title);
+    setCategoryCardSelected((prev) => {
+      const arrayCopy = [...prev].fill(false);
+      arrayCopy[idx] = !prev[idx];
+      return arrayCopy;
+    });
+  }, []);
+
+  const cleanFilters = useCallback(() => {
+    setCategorySelected('');
+    setCategoryCardSelected([false, false]);
+  }, []);
+
   useEffect(() => {
     if (register.isSuccess) {
       toast.success(register.message, {
@@ -80,7 +100,8 @@ const EducacaoDashboard = ({ open }) => {
       dispatch(resetRegisterEducacao());
       dispatch(resetRemoveEducacao());
     };
-  }, [register, remove]);
+  }, [register, remove, dispatch]);
+
   useEffect(() => {
     dispatch(
       getAllAtividadesEducacao({
@@ -92,72 +113,82 @@ const EducacaoDashboard = ({ open }) => {
         categorySelected: categorySelected,
       })
     );
-  }, [register, remove, filter, categorySelected]);
-  const tableColumns = [
-    {
-      name: 'Título',
-      selector: (row) => row.nomeAtividade,
-      sortable: true,
-    },
-    {
-      name: 'Descrição',
-      selector: (row) => row.descricaoAtividade,
-      sortable: true,
-    },
-    {
-      name: 'Ações',
-      width: '10%',
-      cell: (row) => (
-        <Box
-          sx={{
-            display: 'flex',
-            alignItems: 'center',
-          }}
-        >
-          <IconButton
-            onClick={() => {
-              setSelectedRow(row);
+  }, [
+    register,
+    remove,
+    filter,
+    categorySelected,
+    page,
+    limit,
+    prop,
+    sortDirection,
+    dispatch,
+  ]);
 
-              dispatch(setOpenModalEducacao());
+  const tableColumns = useMemo(
+    () => [
+      {
+        name: 'Título',
+        selector: (row) => row.nomeAtividade,
+        sortable: true,
+      },
+      {
+        name: 'Descrição',
+        selector: (row) => row.descricaoAtividade,
+        sortable: true,
+      },
+      {
+        name: 'Ações',
+        width: '10%',
+        cell: (row) => (
+          <Box
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
             }}
           >
-            <EditTwoToneIcon color="success" />
-          </IconButton>
-          <IconButton
-            onClick={() => {
-              dispatch(removeSingleAtividadeEducacao(row._id));
-            }}
-          >
-            <DeleteTwoToneIcon color="error" />
-          </IconButton>
-        </Box>
-      ),
-    },
-  ];
-
-  const cleanForm = (form) => {
-    form.setFieldValue('nomeAtividade', '');
-    form.setFieldValue('categoria', '');
-    form.setFieldValue('descricaoAtividade', '');
-    form.setFieldValue('tempoGasto', '');
-    form.setFieldValue('dinheiroGasto', '');
-    form.setFieldValue('nivelImportância', '');
-  };
+            <IconButton
+              onClick={() => {
+                setSelectedRow(row);
+                dispatch(setOpenModalEducacao());
+              }}
+            >
+              <EditTwoToneIcon color="success" />
+            </IconButton>
+            <IconButton
+              onClick={() => {
+                dispatch(removeSingleAtividadeEducacao(row._id));
+              }}
+            >
+              <DeleteTwoToneIcon color="error" />
+            </IconButton>
+          </Box>
+        ),
+      },
+    ],
+    [dispatch]
+  );
 
   return (
     <MotionDiv>
       <Box sx={{ display: 'flex', justifyContent: 'end' }}>
         <FormAtividade
-          openModal={openModalEducacao}
-          handleCloseModal={closeModalEducacao}
           title={'Nova Atividade Educação'}
           btnColor="#648d64"
           btnHoverColor="#4E7A4E"
           categoriaItens={['Cursos', 'Livros']}
           card={'Educação'}
-          cleanForm={cleanForm}
+          cleanForm={(form) => {
+            form.setFieldValue('nomeAtividade', '');
+            form.setFieldValue('categoria', '');
+            form.setFieldValue('descricaoAtividade', '');
+            form.setFieldValue('tempoGasto', '');
+            form.setFieldValue('dinheiroGasto', '');
+            form.setFieldValue('nivelImportância', '');
+          }}
           data={selectedRow}
         />
+
         {/* MODAL SINGLE ATIVIDADE */}
         {openSingleAtividade && (
           <SingleAtividade
@@ -168,6 +199,7 @@ const EducacaoDashboard = ({ open }) => {
             isAtividadeEducacao={true}
           />
         )}
+
         <Box
           sx={{
             transition: 'all 0.5s ease',
@@ -175,7 +207,6 @@ const EducacaoDashboard = ({ open }) => {
           }}
         >
           <Paper
-            /* onMouseOver={() => coverEffect()} */
             elevation={6}
             sx={{
               px: 2,
@@ -188,12 +219,9 @@ const EducacaoDashboard = ({ open }) => {
             style={{}}
           >
             <DashboardsHeaders
-              setCategorySelected={setCategorySelected}
+              cleanFilters={cleanFilters}
               categorySelected={categorySelected}
-              active={categoryCardSelected}
-              setActive={setCategoryCardSelected}
               title={'DETALHES SOBRE SUA EDUCAÇÃO'}
-              openModal={() => dispatch(setOpenModalEducacao())}
             />
 
             <Stack
@@ -210,8 +238,8 @@ const EducacaoDashboard = ({ open }) => {
             >
               <CategoryCards
                 idx={0}
-                active={categoryCardSelected}
-                setActive={setCategoryCardSelected}
+                isSelected={categoryCardSelected[0]}
+                onSelect={handleCardClick}
                 distance={5}
                 classLabel="category-banner-educacao"
                 qty={quantidadeCursos}
@@ -220,20 +248,12 @@ const EducacaoDashboard = ({ open }) => {
                 title="Cursos"
                 description={'Veja quais cursos você assistiu...'}
                 bgcolor={'#648d64'}
-                icon={
-                  <CastForEducationOutlinedIcon
-                    sx={{
-                      position: 'absolute',
-                      fontSize: '1.8rem',
-                      ml: 2,
-                    }}
-                  />
-                }
+                Icon={CastForEducationOutlinedIcon}
               />
               <CategoryCards
                 idx={1}
-                active={categoryCardSelected}
-                setActive={setCategoryCardSelected}
+                isSelected={categoryCardSelected[1]}
+                onSelect={handleCardClick}
                 distance={5}
                 classLabel="category-banner-educacao"
                 qty={quantidadeLivros}
@@ -242,15 +262,7 @@ const EducacaoDashboard = ({ open }) => {
                 title="Livros"
                 description={'Dê uma olhada nos livros lidos nesse mês...'}
                 bgcolor={'#648d64'}
-                icon={
-                  <MenuBookOutlinedIcon
-                    sx={{
-                      position: 'absolute',
-                      fontSize: '1.8rem',
-                      ml: 2,
-                    }}
-                  />
-                }
+                Icon={MenuBookOutlinedIcon}
               />
             </Stack>
 
@@ -271,7 +283,6 @@ const EducacaoDashboard = ({ open }) => {
                     boxSizing: 'border-box',
                     p: 1,
                     height: '53px',
-                    // borderRadius: "0.8rem",
                     display: 'flex',
                     justifyContent: 'space-around',
                     alignItems: 'center',

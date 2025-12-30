@@ -1,11 +1,12 @@
 import axios from "axios";
 
-const API_URL = "http://localhost:5101/api/atividades-casa";
+const API_URL = import.meta.env.VITE_ENV === 'development' ? 'http://localhost:5101/api/atividades-casa' : `${window.location.origin}/api/atividades-casa` ;
 
-const setNewAtividadeCasa = async (data) => {
+const setNewAtividadeCasa = async (data, token) => {
   const config = {
     headers: {
       "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
     },
   };
   const formData = new FormData();
@@ -35,21 +36,21 @@ const getRefeicoesQty = async () => {
   return response.data;
 };
 
-const getAllAtividadesCasa = async (options) => {
-  const config = { params: { ...options } };
+const getAllAtividadesCasa = async (options, token) => {
+  const config = { params: { ...options }, headers: { Authorization: `Bearer ${token}` } };
 
   const response = await axios.get(API_URL, config);
   return response.data;
 };
-const getSingleAtividade = async (id) => {
-  const config = {};
-  const response = await axios.get(API_URL + `/${id}`);
+const getSingleAtividade = async (id, token) => {
+  const config = {headers: { Authorization: `Bearer ${token}` }};
+  const response = await axios.get(API_URL + `/${id}`, config);
   return response.data;
 };
 
-const removeSingleAtividade = async (id) => {
-  const config = {};
-  const response = await axios.delete(API_URL + `/${id}`);
+const removeSingleAtividade = async (id, token) => {
+  const config = {headers: { Authorization: `Bearer ${token}` }};
+  const response = await axios.delete(API_URL + `/${id}`, config);
   return response.data;
 };
 const casaService = {

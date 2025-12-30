@@ -67,8 +67,9 @@ export const getLivrosQty = createAsyncThunk(
 export const getAllAtividadesEducacao = createAsyncThunk(
   "atividadesEducacao/get",
   async (params, thunkAPI) => {
+    const token = thunkAPI.getState().auth.user.token;
     try {
-      return await educacaoService.getAllAtividadesEducacao(params);
+      return await educacaoService.getAllAtividadesEducacao(params, token);
     } catch (error) {
       const message =
         (error.response &&
@@ -84,8 +85,9 @@ export const getAllAtividadesEducacao = createAsyncThunk(
 export const setNewAtividadeEducacao = createAsyncThunk(
   "atividadesEducacao/post",
   async (data, thunkAPI) => {
+    const token = thunkAPI.getState().auth.user.token;
     try {
-      return await educacaoService.setNewAtividadeEducacao(data);
+      return await educacaoService.setNewAtividadeEducacao(data, token);
     } catch (error) {
       const message =
         (error.response &&
@@ -101,8 +103,9 @@ export const setNewAtividadeEducacao = createAsyncThunk(
 export const getSingleAtividadeEducacao = createAsyncThunk(
   "atividadesEducacao/getId",
   async (id, thunkAPI) => {
+    const token = thunkAPI.getState().auth.user.token;
     try {
-      return await educacaoService.getSingleAtividadeEducacao(id);
+      return await educacaoService.getSingleAtividadeEducacao(id, token);
     } catch (error) {
       const message =
         (error.response &&
@@ -118,8 +121,9 @@ export const getSingleAtividadeEducacao = createAsyncThunk(
 export const removeSingleAtividadeEducacao = createAsyncThunk(
   "atividadesEducacao/delete",
   async (id, thunkAPI) => {
+    const token = thunkAPI.getState().auth.user.token;
     try {
-      return await educacaoService.removeSingleAtividadeEducacao(id);
+      return await educacaoService.removeSingleAtividadeEducacao(id, token);
     } catch (error) {
       const message =
         (error.response &&

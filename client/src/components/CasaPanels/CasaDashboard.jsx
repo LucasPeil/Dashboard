@@ -41,7 +41,7 @@ const CasaDashboard = ({ open, setOpen }) => {
   // Callbacks simples
   const handleCloseSingleAtividade = useCallback(
     () => setOpenSingleAtividade(false),
-    [] // Removido dependência desnecessária se setOpenSingleAtividade é estável
+    []
   );
 
   const [selectedRow, setSelectedRow] = useState();

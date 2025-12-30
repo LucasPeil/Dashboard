@@ -167,7 +167,7 @@ const VisaoGeralDashboard = ({ open, setOpen }) => {
     responsive: true,
     plugins: {
       legend: { position: 'top' },
-      title: { display: true, text: 'Tempo dedicado' },
+      title: { display: true, text: 'Dinheiro investido' },
     },
     maintainAspectRatio: false,
     redraw: true,

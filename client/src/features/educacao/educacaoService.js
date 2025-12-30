@@ -1,10 +1,11 @@
 import axios from "axios";
-const API_URL = "http://localhost:5101/api/atividades-educacao/";
+const API_URL = import.meta.env.VITE_ENV === 'development' ? 'http://localhost:5101/api/atividades-educacao' : `${window.location.origin}/api/atividades-educacao` ;
 
-const setNewAtividadeEducacao = async (data) => {
+const setNewAtividadeEducacao = async (data, token) => {
   const config = {
     headers: {
       "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
     },
   };
 
@@ -14,22 +15,22 @@ const setNewAtividadeEducacao = async (data) => {
   return response.data;
 };
 
-const getAllAtividadesEducacao = async (options) => {
-  const config = { params: { ...options } };
+const getAllAtividadesEducacao = async (options, token) => {
+  const config = { params: { ...options }, headers: { Authorization: `Bearer ${token}` } };
 
   const response = await axios.get(API_URL, config);
 
   return response.data;
 };
-const getSingleAtividadeEducacao = async (id) => {
-  const config = {};
-  const response = await axios.get(API_URL + `/${id}`);
+const getSingleAtividadeEducacao = async (id, token) => {
+  const config = { headers: { Authorization: `Bearer ${token}` } };
+  const response = await axios.get(API_URL + `/${id}`, config);
   return response.data;
 };
 
-const removeSingleAtividadeEducacao = async (id) => {
-  const config = {};
-  const response = await axios.delete(API_URL + `/${id}`);
+const removeSingleAtividadeEducacao = async (id, token) => {
+  const config = { headers: { Authorization: `Bearer ${token}` } };
+  const response = await axios.delete(API_URL + `/${id}`, config);
   return response.data;
 };
 const getCursosQty = async () => {

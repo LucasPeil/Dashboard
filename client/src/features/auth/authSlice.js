@@ -14,6 +14,7 @@ const initialState = {
 
 export const login = createAsyncThunk("auth/login", async (user, thunkAPI) => {
   try {
+  
     return await authService.login(user);
   } catch (error) {
     const message =
@@ -88,7 +89,7 @@ export const authSlice = createSlice({
         state.isLoading = false;
         state.isSuccess = false;
         state.isError = true;
-
+       
         state.message = action.payload;
       })
       .addCase(cadastrar.pending, (state) => {

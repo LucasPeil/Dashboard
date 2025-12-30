@@ -16,7 +16,7 @@ import {
   Select,
 } from '@mui/material';
 import { closeModalCasa } from '../features/casa/casaSlice';
-import { useState, useEffect, memo } from 'react';
+import { useState, memo } from 'react';
 import { Field, Form, Formik, FormikProvider, useFormik } from 'formik';
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -33,7 +33,7 @@ import {
   resetRegisterEducacao,
   setNewAtividadeEducacao,
 } from '../features/educacao/educacaoSlice';
-import dayjs from 'dayjs';
+
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Zoom ref={ref} {...props} />;
 });
@@ -118,8 +118,7 @@ const FormAtividade = memo(function FormAtividade({
       formik.resetForm();
     },
   });
-  // Select ONLY the primitive value we need.
-  // If we select the whole slice object, any update to that slice triggers a re-render.
+
   const openModalCasa = useSelector(
     (state) => state.atividadesCasa.openModalCasa
   );

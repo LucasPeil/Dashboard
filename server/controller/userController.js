@@ -49,7 +49,7 @@ const login = asyncHandler(async (req, res) => {
       resetPassword: user.resetPassword,
     });
   } else {
-    res.status(401).json({ message: 'Usuário ou senha inválidos' });
+    res.status(400).json({ message: 'Usuário ou senha inválidos' });
   }
 });
 

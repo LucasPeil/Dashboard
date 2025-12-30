@@ -13,11 +13,9 @@ const CategoryCards = React.memo(
     Icon,
     classLabel,
     isSelected,
-    onSelect, // Recebe a função já pronta
+    onSelect,
   }) => {
     const theme = useTheme();
-
-    // Memoizamos os estilos para evitar recálculo desnecessário
     const styles = useMemo(() => {
       const activeStyle = isSelected
         ? {

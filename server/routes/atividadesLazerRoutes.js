@@ -1,4 +1,5 @@
 const express = require("express");
+const protect = require("../middlewares/authMiddleware");
 const {
   getAllAtividadesLazer,
   setNewAtividadeLazer,
@@ -22,15 +23,15 @@ const arrSearch = [
 
 router
   .route("/")
-  .get(
+  .get(protect,
     paginationHandler(AtividadesLazer, filter(arrSearch)),
     getAllAtividadesLazer
   )
-  .post(setNewAtividadeLazer);
+  .post(protect,setNewAtividadeLazer);
 router.route("/quantidadeJogos").get(getJogosQty);
 router.route("/quantidadeCultura").get(getCulturaQty);
 router.route("/quantidadeEmGrupo").get(getEmGrupoQty);
 router.route("/quantidadeOutros").get(getOutrosQty);
-router.route("/:id").get(getSingleAtividadeLazer).delete(deleteAtividadeLazer);
+router.route("/:id").get(protect,getSingleAtividadeLazer).delete(protect,deleteAtividadeLazer);
 
 module.exports = router;
