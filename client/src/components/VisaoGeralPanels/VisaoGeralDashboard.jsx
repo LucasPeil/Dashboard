@@ -33,19 +33,16 @@ import { toast } from 'react-toastify';
 import MotionDiv from '../../MotionDiv';
 import {
   closeModalCasa,
-  getAllAtividadesCasa,
   resetRegisterCasa,
   setOpenModalCasa,
 } from '../../features/casa/casaSlice';
 import {
   closeModalEducacao,
-  getAllAtividadesEducacao,
   resetRegisterEducacao,
   setOpenModalEducacao,
 } from '../../features/educacao/educacaoSlice';
 import {
   closeModalLazer,
-  getAllAtividadesLazer,
   resetRegisterLazer,
   setOpenModalLazer,
 } from '../../features/lazer/lazerSlice';
@@ -53,6 +50,16 @@ import { getTotalDinheiroGasto } from '../../features/visaoGeral/visaoGeralSlice
 import '../../index.css';
 import FormAtividade from '../FormAtividade';
 import HeaderCards from '../HeaderCards';
+import { monthsNames } from '../../../utils/monthsNames';
+
+const yearsRange = () => {
+  const currentYear = new Date().getFullYear();
+  const years = [];
+  for (let i = 0; i <= 4; i++) {
+    years.push(currentYear - i);
+  }
+  return years;
+};
 const VisaoGeralDashboard = ({ open, setOpen }) => {
   ChartJS.register(
     CategoryScale,
@@ -62,13 +69,13 @@ const VisaoGeralDashboard = ({ open, setOpen }) => {
     Tooltip,
     Legend
   );
-
   ChartJS.register(ArcElement, Tooltip, Legend);
   const theme = useTheme();
   const dispatch = useDispatch();
-  const [ano, setAno] = useState(2023);
+  const [ano, setAno] = useState(new Date().getFullYear());
   const downLg = useMediaQuery(theme.breakpoints.down('lg'));
   const { openModalLazer } = useSelector((state) => state.atividadesLazer);
+  const user = useSelector((state) => state.auth.user);
   const { openModalEducacao } = useSelector(
     (state) => state.atividadesEducacao
   );
@@ -88,8 +95,8 @@ const VisaoGeralDashboard = ({ open, setOpen }) => {
   const { register: registerEducacao, update: updateEducacao } = useSelector(
     (state) => state.atividadesEducacao
   );
-  const getMonthTotalAmountCasa = (month) => {
-    const dinheiroGastoMes = dinheiroGasto?.dinheiroCasaMes?.find(
+  const getMonthTotalAmount = (month, area) => {
+    const dinheiroGastoMes = dinheiroGasto?.[area]?.find(
       (item) => item._id.mes == month
     )?.totalAmount;
 
@@ -99,69 +106,15 @@ const VisaoGeralDashboard = ({ open, setOpen }) => {
       return 0;
     }
   };
-  const getMonthTotalAmountLazer = (month) => {
-    const dinheiroGastoMes = dinheiroGasto?.dinheiroLazerMes?.find(
-      (item) => item._id.mes == month
-    )?.totalAmount;
 
-    if (dinheiroGastoMes) {
-      return dinheiroGastoMes;
-    } else {
-      return 0;
-    }
-  };
-  const getMonthTotalAmountEducacao = (month) => {
-    const dinheiroGastoMes = dinheiroGasto?.dinheiroEducacaoMes?.find(
-      (item) => item._id.mes == month
-    )?.totalAmount;
-
-    if (dinheiroGastoMes) {
-      return dinheiroGastoMes;
-    } else {
-      return 0;
-    }
-  };
   useEffect(() => {
-    dispatch(getTotalDinheiroGasto(ano));
+    dispatch(getTotalDinheiroGasto({ ano, userId: user._id }));
   }, [
     ano,
     registerCasa.isSuccess,
     registerLazer.isSuccess,
     registerEducacao.isSuccess,
   ]);
-  useEffect(() => {
-    dispatch(
-      getAllAtividadesCasa({
-        page: 1,
-        limit: 5,
-        prop: '_id',
-        sortDirection: 'asc',
-        filter: '',
-        categorySelected: '',
-      })
-    );
-
-    dispatch(
-      getAllAtividadesEducacao({
-        page: 1,
-        limit: 5,
-        prop: '_id',
-        sortDirection: 'asc',
-        filter: '',
-        categorySelected: '',
-      })
-    );
-    dispatch(
-      getAllAtividadesLazer({
-        page: 1,
-        limit: 5,
-        prop: '_id',
-        sortDirection: 'asc',
-        filter: '',
-        categorySelected: '',
-      })
-    );
-  }, []);
 
   const barOptions = {
     responsive: true,
@@ -195,56 +148,23 @@ const VisaoGeralDashboard = ({ open, setOpen }) => {
       datasets: [
         {
           label: 'CASA',
-          data: [
-            getMonthTotalAmountCasa('January'),
-            getMonthTotalAmountCasa('February'),
-            getMonthTotalAmountCasa('March'),
-            getMonthTotalAmountCasa('April'),
-            getMonthTotalAmountCasa('May'),
-            getMonthTotalAmountCasa('June'),
-            getMonthTotalAmountCasa('July'),
-            getMonthTotalAmountCasa('August'),
-            getMonthTotalAmountCasa('September'),
-            getMonthTotalAmountCasa('October'),
-            getMonthTotalAmountCasa('November'),
-            getMonthTotalAmountCasa('December'),
-          ],
+          data: monthsNames.map((month) =>
+            getMonthTotalAmount(month, 'dinheiroCasaMes')
+          ),
           backgroundColor: '#0c264e',
         },
         {
           label: 'LAZER',
-          data: [
-            getMonthTotalAmountLazer('January'),
-            getMonthTotalAmountLazer('February'),
-            getMonthTotalAmountLazer('March'),
-            getMonthTotalAmountLazer('April'),
-            getMonthTotalAmountLazer('May'),
-            getMonthTotalAmountLazer('June'),
-            getMonthTotalAmountLazer('July'),
-            getMonthTotalAmountLazer('August'),
-            getMonthTotalAmountLazer('September'),
-            getMonthTotalAmountLazer('October'),
-            getMonthTotalAmountLazer('November'),
-            getMonthTotalAmountLazer('December'),
-          ],
+          data: monthsNames.map((month) =>
+            getMonthTotalAmount(month, 'dinheiroLazerMes')
+          ),
           backgroundColor: '#f4b26a',
         },
         {
           label: 'EDUCAÇÃO',
-          data: [
-            getMonthTotalAmountEducacao('January'),
-            getMonthTotalAmountEducacao('February'),
-            getMonthTotalAmountEducacao('March'),
-            getMonthTotalAmountEducacao('April'),
-            getMonthTotalAmountEducacao('May'),
-            getMonthTotalAmountEducacao('June'),
-            getMonthTotalAmountEducacao('July'),
-            getMonthTotalAmountEducacao('August'),
-            getMonthTotalAmountEducacao('September'),
-            getMonthTotalAmountEducacao('October'),
-            getMonthTotalAmountEducacao('November'),
-            getMonthTotalAmountEducacao('December'),
-          ],
+          data: monthsNames.map((month) =>
+            getMonthTotalAmount(month, 'dinheiroEducacaoMes')
+          ),
           backgroundColor: '#648d64',
         },
       ],
@@ -540,45 +460,20 @@ const VisaoGeralDashboard = ({ open, setOpen }) => {
                         label="Ano"
                         sx={{ fontSize: '13px' }}
                       >
-                        <MenuItem sx={{ fontSize: '13px' }} value={2023}>
-                          2023
-                        </MenuItem>
-                        <MenuItem sx={{ fontSize: '13px' }} value={2022}>
-                          2022
-                        </MenuItem>
-                        <MenuItem sx={{ fontSize: '13px' }} value={2021}>
-                          2021
-                        </MenuItem>
+                        {yearsRange()?.map((year) => (
+                          <MenuItem
+                            key={year}
+                            sx={{ fontSize: '13px' }}
+                            value={year}
+                          >
+                            {year}
+                          </MenuItem>
+                        ))}
                       </Select>
                     </FormControl>
                   </Stack>
                 </Box>
               )}
-              {/*  <Stack
-              sx={{
-                px: 4,
-                my: 3,
-                mb: 5,
-              }}
-              direction={"row"}
-              justifyContent={"end"}
-            >
-              <Button
-                sx={{
-                  display: "flex",
-                  justifyContent: "space-around",
-                }}
-                onMouseOver={() => setShowArrow(true)}
-                onMouseOut={() => setShowArrow(false)}
-                className="relatorioButton"
-              >
-                <Typography className="buttonLabel">
-                  Ver Gastos mensais
-                </Typography>
-
-                {showArrow && <ArrowRightIcon sx={{ fontSize: "2rem" }} />}
-              </Button>
-            </Stack> */}
             </Stack>
           </Paper>
         </Box>

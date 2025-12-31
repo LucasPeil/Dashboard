@@ -40,8 +40,8 @@ import ProgressComponent from '../ProgressComponent';
 
 const LazerDashboard = ({ open }) => {
   const dispatch = useDispatch();
-
   const [openSingleAtividade, setOpenSingleAtividade] = useState(false);
+  const user = useSelector((state) => state.auth.user);
   const handleCloseSingleAtividade = useCallback(
     () => setOpenSingleAtividade(false),
     []
@@ -120,6 +120,7 @@ const LazerDashboard = ({ open }) => {
         sortDirection: sortDirection,
         filter: filter,
         categorySelected: categorySelected,
+        userId: user._id,
       })
     );
   }, [
@@ -163,7 +164,12 @@ const LazerDashboard = ({ open }) => {
             </IconButton>
             <IconButton
               onClick={() => {
-                dispatch(removeSingleAtividadeLazer(row._id));
+                dispatch(
+                  removeSingleAtividadeLazer({
+                    id: row._id,
+                    userId: row?.userId,
+                  })
+                );
               }}
             >
               <DeleteTwoToneIcon color="error" />
@@ -365,6 +371,7 @@ const LazerDashboard = ({ open }) => {
                         sortDirection: sortDirection,
                         filter: filter,
                         categorySelected: categorySelected,
+                        userId: user._id,
                       })
                     );
                     setPage(newPage);
@@ -378,6 +385,7 @@ const LazerDashboard = ({ open }) => {
                         sortDirection: sortDirection,
                         filter: filter,
                         categorySelected: categorySelected,
+                        userId: user._id,
                       })
                     );
                     setLimit(newLimit);

@@ -33,7 +33,6 @@ const SingleAtividade = memo(function SingleAtividade({
   iconColor,
   isAtividadeEducacao = false,
 }) {
-  console.log('SingleAtividade');
   return (
     <Dialog
       open={openSingleAtividade}

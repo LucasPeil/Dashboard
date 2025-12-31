@@ -99,6 +99,7 @@ const FormAtividade = memo(function FormAtividade({
       nivelImportancia: data?.nivelImportancia || '',
       mesInsercao: '',
       anoInsercao: 1900,
+      userId: data?.userId || '',
     },
     //validationSchema: ValidationSchema,
     onSubmit: (values) => {

@@ -1,6 +1,7 @@
-const express = require("express");
+const express = require('express');
 const router = express.Router();
-const protect = require("../middlewares/authMiddleware");
+const protect = require('../middlewares/authMiddleware');
+const authorization = require('../middlewares/authorizationMiddleware');
 const {
   getAllAtividadesCasa,
   getSingleAtividade,
@@ -9,27 +10,31 @@ const {
   getComprasQty,
   getLimpezaQty,
   getRefeicoesQty,
-} = require("../controller/atividadesCasaController");
-const paginationHandler = require("../middlewares/paginationMiddleware");
-const AtividadesCasa = require("../models/atividadesCasaModel");
-const filter = require("../filterFunction");
+} = require('../controller/atividadesCasaController');
+const paginationHandler = require('../middlewares/paginationMiddleware');
+const AtividadesCasa = require('../models/atividadesCasaModel');
+const filter = require('../filterFunction');
 const arrSearch = [
-  "nomeAtividade",
-  "categoria",
-  "descricaoAtividade",
-  "mesInsercao",
+  'nomeAtividade',
+  'categoria',
+  'descricaoAtividade',
+  'mesInsercao',
 ];
 
-router.route("/newAtividade").post(protect,setNewAtividadeCasa);
+router.route('/newAtividade').post(protect, authorization, setNewAtividadeCasa);
 router
-  .route("/")
-  .get(protect,
+  .route('/')
+  .get(
+    protect,
     paginationHandler(AtividadesCasa, filter(arrSearch)),
     getAllAtividadesCasa
   );
-router.route("/quantidadeCompras").get(getComprasQty);
-router.route("/quantidadeLimpeza").get(getLimpezaQty);
-router.route("/quantidadeRefeicoes").get(getRefeicoesQty);
-router.route("/:id").get(protect,getSingleAtividade).delete(protect,deleteAtividade);
+router.route('/quantidadeCompras').get(getComprasQty);
+router.route('/quantidadeLimpeza').get(getLimpezaQty);
+router.route('/quantidadeRefeicoes').get(getRefeicoesQty);
+router
+  .route('/:id')
+  .get(protect, authorization, getSingleAtividade)
+  .delete(protect, authorization, deleteAtividade);
 
 module.exports = router;

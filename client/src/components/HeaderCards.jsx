@@ -1,9 +1,7 @@
-import { Box, Paper, Typography, useMediaQuery } from "@mui/material";
-import React, { useMemo } from "react";
-import { useSpring, animated } from "@react-spring/web";
-import "../index.css";
-import { useTheme } from "@emotion/react";
-import { addCoverEffect, removeCoverEffect } from "../../utils/coverFunction";
+import { Box, Paper, Typography, useMediaQuery } from '@mui/material';
+import { useSpring, animated } from '@react-spring/web';
+import '../index.css';
+import { useTheme } from '@emotion/react';
 
 const HeaderCards = ({
   content,
@@ -22,19 +20,19 @@ const HeaderCards = ({
     to: { x: 1 },
     config: { duration: 800 },
   });
-  const headerIcons = document.querySelectorAll(".icon");
+  const headerIcons = document.querySelectorAll('.icon');
   const iconAnimation = (idx) => {
-    Array.from(headerIcons)[idx]?.classList.add("icon-shake");
+    Array.from(headerIcons)[idx]?.classList.add('icon-shake');
   };
   const iconAnimationEnd = () => {
-    Array.from(headerIcons)[idx]?.classList.remove("icon-shake");
+    Array.from(headerIcons)[idx]?.classList.remove('icon-shake');
   };
-  const downLg = useMediaQuery(theme.breakpoints.down("lg"));
+  const downLg = useMediaQuery(theme.breakpoints.down('lg'));
   const decorationExpand = {
-    height: "32rem !important",
-    width: "32rem !important",
-    top: "-7.5rem !important",
-    left: "-2.5rem !important",
+    height: '32rem !important',
+    width: '32rem !important',
+    top: '-7.5rem !important',
+    left: '-2.5rem !important',
     zIndex: -2,
   };
 
@@ -53,52 +51,52 @@ const HeaderCards = ({
       }}
       elevation={4}
       sx={{
-        position: "relative",
+        position: 'relative',
         mt: downLg ? 3 : 5,
         mx: 4,
-        height: downLg ? "6rem" : "11rem",
-        borderRadius: "1rem",
-        boxSizing: "border-box",
-        px: "2.5rem",
-        cursor: "pointer",
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "center",
-        transition: "all 0.4s ease ",
-        overflow: "hidden",
+        height: downLg ? '6rem' : '11rem',
+        borderRadius: '1rem',
+        boxSizing: 'border-box',
+        px: '2.5rem',
+        cursor: 'pointer',
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        transition: 'all 0.4s ease ',
+        overflow: 'hidden',
         /*   color: "white",  */
-        "&:hover": {
+        '&:hover': {
           // backgroundColor: theme.palette.vividBlue.main,
-          ".casaCard": content == "CASA" && decorationExpand,
-          ".lazerCard": content == "LAZER" && decorationExpand,
-          ".educacaoCard": content == "EDUCAÇÃO" && decorationExpand,
+          '.casaCard': content == 'CASA' && decorationExpand,
+          '.lazerCard': content == 'LAZER' && decorationExpand,
+          '.educacaoCard': content == 'EDUCAÇÃO' && decorationExpand,
 
-          color: "white",
-          transform: "scale(105%)",
+          color: 'white',
+          transform: 'scale(105%)',
         },
       }}
     >
       {containerDecoration}
       <Box
         sx={{
-          display: "flex",
-          justifyContent: downLg ? "center" : "space-between",
+          display: 'flex',
+          justifyContent: downLg ? 'center' : 'space-between',
         }}
       >
         {!downLg && (
           <Box
             sx={{
-              display: "flex",
-              flexDirection: "column",
+              display: 'flex',
+              flexDirection: 'column',
             }}
           >
             <Typography
               variant="button"
-              sx={{ fontSize: "1.8rem", fontWeight: "bold" }}
+              sx={{ fontSize: '1.8rem', fontWeight: 'bold' }}
             >
               {content}
             </Typography>
-            <Typography variant="caption" sx={{ fontSize: "0.9rem" }}>
+            <Typography variant="caption" sx={{ fontSize: '0.9rem' }}>
               {subtitle}
             </Typography>
           </Box>

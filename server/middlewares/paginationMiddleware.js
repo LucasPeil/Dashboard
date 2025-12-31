@@ -1,13 +1,14 @@
+const mongoose = require('mongoose');
 const paginationHandler = (model, filter) => {
   return async (req, res, next) => {
     const page = parseInt(req.query.page);
     const limit = parseInt(req.query.limit);
-    const sortDirection = req.query.sortDirection === "desc" ? -1 : 1;
-    const prop = req.query.prop ? req.query.prop : "_id";
+    const sortDirection = req.query.sortDirection === 'desc' ? -1 : 1;
+    const prop = req.query.prop ? req.query.prop : '_id';
     const startIndex = (page - 1) * limit;
     const endIndex = page * limit;
     let filter_ = {};
-    if (typeof filter === "function") {
+    if (typeof filter === 'function') {
       filter_ = filter(req);
     } else {
       filter_ = filter;
@@ -32,13 +33,16 @@ const paginationHandler = (model, filter) => {
       results.documents = await model
         .aggregate([
           {
-            $match: filter_,
+            $match: {
+              ...filter_,
+              userId: new mongoose.Types.ObjectId(req.user._id),
+            },
           },
           { $sort: { [prop]: sortDirection } },
           { $skip: startIndex },
           { $limit: limit },
         ])
-        .collation({ locale: "pt", caseLevel: true, strength: 3 });
+        .collation({ locale: 'pt', caseLevel: true, strength: 3 });
 
       res.paginatedResults = results;
       next();

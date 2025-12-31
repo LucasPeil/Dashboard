@@ -1,6 +1,9 @@
 {
   "scripts": {
-    "both": "concurrently \"npm run dev --prefix client\" \"npm start --prefix server\""
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "both": "concurrently \"npm run dev --prefix client\" \"npm start --prefix server\"",
+    "postinstall": "cd client && npm install",
+    "build": "cd client && npm run build"
   },
   "devDependencies": {
     "concurrently": "^8.2.1"

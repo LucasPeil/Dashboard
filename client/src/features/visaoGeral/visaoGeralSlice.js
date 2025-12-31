@@ -1,6 +1,6 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 
-import visaoGeralService from "./visaoGeralService";
+import visaoGeralService from './visaoGeralService';
 const initialState = {
   dinheiroGasto: {},
   isLoading: false,
@@ -9,11 +9,11 @@ const initialState = {
 };
 
 export const getTotalDinheiroGasto = createAsyncThunk(
-  "visaoGeral/getTotalDinheiroGasto",
-  async (ano, thunkAPI) => {
+  'visaoGeral/getTotalDinheiroGasto',
+  async ({ ano, userId }, thunkAPI) => {
     const token = thunkAPI.getState().auth.user.token;
     try {
-      return await visaoGeralService.getDinheiroGasto(ano, token);
+      return await visaoGeralService.getDinheiroGasto({ ano, userId }, token);
     } catch (error) {
       const message =
         (error.response &&
@@ -27,7 +27,7 @@ export const getTotalDinheiroGasto = createAsyncThunk(
 );
 
 export const dinheiroGastoSlice = createSlice({
-  name: "dinheiroGasto",
+  name: 'dinheiroGasto',
   initialState,
   reducers: {
     reset: (state) => {

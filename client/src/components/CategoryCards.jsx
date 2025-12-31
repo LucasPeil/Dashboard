@@ -61,7 +61,6 @@ const CategoryCards = React.memo(
     const handleClick = () => {
       onSelect(idx, title);
     };
-    console.log(`Renderizou Card: ${title}`); // Para teste de performance
 
     return (
       <Paper

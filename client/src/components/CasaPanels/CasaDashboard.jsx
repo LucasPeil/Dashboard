@@ -37,7 +37,7 @@ import SingleAtividade from './SingleAtividade';
 
 const CasaDashboard = ({ open, setOpen }) => {
   const [openSingleAtividade, setOpenSingleAtividade] = useState(false);
-
+  const user = useSelector((state) => state.auth.user);
   // Callbacks simples
   const handleCloseSingleAtividade = useCallback(
     () => setOpenSingleAtividade(false),
@@ -74,7 +74,6 @@ const CasaDashboard = ({ open, setOpen }) => {
     quantidadeCompras,
     quantidadeRefeicoes,
   } = useSelector((state) => state.atividadesCasa);
-
   const handleCardClick = useCallback((idx, title) => {
     setCategorySelected(title);
     setCategoryCardSelected((prev) => {
@@ -136,7 +135,9 @@ const CasaDashboard = ({ open, setOpen }) => {
             </IconButton>
             <IconButton
               onClick={() => {
-                dispatch(removeSingleAtividade(row._id));
+                dispatch(
+                  removeSingleAtividade({ id: row._id, userId: row?.userId })
+                );
               }}
             >
               <DeleteTwoToneIcon color="error" />
@@ -157,6 +158,7 @@ const CasaDashboard = ({ open, setOpen }) => {
         sortDirection: sortDirection,
         filter: filter,
         categorySelected: categorySelected,
+        userId: user._id,
       })
     );
   }, [
@@ -307,6 +309,7 @@ const CasaDashboard = ({ open, setOpen }) => {
                         sortDirection,
                         filter,
                         categorySelected,
+                        userId: user._id,
                       })
                     );
                   }}
@@ -320,6 +323,7 @@ const CasaDashboard = ({ open, setOpen }) => {
                         sortDirection,
                         filter,
                         categorySelected,
+                        userId: user._id,
                       })
                     );
                   }}

@@ -52,7 +52,7 @@ const getSingleAtividade = asyncHandler(async (req, res) => {
 
 const setNewAtividadeCasa = asyncHandler(async (req, res) => {
   const data = JSON.parse(req.body.data);
-
+  const userId = req.user._id;
   let atividadeCasa;
   let message;
 
@@ -63,7 +63,7 @@ const setNewAtividadeCasa = asyncHandler(async (req, res) => {
     message = 'Aividade atualizada com sucesso.';
   } else {
     delete data._id;
-    atividadeCasa = new AtividadesCasa(data);
+    atividadeCasa = new AtividadesCasa({ ...data, userId });
     atividadeCasa = await atividadeCasa.save();
     message = 'Aividade registrada com sucesso.';
   }
@@ -78,9 +78,7 @@ const setNewAtividadeCasa = asyncHandler(async (req, res) => {
 
 const deleteAtividade = asyncHandler(async (req, res) => {
   const { id } = req.params;
-
   const atividade = await AtividadesCasa.findByIdAndDelete(id);
-
   if (atividade) {
     res
       .status(200)

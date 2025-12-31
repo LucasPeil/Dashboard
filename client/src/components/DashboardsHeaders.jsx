@@ -20,7 +20,6 @@ const DashboardsHeaders = memo(function DashboardsHeaders({
   }));
   const dispatch = useDispatch();
   const openModal = () => dispatch(setOpenModalCasa());
-  console.log('DashboardsHeaders');
   return (
     <Stack
       direction={'column'}

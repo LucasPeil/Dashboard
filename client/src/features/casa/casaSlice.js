@@ -1,6 +1,6 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 
-import casaService from "./casaService";
+import casaService from './casaService';
 
 const initialState = {
   atividadesCasa: [],
@@ -16,28 +16,28 @@ const initialState = {
     isSuccess: false,
     isLoading: false,
     isError: false,
-    message: "",
+    message: '',
   },
   update: {
     isSuccess: false,
     isLoading: false,
     isError: false,
-    message: "",
+    message: '',
   },
   remove: {
     isSuccess: false,
     isLoading: false,
     isError: false,
-    message: "",
+    message: '',
   },
 
-  message: "",
+  message: '',
 };
 
 export const setNewAtividadeCasa = createAsyncThunk(
-  "atividadeCasa/post",
+  'atividadeCasa/post',
   async (data, thunkAPI) => {
-     const token = thunkAPI.getState().auth.user.token;
+    const token = thunkAPI.getState().auth.user.token;
     try {
       return await casaService.setNewAtividadeCasa(data, token);
     } catch (error) {
@@ -52,7 +52,7 @@ export const setNewAtividadeCasa = createAsyncThunk(
   }
 );
 export const getAllAtividadesCasa = createAsyncThunk(
-  "atividadesCasa/getAll",
+  'atividadesCasa/getAll',
   async (params, thunkAPI) => {
     const token = thunkAPI.getState().auth.user.token;
     try {
@@ -70,7 +70,7 @@ export const getAllAtividadesCasa = createAsyncThunk(
 );
 
 export const getSingleAtividade = createAsyncThunk(
-  "atividadesCasa/singleAtividade",
+  'atividadesCasa/singleAtividade',
   async (id, thunkAPI) => {
     const token = thunkAPI.getState().auth.user.token;
     try {
@@ -87,11 +87,11 @@ export const getSingleAtividade = createAsyncThunk(
   }
 );
 export const removeSingleAtividade = createAsyncThunk(
-  "atividadesCasa/remove",
-  async (id, thunkAPI) => {
+  'atividadesCasa/remove',
+  async ({ id, userId }, thunkAPI) => {
     const token = thunkAPI.getState().auth.user.token;
     try {
-      return await casaService.removeSingleAtividade(id, token);
+      return await casaService.removeSingleAtividade({ id, userId }, token);
     } catch (error) {
       const message =
         (error.response &&
@@ -104,7 +104,7 @@ export const removeSingleAtividade = createAsyncThunk(
   }
 );
 export const getComprasQty = createAsyncThunk(
-  "atividadesCasa/getComprasQty",
+  'atividadesCasa/getComprasQty',
   async (id, thunkAPI) => {
     try {
       return await casaService.getComprasQty();
@@ -120,7 +120,7 @@ export const getComprasQty = createAsyncThunk(
   }
 );
 export const getLimpezaQty = createAsyncThunk(
-  "atividadesCasa/getLimpezaQty",
+  'atividadesCasa/getLimpezaQty',
   async (id, thunkAPI) => {
     try {
       return await casaService.getLimpezaQty();
@@ -136,7 +136,7 @@ export const getLimpezaQty = createAsyncThunk(
   }
 );
 export const getRefeicoesQty = createAsyncThunk(
-  "atividadesCasa/getRefeicoesQty",
+  'atividadesCasa/getRefeicoesQty',
   async (id, thunkAPI) => {
     try {
       return await casaService.getRefeicoesQty();
@@ -152,7 +152,7 @@ export const getRefeicoesQty = createAsyncThunk(
   }
 );
 export const casaSlice = createSlice({
-  name: "casaSlice",
+  name: 'casaSlice',
   initialState,
   reducers: {
     resetRegisterCasa(state) {

@@ -37,12 +37,11 @@ const Cadastrar = () => {
 
   useEffect(() => {
     if (isSuccess) {
-      navigate('/visao-geral');
+      navigate(import.meta.env.BASE_URL);
     }
-    return ()=>{
+    return () => {
       dispatch(reset());
-    }
-
+    };
   }, [user]);
   return (
     <Box

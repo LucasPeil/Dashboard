@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
 const atividadesCasaSchema = new mongoose.Schema({
   nomeAtividade: {
@@ -30,6 +30,11 @@ const atividadesCasaSchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
+  userId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true,
+  },
 });
 
-module.exports = mongoose.model("AtividadesCasa", atividadesCasaSchema);
+module.exports = mongoose.model('AtividadesCasa', atividadesCasaSchema);

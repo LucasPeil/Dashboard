@@ -1,6 +1,6 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 
-import lazerService from "./lazerService";
+import lazerService from './lazerService';
 
 const initialState = {
   atividadesLazer: [],
@@ -29,11 +29,11 @@ const initialState = {
     isError: false,
   },
 
-  message: "",
+  message: '',
 };
 
 export const getJogosQty = createAsyncThunk(
-  "atividadesLazer/getJogosQty",
+  'atividadesLazer/getJogosQty',
   async (id, thunkAPI) => {
     try {
       return await lazerService.getJogosQty();
@@ -49,7 +49,7 @@ export const getJogosQty = createAsyncThunk(
   }
 );
 export const getCulturaQty = createAsyncThunk(
-  "atividadesLazer/getCulturaQty",
+  'atividadesLazer/getCulturaQty',
   async (id, thunkAPI) => {
     try {
       return await lazerService.getCulturaQty();
@@ -65,7 +65,7 @@ export const getCulturaQty = createAsyncThunk(
   }
 );
 export const getEmGrupoQty = createAsyncThunk(
-  "atividadesLazer/getEmGrupoQty",
+  'atividadesLazer/getEmGrupoQty',
   async (id, thunkAPI) => {
     try {
       return await lazerService.getEmGrupoQty();
@@ -81,7 +81,7 @@ export const getEmGrupoQty = createAsyncThunk(
   }
 );
 export const getOutrosQty = createAsyncThunk(
-  "atividadesLazer/getOutrosQty",
+  'atividadesLazer/getOutrosQty',
   async (id, thunkAPI) => {
     try {
       return await lazerService.getOutrosQty();
@@ -98,7 +98,7 @@ export const getOutrosQty = createAsyncThunk(
 );
 
 export const getAllAtividadesLazer = createAsyncThunk(
-  "atividadesLazer/get",
+  'atividadesLazer/get',
   async (params, thunkAPI) => {
     const token = thunkAPI.getState().auth.user.token;
     try {
@@ -116,7 +116,7 @@ export const getAllAtividadesLazer = createAsyncThunk(
 );
 
 export const setNewAtividadeLazer = createAsyncThunk(
-  "atividadesLazer/post",
+  'atividadesLazer/post',
   async (data, thunkAPI) => {
     const token = thunkAPI.getState().auth.user.token;
     try {
@@ -134,7 +134,7 @@ export const setNewAtividadeLazer = createAsyncThunk(
 );
 
 export const getSingleAtividadeLazer = createAsyncThunk(
-  "atividadesLazer/getId",
+  'atividadesLazer/getId',
   async (id, thunkAPI) => {
     const token = thunkAPI.getState().auth.user.token;
     try {
@@ -152,11 +152,14 @@ export const getSingleAtividadeLazer = createAsyncThunk(
 );
 
 export const removeSingleAtividadeLazer = createAsyncThunk(
-  "atividadesLazer/delete",
-  async (id, thunkAPI) => {
+  'atividadesLazer/delete',
+  async ({ id, userId }, thunkAPI) => {
     const token = thunkAPI.getState().auth.user.token;
     try {
-      return await lazerService.removeSingleAtividadeLazer(id, token);
+      return await lazerService.removeSingleAtividadeLazer(
+        { id, userId },
+        token
+      );
     } catch (error) {
       const message =
         (error.response &&
@@ -170,7 +173,7 @@ export const removeSingleAtividadeLazer = createAsyncThunk(
 );
 
 export const lazerSlice = createSlice({
-  name: "lazerSlice",
+  name: 'lazerSlice',
   initialState,
   reducers: {
     resetRegisterLazer(state) {

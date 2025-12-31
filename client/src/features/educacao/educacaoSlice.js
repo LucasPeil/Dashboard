@@ -1,6 +1,6 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 
-import educacaoService from "./educacaoService";
+import educacaoService from './educacaoService';
 
 const initialState = {
   atividadesEducacao: [],
@@ -15,25 +15,25 @@ const initialState = {
     isSuccess: false,
     isLoading: false,
     isError: false,
-    message: "",
+    message: '',
   },
   update: {
     isSuccess: false,
     isLoading: false,
     isError: false,
-    message: "",
+    message: '',
   },
   remove: {
     isSuccess: false,
     isLoading: false,
     isError: false,
-    message: "",
+    message: '',
   },
 
-  message: "",
+  message: '',
 };
 export const getCursosQty = createAsyncThunk(
-  "atividadesEducacao/getCursosQty",
+  'atividadesEducacao/getCursosQty',
   async (id, thunkAPI) => {
     try {
       return await educacaoService.getCursosQty();
@@ -49,7 +49,7 @@ export const getCursosQty = createAsyncThunk(
   }
 );
 export const getLivrosQty = createAsyncThunk(
-  "atividadesEducacao/getLivrosQty",
+  'atividadesEducacao/getLivrosQty',
   async (id, thunkAPI) => {
     try {
       return await educacaoService.getLivrosQty();
@@ -65,7 +65,7 @@ export const getLivrosQty = createAsyncThunk(
   }
 );
 export const getAllAtividadesEducacao = createAsyncThunk(
-  "atividadesEducacao/get",
+  'atividadesEducacao/get',
   async (params, thunkAPI) => {
     const token = thunkAPI.getState().auth.user.token;
     try {
@@ -83,7 +83,7 @@ export const getAllAtividadesEducacao = createAsyncThunk(
 );
 
 export const setNewAtividadeEducacao = createAsyncThunk(
-  "atividadesEducacao/post",
+  'atividadesEducacao/post',
   async (data, thunkAPI) => {
     const token = thunkAPI.getState().auth.user.token;
     try {
@@ -101,7 +101,7 @@ export const setNewAtividadeEducacao = createAsyncThunk(
 );
 
 export const getSingleAtividadeEducacao = createAsyncThunk(
-  "atividadesEducacao/getId",
+  'atividadesEducacao/getId',
   async (id, thunkAPI) => {
     const token = thunkAPI.getState().auth.user.token;
     try {
@@ -119,11 +119,14 @@ export const getSingleAtividadeEducacao = createAsyncThunk(
 );
 
 export const removeSingleAtividadeEducacao = createAsyncThunk(
-  "atividadesEducacao/delete",
-  async (id, thunkAPI) => {
+  'atividadesEducacao/delete',
+  async ({ id, userId }, thunkAPI) => {
     const token = thunkAPI.getState().auth.user.token;
     try {
-      return await educacaoService.removeSingleAtividadeEducacao(id, token);
+      return await educacaoService.removeSingleAtividadeEducacao(
+        { id, userId },
+        token
+      );
     } catch (error) {
       const message =
         (error.response &&
@@ -137,7 +140,7 @@ export const removeSingleAtividadeEducacao = createAsyncThunk(
 );
 
 export const educacaoSlice = createSlice({
-  name: "educacaoSlice",
+  name: 'educacaoSlice',
   initialState,
   reducers: {
     resetRegisterEducacao(state) {

@@ -2,6 +2,7 @@ const AtividadesCasa = require('../models/atividadesCasaModel');
 const AtividadesLazer = require('../models/atividadesLazerModel');
 const AtividadesEducacao = require('../models/atividadesEducacaoModel');
 const asyncHandler = require('express-async-handler');
+const mongoose = require('mongoose');
 
 const getTempoGasto = asyncHandler(async (req, res) => {
   const tempoCasa = await AtividadesCasa.distinct('tempoGasto', {});
@@ -31,40 +32,66 @@ const getTempoGasto = asyncHandler(async (req, res) => {
 });
 const getDinheiroGasto = asyncHandler(async (req, res) => {
   const ano = parseInt(req.query.ano);
-  const dinheiroCasaMes = await AtividadesCasa.aggregate([
-    {
-      $match: { anoInsercao: { $eq: ano } },
-    },
-    {
-      $group: {
-        _id: { mes: '$mesInsercao' },
-        totalAmount: { $sum: '$dinheiroGasto' },
-      },
-    },
-  ]);
+  const userId = req.query.userId;
+  let dinheiroCasaMes;
+  let dinheiroLazerMes;
+  let dinheiroEducacaoMes;
+  try {
+    dinheiroCasaMes = await AtividadesCasa.aggregate([
+      {
+        $match: {
+          anoInsercao: ano,
 
-  const dinheiroEducacaoMes = await AtividadesEducacao.aggregate([
-    {
-      $match: { anoInsercao: { $eq: ano } },
-    },
-    {
-      $group: {
-        _id: { mes: '$mesInsercao' },
-        totalAmount: { $sum: '$dinheiroGasto' },
+          userId: new mongoose.Types.ObjectId(userId),
+        },
       },
-    },
-  ]);
-  const dinheiroLazerMes = await AtividadesLazer.aggregate([
-    {
-      $match: { anoInsercao: { $eq: ano } },
-    },
-    {
-      $group: {
-        _id: { mes: '$mesInsercao' },
-        totalAmount: { $sum: '$dinheiroGasto' },
+      {
+        $group: {
+          _id: { mes: '$mesInsercao' },
+          totalAmount: { $sum: '$dinheiroGasto' },
+        },
       },
-    },
-  ]);
+    ]);
+  } catch (error) {
+    console.error('Erro no aggregate:', error.message);
+  }
+  try {
+    dinheiroEducacaoMes = await AtividadesEducacao.aggregate([
+      {
+        $match: {
+          anoInsercao: ano,
+          userId: new mongoose.Types.ObjectId(userId),
+        },
+      },
+      {
+        $group: {
+          _id: { mes: '$mesInsercao' },
+          totalAmount: { $sum: '$dinheiroGasto' },
+        },
+      },
+    ]);
+  } catch (error) {
+    console.error('Erro no aggregate:', error.message);
+  }
+
+  try {
+    dinheiroLazerMes = await AtividadesLazer.aggregate([
+      {
+        $match: {
+          anoInsercao: ano,
+          userId: new mongoose.Types.ObjectId(userId),
+        },
+      },
+      {
+        $group: {
+          _id: { mes: '$mesInsercao' },
+          totalAmount: { $sum: '$dinheiroGasto' },
+        },
+      },
+    ]);
+  } catch (error) {
+    console.error('Erro no aggregate:', error.message);
+  }
 
   res
     .status(200)

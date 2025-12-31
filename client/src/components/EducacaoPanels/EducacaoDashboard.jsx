@@ -37,7 +37,7 @@ import SearchBar from '../SearchBar';
 const EducacaoDashboard = ({ open }) => {
   const dispatch = useDispatch();
   const [openSingleAtividade, setOpenSingleAtividade] = useState(false);
-
+  const user = useSelector((state) => state.auth.user);
   const handleCloseSingleAtividade = useCallback(
     () => setOpenSingleAtividade(false),
     []
@@ -111,6 +111,7 @@ const EducacaoDashboard = ({ open }) => {
         sortDirection: sortDirection,
         filter: filter,
         categorySelected: categorySelected,
+        userId: user._id,
       })
     );
   }, [
@@ -157,7 +158,12 @@ const EducacaoDashboard = ({ open }) => {
             </IconButton>
             <IconButton
               onClick={() => {
-                dispatch(removeSingleAtividadeEducacao(row._id));
+                dispatch(
+                  removeSingleAtividadeEducacao({
+                    id: row._id,
+                    userId: row?.userId,
+                  })
+                );
               }}
             >
               <DeleteTwoToneIcon color="error" />
@@ -331,6 +337,7 @@ const EducacaoDashboard = ({ open }) => {
                         sortDirection: sortDirection,
                         filter: filter,
                         categorySelected: categorySelected,
+                        userId: user._id,
                       })
                     );
                     setPage(newPage);
@@ -344,6 +351,7 @@ const EducacaoDashboard = ({ open }) => {
                         sortDirection: sortDirection,
                         filter: filter,
                         categorySelected: categorySelected,
+                        userId: user._id,
                       })
                     );
                     setLimit(newLimit);
