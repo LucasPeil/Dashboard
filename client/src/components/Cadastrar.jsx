@@ -37,7 +37,7 @@ const Cadastrar = () => {
 
   useEffect(() => {
     if (isSuccess) {
-      navigate(import.meta.env.BASE_URL);
+      navigate('/');
     }
     return () => {
       dispatch(reset());

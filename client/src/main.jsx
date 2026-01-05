@@ -60,7 +60,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
     <StyleSheetManager shouldForwardProp={(prop) => prop !== 'sortActive'}>
       <Provider store={store}>
         <ThemeProvider theme={theme}>
-          <BrowserRouter basename={import.meta.env.BASE_URL}>
+          <BrowserRouter>
             <Routes>
               <Route exact path="/login" element={<Login />} />
               <Route exact path="/cadastrar" element={<Cadastrar />} />
