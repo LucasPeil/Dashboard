@@ -34,9 +34,10 @@ const initialState = {
 };
 export const getCursosQty = createAsyncThunk(
   'atividadesEducacao/getCursosQty',
-  async (id, thunkAPI) => {
+  async (_, thunkAPI) => {
     try {
-      return await educacaoService.getCursosQty();
+      const token = thunkAPI.getState().auth.user.token;
+      return await educacaoService.getCursosQty(token);
     } catch (error) {
       const message =
         (error.response &&
@@ -50,9 +51,10 @@ export const getCursosQty = createAsyncThunk(
 );
 export const getLivrosQty = createAsyncThunk(
   'atividadesEducacao/getLivrosQty',
-  async (id, thunkAPI) => {
+  async (_, thunkAPI) => {
     try {
-      return await educacaoService.getLivrosQty();
+      const token = thunkAPI.getState().auth.user.token;
+      return await educacaoService.getLivrosQty(token);
     } catch (error) {
       const message =
         (error.response &&

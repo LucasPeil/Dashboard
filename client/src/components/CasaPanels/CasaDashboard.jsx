@@ -34,6 +34,7 @@ import FormAtividade from '../FormAtividade';
 import ProgressComponent from '../ProgressComponent';
 import SearchBar from '../SearchBar';
 import SingleAtividade from './SingleAtividade';
+import NoRecord from '../NoRecord';
 
 const CasaDashboard = ({ open, setOpen }) => {
   const [openSingleAtividade, setOpenSingleAtividade] = useState(false);
@@ -281,6 +282,7 @@ const CasaDashboard = ({ open, setOpen }) => {
                   data={atividadesCasa.documents}
                   customStyles={customStyles({ backgroundColor: '#D6E8FB' })}
                   subHeader
+                  noDataComponent={<NoRecord />}
                   subHeaderComponent={
                     <SearchBar setFilter={setFilter} filter={filter} />
                   }

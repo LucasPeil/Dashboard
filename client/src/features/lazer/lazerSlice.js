@@ -34,9 +34,10 @@ const initialState = {
 
 export const getJogosQty = createAsyncThunk(
   'atividadesLazer/getJogosQty',
-  async (id, thunkAPI) => {
+  async (_, thunkAPI) => {
+    const token = thunkAPI.getState().auth.user.token;
     try {
-      return await lazerService.getJogosQty();
+      return await lazerService.getJogosQty(token);
     } catch (error) {
       const message =
         (error.response &&
@@ -50,9 +51,10 @@ export const getJogosQty = createAsyncThunk(
 );
 export const getCulturaQty = createAsyncThunk(
   'atividadesLazer/getCulturaQty',
-  async (id, thunkAPI) => {
+  async (_, thunkAPI) => {
+    const token = thunkAPI.getState().auth.user.token;
     try {
-      return await lazerService.getCulturaQty();
+      return await lazerService.getCulturaQty(token);
     } catch (error) {
       const message =
         (error.response &&
@@ -66,9 +68,10 @@ export const getCulturaQty = createAsyncThunk(
 );
 export const getEmGrupoQty = createAsyncThunk(
   'atividadesLazer/getEmGrupoQty',
-  async (id, thunkAPI) => {
+  async (_, thunkAPI) => {
+    const token = thunkAPI.getState().auth.user.token;
     try {
-      return await lazerService.getEmGrupoQty();
+      return await lazerService.getEmGrupoQty(token);
     } catch (error) {
       const message =
         (error.response &&
@@ -82,9 +85,10 @@ export const getEmGrupoQty = createAsyncThunk(
 );
 export const getOutrosQty = createAsyncThunk(
   'atividadesLazer/getOutrosQty',
-  async (id, thunkAPI) => {
+  async (_, thunkAPI) => {
+    const token = thunkAPI.getState().auth.user.token;
     try {
-      return await lazerService.getOutrosQty();
+      return await lazerService.getOutrosQty(token);
     } catch (error) {
       const message =
         (error.response &&

@@ -8,6 +8,7 @@ const getAllAtividadesLazer = asyncHandler(async (req, res) => {
 const getJogosQty = asyncHandler(async (req, res) => {
   const qty = await AtividadesLazer.countDocuments({
     categoria: 'Jogos',
+    userId: req.user.id,
   }).exec();
 
   if (typeof qty === 'number') {
@@ -20,6 +21,7 @@ const getJogosQty = asyncHandler(async (req, res) => {
 const getCulturaQty = asyncHandler(async (req, res) => {
   const qty = await AtividadesLazer.countDocuments({
     categoria: 'Cultura',
+    userId: req.user.id,
   }).exec();
   if (typeof qty === 'number') {
     res.status(200).json({ culturaQuantidade: qty });
@@ -31,6 +33,7 @@ const getCulturaQty = asyncHandler(async (req, res) => {
 const getEmGrupoQty = asyncHandler(async (req, res) => {
   const qty = await AtividadesLazer.countDocuments({
     categoria: 'Em grupo',
+    userId: req.user.id,
   }).exec();
 
   if (typeof qty === 'number') {
@@ -43,6 +46,7 @@ const getEmGrupoQty = asyncHandler(async (req, res) => {
 const getOutrosQty = asyncHandler(async (req, res) => {
   const qty = await AtividadesLazer.countDocuments({
     categoria: 'Outros',
+    userId: req.user.id,
   }).exec();
 
   if (typeof qty === 'number') {

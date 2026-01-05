@@ -37,6 +37,7 @@ import FormAtividade from '../FormAtividade';
 import SingleAtividade from '../CasaPanels/SingleAtividade';
 import DashboardsHeaders from '../DashboardsHeaders';
 import ProgressComponent from '../ProgressComponent';
+import NoRecord from '../NoRecord';
 
 const LazerDashboard = ({ open }) => {
   const dispatch = useDispatch();
@@ -340,6 +341,7 @@ const LazerDashboard = ({ open }) => {
                   })}
                   highlightOnHover
                   subHeader
+                  noDataComponent={<NoRecord />}
                   subHeaderComponent={
                     <SearchBar setFilter={setFilter} filter={filter} />
                   }

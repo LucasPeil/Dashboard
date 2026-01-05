@@ -29,9 +29,9 @@ router
     paginationHandler(AtividadesCasa, filter(arrSearch)),
     getAllAtividadesCasa
   );
-router.route('/quantidadeCompras').get(getComprasQty);
-router.route('/quantidadeLimpeza').get(getLimpezaQty);
-router.route('/quantidadeRefeicoes').get(getRefeicoesQty);
+router.route('/quantidadeCompras').get(protect, getComprasQty);
+router.route('/quantidadeLimpeza').get(protect, getLimpezaQty);
+router.route('/quantidadeRefeicoes').get(protect, getRefeicoesQty);
 router
   .route('/:id')
   .get(protect, authorization, getSingleAtividade)

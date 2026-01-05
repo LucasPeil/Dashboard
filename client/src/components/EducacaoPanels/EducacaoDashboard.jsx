@@ -33,6 +33,7 @@ import DashboardsHeaders from '../DashboardsHeaders';
 import FormAtividade from '../FormAtividade';
 import ProgressComponent from '../ProgressComponent';
 import SearchBar from '../SearchBar';
+import NoRecord from '../NoRecord';
 
 const EducacaoDashboard = ({ open }) => {
   const dispatch = useDispatch();
@@ -306,6 +307,7 @@ const EducacaoDashboard = ({ open }) => {
                   })}
                   highlightOnHover
                   subHeader
+                  noDataComponent={<NoRecord />}
                   subHeaderComponent={
                     <SearchBar setFilter={setFilter} filter={filter} />
                   }

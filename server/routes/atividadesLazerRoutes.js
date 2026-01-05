@@ -30,10 +30,10 @@ router
     getAllAtividadesLazer
   )
   .post(protect, authorization, setNewAtividadeLazer);
-router.route('/quantidadeJogos').get(getJogosQty);
-router.route('/quantidadeCultura').get(getCulturaQty);
-router.route('/quantidadeEmGrupo').get(getEmGrupoQty);
-router.route('/quantidadeOutros').get(getOutrosQty);
+router.route('/quantidadeJogos').get(protect, getJogosQty);
+router.route('/quantidadeCultura').get(protect, getCulturaQty);
+router.route('/quantidadeEmGrupo').get(protect, getEmGrupoQty);
+router.route('/quantidadeOutros').get(protect, getOutrosQty);
 router
   .route('/:id')
   .get(protect, authorization, getSingleAtividadeLazer)

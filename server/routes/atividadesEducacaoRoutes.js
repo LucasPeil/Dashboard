@@ -29,8 +29,8 @@ router
     getAllAtividadesEducacao
   )
   .post(protect, authorization, setNewAtividadeEducacao);
-router.route('/quantidadeCursos').get(getCursosQty);
-router.route('/quantidadeLivros').get(getLivrosQty);
+router.route('/quantidadeCursos').get(protect, getCursosQty);
+router.route('/quantidadeLivros').get(protect, getLivrosQty);
 
 router
   .route('/:id')

@@ -23,19 +23,19 @@ const setNewAtividadeCasa = async (data, token) => {
 
   return response.data;
 };
-const getComprasQty = async () => {
-  const config = {};
-  const response = await axios.get(API_URL + `/quantidadeCompras`);
+const getComprasQty = async (token) => {
+  const config = { headers: { Authorization: `Bearer ${token}` } };
+  const response = await axios.get(API_URL + `/quantidadeCompras`, config);
   return response.data;
 };
-const getLimpezaQty = async () => {
-  const config = {};
-  const response = await axios.get(API_URL + `/quantidadeLimpeza`);
+const getLimpezaQty = async (token) => {
+  const config = { headers: { Authorization: `Bearer ${token}` } };
+  const response = await axios.get(API_URL + `/quantidadeLimpeza`, config);
   return response.data;
 };
-const getRefeicoesQty = async () => {
-  const config = {};
-  const response = await axios.get(API_URL + `/quantidadeRefeicoes`);
+const getRefeicoesQty = async (token) => {
+  const config = { headers: { Authorization: `Bearer ${token}` } };
+  const response = await axios.get(API_URL + `/quantidadeRefeicoes`, config);
   return response.data;
 };
 

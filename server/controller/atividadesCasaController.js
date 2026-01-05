@@ -7,6 +7,7 @@ const getAllAtividadesCasa = asyncHandler(async (req, res) => {
 const getComprasQty = asyncHandler(async (req, res) => {
   const qty = await AtividadesCasa.countDocuments({
     categoria: 'Compras',
+    userId: req.user._id,
   }).exec();
 
   if (typeof qty === 'number') {
@@ -19,7 +20,9 @@ const getComprasQty = asyncHandler(async (req, res) => {
 const getLimpezaQty = asyncHandler(async (req, res) => {
   const qty = await AtividadesCasa.countDocuments({
     categoria: 'Limpeza',
+    userId: req.user._id,
   }).exec();
+
   if (typeof qty === 'number') {
     res.status(200).json({ limpezaQuantidade: qty });
   } else {
@@ -30,6 +33,7 @@ const getLimpezaQty = asyncHandler(async (req, res) => {
 const getRefeicoesQty = asyncHandler(async (req, res) => {
   const qty = await AtividadesCasa.countDocuments({
     categoria: 'Refeições',
+    userId: req.user._id,
   }).exec();
   if (typeof qty === 'number') {
     res.status(200).json({ refeicoesQuantidade: qty });
