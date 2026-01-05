@@ -42,14 +42,14 @@ const removeSingleAtividadeEducacao = async ({ id, userId }, token) => {
   const response = await axios.delete(API_URL + `/${id}`, config);
   return response.data;
 };
-const getCursosQty = async () => {
-  const config = {};
-  const response = await axios.get(API_URL + `/quantidadeCursos`);
+const getCursosQty = async (token) => {
+  const config = { headers: { Authorization: `Bearer ${token}` } };
+  const response = await axios.get(API_URL + `/quantidadeCursos`, config);
   return response.data;
 };
-const getLivrosQty = async () => {
-  const config = {};
-  const response = await axios.get(API_URL + `/quantidadeLivros`);
+const getLivrosQty = async (token) => {
+  const config = { headers: { Authorization: `Bearer ${token}` } };
+  const response = await axios.get(API_URL + `/quantidadeLivros`, config);
   return response.data;
 };
 

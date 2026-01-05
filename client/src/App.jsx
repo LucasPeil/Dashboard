@@ -29,9 +29,6 @@ function App() {
           path="/"
           element={<VisaoGeralDashboard open={open} setOpen={setOpen} />}
         />
-
-        {/*  <Route path="/" element={<Navigate to="/visao-geral" replace />} /> */}
-
         <Route path="/educacao" element={<EducacaoDashboard open={open} />} />
         <Route path="/casa" element={<CasaDashboard open={open} />} />
         <Route path="/lazer" element={<LazerDashboard open={open} />} />

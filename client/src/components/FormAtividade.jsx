@@ -14,6 +14,7 @@ import {
   MenuItem,
   FormControl,
   Select,
+  FormHelperText,
 } from '@mui/material';
 import { closeModalCasa } from '../features/casa/casaSlice';
 import { useState, memo } from 'react';
@@ -66,6 +67,11 @@ const FormAtividade = memo(function FormAtividade({
       .trim()
       .required('Nome da Atividade é obrigatório'),
     categoria: Yup.string().trim().required('Categoria é obrigatório'),
+    dinheiroGasto: Yup.number()
+      .required('Dinheiro gasto para exercer a atividade é obrigatório')
+      .positive()
+      .integer()
+      .min(1),
     tempoGasto: Yup.number()
       .required('Tempo gasto para exercer a atividade é obrigatório')
       .positive()
@@ -101,7 +107,7 @@ const FormAtividade = memo(function FormAtividade({
       anoInsercao: 1900,
       userId: data?.userId || '',
     },
-    //validationSchema: ValidationSchema,
+    validationSchema: ValidationSchema,
     onSubmit: (values) => {
       values.mesInsercao = months[new Date().getMonth()];
       values.anoInsercao = new Date().getFullYear();
@@ -147,6 +153,12 @@ const FormAtividade = memo(function FormAtividade({
               label="Nome da atividade"
               variant="standard"
               fullWidth
+              error={Boolean(
+                formik.touched.nomeAtividade && formik.errors.nomeAtividade
+              )}
+              helperText={
+                formik.touched.nomeAtividade && formik.errors.nomeAtividade
+              }
             />
             <FormControl fullWidth style={{ marginTop: 30, marginBottom: 10 }}>
               <InputLabel id="categoria" sx={{}}>
@@ -159,6 +171,9 @@ const FormAtividade = memo(function FormAtividade({
                 id="categoria"
                 label="Categoria"
                 variant="standard"
+                error={Boolean(
+                  formik.touched.categoria && formik.errors.categoria
+                )}
               >
                 {categoriaItens.map((category, idx) => (
                   <MenuItem key={idx} value={category}>
@@ -166,6 +181,9 @@ const FormAtividade = memo(function FormAtividade({
                   </MenuItem>
                 ))}
               </Field>
+              <FormHelperText sx={{ color: '#FF0000' }}>
+                {formik.touched.categoria && formik.errors.categoria}
+              </FormHelperText>
             </FormControl>
 
             <Field
@@ -179,9 +197,17 @@ const FormAtividade = memo(function FormAtividade({
               variant="filled"
               fullWidth
               style={{ marginTop: 30, marginBottom: 30 }}
+              error={Boolean(
+                formik.touched.descricaoAtividade &&
+                  formik.errors.descricaoAtividade
+              )}
+              helperText={
+                formik.touched.descricaoAtividade &&
+                formik.errors.descricaoAtividade
+              }
             />
 
-            {card == 'Educação' && (
+            {/* {card == 'Educação' && (
               <FormControl
                 fullWidth
                 style={{ marginTop: 30, marginBottom: 10 }}
@@ -194,13 +220,21 @@ const FormAtividade = memo(function FormAtividade({
                   id="categoria"
                   label="Categoria"
                   variant="standard"
+                  error={Boolean(
+                    formik.touched.nivelImportancia &&
+                      formik.errors.nivelImportancia
+                  )}
+                  helperText={
+                    formik.touched.nivelImportancia &&
+                    formik.errors.nivelImportancia
+                  }
                 >
                   <MenuItem value="Baixa">Baixa</MenuItem>
                   <MenuItem value="Média">Média</MenuItem>
                   <MenuItem value="Alta">Alta</MenuItem>
                 </Field>
               </FormControl>
-            )}
+            )} */}
 
             <Field
               {...formik.getFieldProps('dinheiroGasto')}
@@ -215,8 +249,15 @@ const FormAtividade = memo(function FormAtividade({
               label="Dinheiro gasto nesta tarefa"
               variant="standard"
               fullWidth
-              helperText="* Em Reais"
               style={{ marginTop: 30, marginBottom: 10 }}
+              error={Boolean(
+                formik.touched.dinheiroGasto && formik.errors.dinheiroGasto
+              )}
+              helperText={
+                formik.touched.dinheiroGasto && formik.errors.dinheiroGasto
+                  ? formik.errors.dinheiroGasto
+                  : '* Em Reais'
+              }
             />
             <Field
               {...formik.getFieldProps('tempoGasto')}
@@ -226,8 +267,15 @@ const FormAtividade = memo(function FormAtividade({
               label="Tempo a ser dedicado a esta tarefa"
               variant="standard"
               fullWidth
-              helperText="* Em minutos"
               style={{ marginTop: 30, marginBottom: 30 }}
+              error={Boolean(
+                formik.touched.tempoGasto && formik.errors.tempoGasto
+              )}
+              helperText={
+                formik.touched.tempoGasto && formik.errors.tempoGasto
+                  ? formik.errors.tempoGasto
+                  : '* Em minutos'
+              }
             />
 
             <DialogActions

@@ -44,6 +44,7 @@ const getSingleAtividadeEducacao = asyncHandler(async (req, res) => {
 
 const setNewAtividadeEducacao = asyncHandler(async (req, res) => {
   const data = JSON.parse(req.body.data);
+  const userId = req.user._id;
   let atividadeEducacao;
   let message;
   if (data._id) {
@@ -53,7 +54,7 @@ const setNewAtividadeEducacao = asyncHandler(async (req, res) => {
     message = 'Aividade atualizada com sucesso.';
   } else {
     delete data._id;
-    atividadeEducacao = new AtividadesEducacao(data);
+    atividadeEducacao = new AtividadesEducacao({ ...data, userId });
     atividadeEducacao = await atividadeEducacao.save();
     message = 'Aividade registrada com sucesso.';
   }

@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
 const atividadesLazerSchema = new mongoose.Schema({
   nomeAtividade: {
@@ -29,6 +29,11 @@ const atividadesLazerSchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
+  userId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true,
+  },
 });
 
-module.exports = mongoose.model("AtividadesLazer", atividadesLazerSchema);
+module.exports = mongoose.model('AtividadesLazer', atividadesLazerSchema);

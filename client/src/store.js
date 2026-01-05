@@ -1,11 +1,11 @@
-import { configureStore } from "@reduxjs/toolkit";
+import { configureStore } from '@reduxjs/toolkit';
 
-import casaReducer from "./features/casa/casaSlice";
-import lazerReducer from "./features/lazer/lazerSlice";
-import educacaoReducer from "./features/educacao/educacaoSlice";
-import dinheiroGastoReducer from "./features/visaoGeral/visaoGeralSlice";
-import authReducer from "./features/auth/authSlice";
-import axios from "axios";
+import casaReducer from './features/casa/casaSlice';
+import lazerReducer from './features/lazer/lazerSlice';
+import educacaoReducer from './features/educacao/educacaoSlice';
+import dinheiroGastoReducer from './features/visaoGeral/visaoGeralSlice';
+import authReducer from './features/auth/authSlice';
+import axios from 'axios';
 const store = configureStore({
   reducer: {
     atividadesCasa: casaReducer,
@@ -17,14 +17,14 @@ const store = configureStore({
 });
 
 axios.interceptors.response.use(
-    response => response,
-    error => {
-        if(error.response.status === 401){
-           localStorage.removeItem("user")
-           window.location.href = import.meta.env.BASE_URL + '/login'
-        }else{
-            return Promise.reject(error);
-        }
+  (response) => response,
+  (error) => {
+    if (error.response.status === 401) {
+      localStorage.removeItem('user');
+      window.location.href = '/login';
+    } else {
+      return Promise.reject(error);
     }
-    )
+  }
+);
 export default store;

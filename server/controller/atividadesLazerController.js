@@ -70,6 +70,7 @@ const getSingleAtividadeLazer = asyncHandler(async (req, res) => {
 
 const setNewAtividadeLazer = asyncHandler(async (req, res) => {
   const data = JSON.parse(req.body.data);
+  const userId = req.user._id;
   let atividadeLazer;
   let message;
 
@@ -80,12 +81,11 @@ const setNewAtividadeLazer = asyncHandler(async (req, res) => {
     message = 'Aividade atualizada com sucesso.';
   } else {
     delete data._id;
-
-    atividadeLazer = new AtividadesLazer(data);
+    atividadeLazer = new AtividadesLazer({ ...data, userId: userId });
     atividadeLazer = await atividadeLazer.save();
     message = 'Aividade registrada com sucesso.';
   }
-
+  console.log(atividadeLazer);
   if (atividadeLazer) {
     res.status(201).json({ atividadeLazer, message });
   } else {

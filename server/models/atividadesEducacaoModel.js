@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
 const atividadesEducacaoSchema = new mongoose.Schema({
   nomeAtividade: {
@@ -19,7 +19,7 @@ const atividadesEducacaoSchema = new mongoose.Schema({
   },
   nivelImportancia: {
     type: String,
-    required: true,
+    required: false,
   },
   categoria: {
     type: String,
@@ -33,6 +33,11 @@ const atividadesEducacaoSchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
+  userId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true,
+  },
 });
 
-module.exports = mongoose.model("AtividadesEducacao", atividadesEducacaoSchema);
+module.exports = mongoose.model('AtividadesEducacao', atividadesEducacaoSchema);
