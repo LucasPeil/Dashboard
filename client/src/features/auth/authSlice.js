@@ -1,20 +1,19 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 
-import authService from "./authService";
+import authService from './authService';
 
-const user = JSON.parse(localStorage.getItem("user"));
+const user = JSON.parse(localStorage.getItem('user'));
 
 const initialState = {
   user: user ? user : null,
   isLoading: false,
   isSuccess: false,
   isError: false,
-  message: "",
+  message: '',
 };
 
-export const login = createAsyncThunk("auth/login", async (user, thunkAPI) => {
+export const login = createAsyncThunk('auth/login', async (user, thunkAPI) => {
   try {
-  
     return await authService.login(user);
   } catch (error) {
     const message =
@@ -25,7 +24,7 @@ export const login = createAsyncThunk("auth/login", async (user, thunkAPI) => {
   }
 });
 export const cadastrar = createAsyncThunk(
-  "auth/cadastrar",
+  'auth/cadastrar',
   async (userData, thunkAPI) => {
     try {
       return await authService.cadastrarUser(userData);
@@ -41,12 +40,12 @@ export const cadastrar = createAsyncThunk(
   }
 );
 
-export const logout = createAsyncThunk("auth/logout", async () => {
+export const logout = createAsyncThunk('auth/logout', async () => {
   return await authService.logout();
 });
 
 export const resetPassword = createAsyncThunk(
-  "auth/resetPassword",
+  'auth/resetPassword',
   async (newPassword, thunkAPI) => {
     try {
       const token = thunkAPI.getState().auth.user.token;
@@ -64,14 +63,14 @@ export const resetPassword = createAsyncThunk(
 );
 
 export const authSlice = createSlice({
-  name: "auth",
+  name: 'auth',
   initialState,
   reducers: {
     reset: (state) => {
       state.isLoading = false;
       state.isSuccess = false;
       state.isError = false;
-      state.message = "";
+      state.message = '';
     },
   },
   extraReducers: (builder) => {
@@ -82,14 +81,13 @@ export const authSlice = createSlice({
       .addCase(login.fulfilled, (state, action) => {
         state.isLoading = false;
         state.isSuccess = true;
-
         state.user = action.payload;
       })
       .addCase(login.rejected, (state, action) => {
         state.isLoading = false;
         state.isSuccess = false;
         state.isError = true;
-       
+
         state.message = action.payload;
       })
       .addCase(cadastrar.pending, (state) => {
@@ -98,7 +96,7 @@ export const authSlice = createSlice({
       .addCase(cadastrar.fulfilled, (state, action) => {
         state.isLoading = false;
         state.isSuccess = true;
-        state.user = action.payload.user;
+        state.user = action.payload;
       })
       .addCase(cadastrar.rejected, (state, action) => {
         state.isLoading = false;

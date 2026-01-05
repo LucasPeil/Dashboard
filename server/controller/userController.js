@@ -19,14 +19,20 @@ const createUser = asyncHandler(async (req, res) => {
   }
   const hashedPassword = await createNewPassword(password);
 
-  const user = await User.create({
+  let user = await User.create({
     username: username,
     email: email,
     password: hashedPassword,
   });
+  let token = generateToken(user._id);
 
   if (user) {
-    res.status(200).json({ user, message: 'usuário criado com sucesso!' });
+    res.status(200).json({
+      _id: user._id,
+      email: user.email,
+      token: token,
+      resetPassword: user.resetPassword,
+    });
   } else {
     res.status(404);
     throw new Error('Dados inválidos');
