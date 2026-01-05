@@ -14,6 +14,8 @@ app.use(
     origin: [
       'http://localhost:5173', // Porta padrão do Vite
       'http://127.0.0.1:5173',
+      'https://dashboard-gamma-jade.vercel.app',
+      'https://dashboard-lucaspeils-projects.vercel.app',
     ],
     credentials: true,
   })
