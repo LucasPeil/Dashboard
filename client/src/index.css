@@ -134,54 +134,17 @@ position: relative;
 .title{
     transition: color 0.3s ease-in-out 0.1s;
 }
-.modal-atividade-content{
 
-}
-
-
-
-
-
-/* .category-banner::before, .category-banner-casa::before, .category-banner-educacao::before{
-    content: "";
-    background-color: var(--banner-color);
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    position: absolute;
-    top: 0.4rem;
-    left: -0.65rem;
-    width: 10rem;
-    height: 2rem;
-    z-index: 1;
-    border-top-right-radius: 2rem;
-    border-bottom-right-radius: 2rem; 
-
-    
-}
-
-.category-banner::after, .category-banner-casa::after, .category-banner-educacao::after{
-    content: "";
-    width: 1.8rem;
-    height: 1.8rem;
-    position: absolute;
-    top: 1.5rem;
-    left: -0.25rem;
-    transform: rotate(45deg);
-     z-index: -1; 
-    background-color: rgb(230, 170, 106);
-}
-.category-banner-casa::after{
-    background-color: #000000;
-  
-}
-.category-banner-educacao::after{
-    background-color: #345734;
-}
- */
-/* .table{
-    border:"1px solid red";
-    height:30vh;
-    overflow: auto;
+/* @media (min-width: 880px) and (max-width: 1150px) {
+    .category-banner-lazer, .category-banner-casa, .category-banner-educacao{
+        width: 35rem;
+    }
+    .category-qty, .title{
+       color: white;
+    }
+} */
+/* @media (min-width: 880px) and (max-width: 1150px) {
+    .category-banner-lazer, .category-banner-casa, .category-banner-educacao{
+        width: 25rem;
+    }
 } */

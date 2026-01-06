@@ -1,4 +1,4 @@
-import { Paper, Typography, Box } from '@mui/material';
+import { Paper, Typography, Box, useMediaQuery } from '@mui/material';
 import React, { useMemo } from 'react';
 import { useTheme } from '@emotion/react';
 
@@ -29,13 +29,13 @@ const CategoryCards = React.memo(
               },
             '.title': { color: 'white' },
             '.description': { color: 'white' },
-            '.category-description': { color: 'white' },
+            '.category-qty': { color: 'white' },
           }
         : {};
 
       const baseStyle = {
         display: 'flex',
-        width: '22rem',
+        width: { xs: '100%', sm: '18rem', md: '22rem' },
         minHeight: '9.5rem',
         borderRadius: '0.6rem',
         position: 'relative',
@@ -52,12 +52,12 @@ const CategoryCards = React.memo(
             },
           '.title': { color: 'white' },
           '.description': { color: 'white' },
-          '.category-description': { color: 'white' },
+          '.category-qty': { color: 'white' },
         },
       };
 
       return { ...baseStyle, ...activeStyle };
-    }, [isSelected]); // Recalcula apenas se o status de seleção mudar
+    }, [isSelected]);
     const handleClick = () => {
       onSelect(idx, title);
     };
@@ -66,7 +66,7 @@ const CategoryCards = React.memo(
       <Paper
         style={{ '--banner-color': bgcolor }}
         elevation={5}
-        onClick={handleClick} // Executa a função passada pelo pai
+        onClick={handleClick}
         sx={styles}
       >
         <Box className={classLabel}></Box>
@@ -76,7 +76,7 @@ const CategoryCards = React.memo(
             sx={{
               position: 'absolute',
               zIndex: 1,
-              top: '0.7rem',
+              top: '0.3rem',
               color: 'white',
             }}
           >
@@ -89,6 +89,7 @@ const CategoryCards = React.memo(
             display: 'flex',
             flexDirection: 'column',
             justifyContent: 'center',
+
             pl: 1,
             mt: 1,
           }}
@@ -100,7 +101,7 @@ const CategoryCards = React.memo(
               fontSize: '1.5rem',
               width: '100%',
               textAlign: 'center',
-              mb: 1,
+              mb: { xs: 2, lg: 3 },
               zIndex: 1,
             }}
           >
@@ -110,7 +111,6 @@ const CategoryCards = React.memo(
             className="description"
             variant="caption"
             sx={{
-              fontSize: 'rem',
               width: '100%',
               textAlign: 'center',
               zIndex: 1,
@@ -119,9 +119,8 @@ const CategoryCards = React.memo(
             {description}
           </Typography>
           <Typography
-            className="category-description"
+            className="category-qty"
             variant="caption"
-            color={'text.secondary'}
             sx={{
               position: 'absolute',
               top: '0.5rem',

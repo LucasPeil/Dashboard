@@ -56,7 +56,7 @@ const CasaDashboard = ({ open, setOpen }) => {
   const [filter, setFilter] = useState('');
 
   const theme = useTheme();
-  const downLg = useMediaQuery(theme.breakpoints.down('lg'));
+  const downMd = useMediaQuery(theme.breakpoints.down('md'));
 
   // Estado dos Cards
   const [categoryCardSelected, setCategoryCardSelected] = useState([
@@ -204,12 +204,12 @@ const CasaDashboard = ({ open, setOpen }) => {
           <Paper
             elevation={6}
             sx={{
-              px: 2,
               boxSizing: 'border-box',
               width: 'calc(100% - 4rem)',
               margin: '2rem auto',
               minHeight: '90vh',
               position: 'relative',
+              px: 2,
             }}
           >
             <DashboardsHeaders
@@ -219,15 +219,18 @@ const CasaDashboard = ({ open, setOpen }) => {
             />
 
             <Stack
-              direction={downLg ? 'column' : 'row'}
-              spacing={10}
+              direction={downMd ? 'column' : 'row'}
+              spacing={downMd ? 2 : 5}
               sx={{
+                justifyContent: 'start',
+                alignItems: `${downMd ? 'center' : 'start'}`,
                 mt: 7,
                 mb: 2,
-                mx: 2,
                 position: 'relative',
                 zIndex: 10,
-                width: '70%',
+                width: '100%',
+                px: 2,
+                boxSizing: 'border-box',
               }}
             >
               <CategoryCards

@@ -40,7 +40,11 @@ const DashboardsHeaders = memo(function DashboardsHeaders({
       >
         <Typography
           component="h2"
-          sx={{ fontWeight: 600, color: '#D8D8D8', fontSize: '2.4rem' }}
+          sx={{
+            fontWeight: 600,
+            color: '#D8D8D8',
+            fontSize: { xs: '1.8rem', sm: '2.1rem', md: '2.4rem' },
+          }}
         >
           {title}
         </Typography>
@@ -76,8 +80,8 @@ const DashboardsHeaders = memo(function DashboardsHeaders({
             onClick={cleanFilters}
             sx={{
               position: 'absolute',
-              bottom: '-6rem',
-              right: 0,
+              bottom: '-3rem',
+              left: 0,
               '&:hover': {
                 backgroundColor: 'transparent',
               },

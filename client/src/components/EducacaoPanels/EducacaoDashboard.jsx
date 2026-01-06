@@ -196,16 +196,13 @@ const EducacaoDashboard = ({ open }) => {
           data={selectedRow}
         />
 
-        {/* MODAL SINGLE ATIVIDADE */}
-        {openSingleAtividade && (
-          <SingleAtividade
-            rowData={selectedRow}
-            openSingleAtividade={openSingleAtividade}
-            handleCloseSingleAtividade={handleCloseSingleAtividade}
-            iconColor={'#1D791D'}
-            isAtividadeEducacao={true}
-          />
-        )}
+        <SingleAtividade
+          rowData={selectedRow}
+          openSingleAtividade={openSingleAtividade}
+          handleCloseSingleAtividade={handleCloseSingleAtividade}
+          iconColor={'#1D791D'}
+          isAtividadeEducacao={true}
+        />
 
         <Box
           sx={{
@@ -233,14 +230,17 @@ const EducacaoDashboard = ({ open }) => {
 
             <Stack
               direction={downMd ? 'column' : 'row'}
-              spacing={10}
+              spacing={downMd ? 2 : 5}
               sx={{
+                justifyContent: 'start',
+                alignItems: `${downMd ? 'center' : 'start'}`,
                 mt: 7,
                 mb: 2,
-                mx: 2,
                 position: 'relative',
                 zIndex: 10,
-                width: '50%',
+                width: '100%',
+                px: 2,
+                boxSizing: 'border-box',
               }}
             >
               <CategoryCards

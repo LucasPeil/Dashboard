@@ -65,6 +65,7 @@ const LazerDashboard = ({ open }) => {
 
   const theme = useTheme();
   const downMd = useMediaQuery(theme.breakpoints.down('md'));
+  const downLg = useMediaQuery(theme.breakpoints.down('lg'));
 
   const {
     atividadesLazer,
@@ -209,15 +210,13 @@ const LazerDashboard = ({ open }) => {
           data={selectedRow}
         />
 
-        {/* MODAL SINGLE ATIVIDADE */}
-        {openSingleAtividade && (
-          <SingleAtividade
-            rowData={selectedRow}
-            openSingleAtividade={openSingleAtividade}
-            handleCloseSingleAtividade={handleCloseSingleAtividade}
-            iconColor={'#D67F20'}
-          />
-        )}
+        <SingleAtividade
+          rowData={selectedRow}
+          openSingleAtividade={openSingleAtividade}
+          handleCloseSingleAtividade={handleCloseSingleAtividade}
+          iconColor={'#D67F20'}
+        />
+
         <Box
           sx={{
             transition: 'all 0.5s ease',
@@ -243,14 +242,18 @@ const LazerDashboard = ({ open }) => {
             />
 
             <Stack
-              direction={downMd ? 'column' : 'row'}
-              spacing={10}
+              direction={downLg ? 'column' : 'row'}
+              spacing={downLg ? 2 : 3}
               sx={{
+                justifyContent: `${downLg ? 'center' : 'start'}`,
+                alignItems: `${downLg ? 'center' : 'start'}`,
                 mt: 7,
                 mb: 2,
-                mx: 2,
                 position: 'relative',
                 zIndex: 10,
+                width: '100%',
+                px: 2,
+                boxSizing: 'border-box',
               }}
             >
               <CategoryCards
