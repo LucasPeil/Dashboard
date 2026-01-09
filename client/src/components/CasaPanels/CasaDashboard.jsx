@@ -12,11 +12,13 @@ import {
   Stack,
   useMediaQuery,
 } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import DataTable from 'react-data-table-component';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify'; // Import movido para cima
 import MotionDiv from '../../MotionDiv';
+import { Outlet } from 'react-router-dom';
 import {
   getAllAtividadesCasa,
   getComprasQty,
@@ -30,13 +32,14 @@ import {
 import { customStyles } from '../../styles/stylesConst';
 import CategoryCards from '../CategoryCards';
 import DashboardsHeaders from '../DashboardsHeaders';
-import FormAtividade from '../FormAtividade';
+
 import ProgressComponent from '../ProgressComponent';
 import SearchBar from '../SearchBar';
 import SingleAtividade from './SingleAtividade';
 import NoRecord from '../NoRecord';
+import DashboardContainer from '../Container';
 
-const CasaDashboard = ({ open, setOpen }) => {
+const CasaDashboard = () => {
   const [openSingleAtividade, setOpenSingleAtividade] = useState(false);
   const user = useSelector((state) => state.auth.user);
   // Callbacks simples
@@ -107,6 +110,7 @@ const CasaDashboard = ({ open, setOpen }) => {
     };
   }, [register, remove, dispatch]);
 
+  const navigate = useNavigate();
   const tableColumns = useMemo(
     () => [
       {
@@ -128,8 +132,7 @@ const CasaDashboard = ({ open, setOpen }) => {
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
             <IconButton
               onClick={() => {
-                setSelectedRow(row);
-                dispatch(setOpenModalCasa());
+                navigate(`/casa/nova-atividade/casa/${row._id}`);
               }}
             >
               <EditTwoToneIcon color="success" />
@@ -174,170 +177,136 @@ const CasaDashboard = ({ open, setOpen }) => {
   ]);
   // Adicionei prop e sortDirection nas dependências se eles afetam o fetch
 
-  const categoriaItens = useMemo(() => ['Compras', 'Limpeza', 'Refeições'], []);
-
   return (
     <MotionDiv>
-      <Box sx={{ display: 'flex', justifyContent: 'end' }}>
-        <FormAtividade
-          title={'Nova Atividade Doméstica'}
-          btnColor="#0c264e"
-          btnHoverColor="#031426"
-          categoriaItens={categoriaItens}
-          card={'Casa'}
-          data={selectedRow}
+      <Outlet />
+      <SingleAtividade
+        rowData={selectedRow}
+        openSingleAtividade={openSingleAtividade}
+        handleCloseSingleAtividade={handleCloseSingleAtividade}
+        iconColor={'#0a1e73'}
+      />
+      <DashboardContainer>
+        <DashboardsHeaders
+          cleanFilters={cleanFilters}
+          categorySelected={categorySelected}
+          title={'DETALHES SOBRE AS ATIVIDADES DOMÉSTICAS'}
         />
 
-        <SingleAtividade
-          rowData={selectedRow}
-          openSingleAtividade={openSingleAtividade}
-          handleCloseSingleAtividade={handleCloseSingleAtividade}
-          iconColor={'#0a1e73'}
-        />
-
-        <Box
+        <Stack
+          direction={downMd ? 'column' : 'row'}
+          spacing={downMd ? 2 : 5}
           sx={{
-            transition: 'all 0.5s ease',
-            width: open ? 'calc(100% - 14rem)' : 'calc(100% - 6rem)',
+            justifyContent: 'start',
+            alignItems: `${downMd ? 'center' : 'start'}`,
+            mt: 7,
+            mb: 2,
+            position: 'relative',
+            zIndex: 10,
+            width: '100%',
+            px: 2,
+            boxSizing: 'border-box',
           }}
         >
-          <Paper
-            elevation={6}
-            sx={{
-              boxSizing: 'border-box',
-              width: 'calc(100% - 4rem)',
-              margin: '2rem auto',
-              minHeight: '90vh',
-              position: 'relative',
-              px: 2,
-            }}
-          >
-            <DashboardsHeaders
-              cleanFilters={cleanFilters}
-              categorySelected={categorySelected}
-              title={'DETALHES SOBRE AS ATIVIDADES DOMÉSTICAS'}
-            />
+          <CategoryCards
+            idx={0}
+            title="Compras"
+            description={'Veja as atividades relacionadas às compras do mês...'}
+            classLabel="category-banner-casa"
+            bgcolor={'#0c264e'}
+            Icon={ShoppingBasketOutlinedIcon}
+            qty={quantidadeCompras}
+            // Novas Props Otimizadas
+            isSelected={categoryCardSelected[0]}
+            onSelect={handleCardClick}
+          />
 
-            <Stack
-              direction={downMd ? 'column' : 'row'}
-              spacing={downMd ? 2 : 5}
-              sx={{
-                justifyContent: 'start',
-                alignItems: `${downMd ? 'center' : 'start'}`,
-                mt: 7,
-                mb: 2,
-                position: 'relative',
-                zIndex: 10,
-                width: '100%',
-                px: 2,
-                boxSizing: 'border-box',
+          <CategoryCards
+            idx={1}
+            title="Limpeza"
+            description={
+              'Veja as atividades relacionadas a limpeza do seu lar...'
+            }
+            classLabel="category-banner-casa"
+            bgcolor={'#0c264e'}
+            Icon={LocalLaundryServiceOutlinedIcon}
+            qty={quantidadeLimpeza}
+            isSelected={categoryCardSelected[1]}
+            onSelect={handleCardClick}
+          />
+
+          <CategoryCards
+            idx={2}
+            title="Refeições"
+            description={'Veja as atividades relacionadas a sua alimentação...'}
+            classLabel="category-banner-casa"
+            bgcolor={'#0c264e'}
+            Icon={RamenDiningOutlinedIcon}
+            qty={quantidadeRefeicoes}
+            isSelected={categoryCardSelected[2]}
+            onSelect={handleCardClick}
+          />
+        </Stack>
+
+        <Grid container>
+          <Grid item xs={12} sx={{ position: 'relative', px: 2 }}>
+            <DataTable
+              className="table"
+              columns={tableColumns}
+              data={atividadesCasa.documents}
+              customStyles={customStyles({ backgroundColor: '#D6E8FB' })}
+              subHeader
+              noDataComponent={<NoRecord />}
+              subHeaderComponent={
+                <SearchBar setFilter={setFilter} filter={filter} />
+              }
+              striped
+              pagination
+              paginationServer
+              fixedHeader
+              responsive
+              highlightOnHover
+              progressPending={isLoading}
+              progressComponent={<ProgressComponent limit={limit} />}
+              paginationTotalRows={atividadesCasa.total}
+              onRowClicked={(row) => {
+                setSelectedRow(row);
+                setOpenSingleAtividade(true);
               }}
-            >
-              <CategoryCards
-                idx={0}
-                title="Compras"
-                description={
-                  'Veja as atividades relacionadas às compras do mês...'
-                }
-                classLabel="category-banner-casa"
-                bgcolor={'#0c264e'}
-                Icon={ShoppingBasketOutlinedIcon}
-                qty={quantidadeCompras}
-                // Novas Props Otimizadas
-                isSelected={categoryCardSelected[0]}
-                onSelect={handleCardClick}
-              />
-
-              <CategoryCards
-                idx={1}
-                title="Limpeza"
-                description={
-                  'Veja as atividades relacionadas a limpeza do seu lar...'
-                }
-                classLabel="category-banner-casa"
-                bgcolor={'#0c264e'}
-                Icon={LocalLaundryServiceOutlinedIcon}
-                qty={quantidadeLimpeza}
-                isSelected={categoryCardSelected[1]}
-                onSelect={handleCardClick}
-              />
-
-              <CategoryCards
-                idx={2}
-                title="Refeições"
-                description={
-                  'Veja as atividades relacionadas a sua alimentação...'
-                }
-                classLabel="category-banner-casa"
-                bgcolor={'#0c264e'}
-                Icon={RamenDiningOutlinedIcon}
-                qty={quantidadeRefeicoes}
-                isSelected={categoryCardSelected[2]}
-                onSelect={handleCardClick}
-              />
-            </Stack>
-
-            <Grid container>
-              <Grid item xs={12} sx={{ position: 'relative', px: 2 }}>
-                <DataTable
-                  className="table"
-                  columns={tableColumns}
-                  data={atividadesCasa.documents}
-                  customStyles={customStyles({ backgroundColor: '#D6E8FB' })}
-                  subHeader
-                  noDataComponent={<NoRecord />}
-                  subHeaderComponent={
-                    <SearchBar setFilter={setFilter} filter={filter} />
-                  }
-                  striped
-                  pagination
-                  paginationServer
-                  fixedHeader
-                  responsive
-                  highlightOnHover
-                  progressPending={isLoading}
-                  progressComponent={<ProgressComponent limit={limit} />}
-                  paginationTotalRows={atividadesCasa.total}
-                  onRowClicked={(row) => {
-                    setSelectedRow(row);
-                    setOpenSingleAtividade(true);
-                  }}
-                  // ... restante das props de paginação mantidas ...
-                  onChangePage={(newPage) => {
-                    setPage(newPage);
-                    //dispatch manual ou page no array de dependencias do useEffect
-                    dispatch(
-                      getAllAtividadesCasa({
-                        page: newPage,
-                        limit,
-                        prop,
-                        sortDirection,
-                        filter,
-                        categorySelected,
-                        userId: user._id,
-                      })
-                    );
-                  }}
-                  onChangeRowsPerPage={(newLimit) => {
-                    setLimit(newLimit);
-                    dispatch(
-                      getAllAtividadesCasa({
-                        page,
-                        limit: newLimit,
-                        prop,
-                        sortDirection,
-                        filter,
-                        categorySelected,
-                        userId: user._id,
-                      })
-                    );
-                  }}
-                />
-              </Grid>
-            </Grid>
-          </Paper>
-        </Box>
-      </Box>
+              // ... restante das props de paginação mantidas ...
+              onChangePage={(newPage) => {
+                setPage(newPage);
+                //dispatch manual ou page no array de dependencias do useEffect
+                dispatch(
+                  getAllAtividadesCasa({
+                    page: newPage,
+                    limit,
+                    prop,
+                    sortDirection,
+                    filter,
+                    categorySelected,
+                    userId: user._id,
+                  })
+                );
+              }}
+              onChangeRowsPerPage={(newLimit) => {
+                setLimit(newLimit);
+                dispatch(
+                  getAllAtividadesCasa({
+                    page,
+                    limit: newLimit,
+                    prop,
+                    sortDirection,
+                    filter,
+                    categorySelected,
+                    userId: user._id,
+                  })
+                );
+              }}
+            />
+          </Grid>
+        </Grid>
+      </DashboardContainer>
     </MotionDiv>
   );
 };

@@ -44,8 +44,9 @@ const getRefeicoesQty = asyncHandler(async (req, res) => {
 });
 const getSingleAtividade = asyncHandler(async (req, res) => {
   const { id } = req.params;
+  console.log(id);
   const atividade = await AtividadesCasa.findById(id);
-
+  console.log(atividade);
   if (atividade._id) {
     res.status(200).json(atividade);
   } else {

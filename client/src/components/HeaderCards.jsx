@@ -1,4 +1,4 @@
-import { Box, Paper, Typography, useMediaQuery } from '@mui/material';
+import { Box, Paper, Tooltip, Typography, useMediaQuery } from '@mui/material';
 import { useSpring, animated } from '@react-spring/web';
 import '../index.css';
 import { useTheme } from '@emotion/react';
@@ -7,27 +7,15 @@ const HeaderCards = ({
   content,
   icon,
   subtitle,
-  idx,
   containerDecoration,
   index,
   setShowAddIcon,
-  showAddIcon,
   onClickAction,
+  bgColor,
 }) => {
   const theme = useTheme();
-  const props = useSpring({
-    from: { x: 0 },
-    to: { x: 1 },
-    config: { duration: 800 },
-  });
-  const headerIcons = document.querySelectorAll('.icon');
-  const iconAnimation = (idx) => {
-    Array.from(headerIcons)[idx]?.classList.add('icon-shake');
-  };
-  const iconAnimationEnd = () => {
-    Array.from(headerIcons)[idx]?.classList.remove('icon-shake');
-  };
-  const downLg = useMediaQuery(theme.breakpoints.down('lg'));
+  const downMd = useMediaQuery(theme.breakpoints.down('md'));
+  const downXl = useMediaQuery(theme.breakpoints.down('xl'));
   const decorationExpand = {
     height: '32rem !important',
     width: '32rem !important',
@@ -37,90 +25,102 @@ const HeaderCards = ({
   };
 
   return (
-    <Paper
-      onClick={onClickAction}
-      onMouseOver={() => {
-        let showAddIconCopy = [...showAddIcon];
-        showAddIconCopy.splice(index, 1, false);
-        setShowAddIcon(showAddIconCopy);
-      }}
-      onMouseOut={() => {
-        let showAddIconCopy = [...showAddIcon];
-        showAddIconCopy.splice(index, 1, true);
-        setShowAddIcon(showAddIconCopy);
-      }}
-      elevation={4}
-      sx={{
-        position: 'relative',
-        mt: downLg ? 3 : 5,
-        mx: 4,
-        height: downLg ? '6rem' : '11rem',
-        borderRadius: '1rem',
-        boxSizing: 'border-box',
-        px: '2.5rem',
-        cursor: 'pointer',
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'center',
-        transition: 'all 0.4s ease ',
-        overflow: 'hidden',
-        /*   color: "white",  */
-        '&:hover': {
-          // backgroundColor: theme.palette.vividBlue.main,
-          '.casaCard': content == 'CASA' && decorationExpand,
-          '.lazerCard': content == 'LAZER' && decorationExpand,
-          '.educacaoCard': content == 'EDUCAÇÃO' && decorationExpand,
-
-          color: 'white',
-          transform: 'scale(105%)',
+    <Tooltip
+      title={subtitle}
+      slotProps={{
+        tooltip: {
+          sx: {
+            display: downMd ? 'block' : 'none',
+            fontSize: '1rem',
+          },
         },
       }}
     >
-      {containerDecoration}
-      <Box
+      <Paper
+        onClick={onClickAction}
+        onMouseOver={() => {
+          setShowAddIcon((prev) => {
+            return prev.map((listItem, listIdx) => {
+              if (listIdx == index) {
+                return false;
+              }
+              return listItem;
+            });
+          });
+        }}
+        onMouseOut={() => {
+          setShowAddIcon((prev) => {
+            return prev.map((listItem, listIdx) => {
+              if (listIdx == index) {
+                return true;
+              }
+              return listItem;
+            });
+          });
+        }}
+        elevation={4}
         sx={{
+          position: 'relative',
+          mt: 5,
+          mx: 4,
+          height: downMd ? '4.5rem' : '11rem',
+          borderRadius: '1rem',
+          boxSizing: 'border-box',
+          px: downXl ? 0 : '2.5rem',
+          cursor: 'pointer',
           display: 'flex',
-          justifyContent: downLg ? 'center' : 'space-between',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          transition: 'all 0.4s ease ',
+          overflow: 'hidden',
+          backgroundColor: downMd ? bgColor : 'white',
+          color: downMd ? 'white' : 'black',
+          '&:hover': {
+            '.casaCard': content == 'CASA' && decorationExpand,
+            '.lazerCard': content == 'LAZER' && decorationExpand,
+            '.educacaoCard': content == 'EDUCAÇÃO' && decorationExpand,
+
+            color: 'white',
+            transform: 'scale(105%)',
+          },
         }}
       >
-        {!downLg && (
-          <Box
-            sx={{
-              display: 'flex',
-              flexDirection: 'column',
-            }}
-          >
-            <Typography
-              variant="button"
-              sx={{ fontSize: '1.8rem', fontWeight: 'bold' }}
+        {!downMd && containerDecoration}
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: downXl ? 'column-reverse' : 'row',
+            justifyContent: downMd ? 'center' : 'space-between',
+            alignItems: downXl ? 'center' : 'space-between',
+          }}
+        >
+          {!downMd && (
+            <Box
+              sx={{
+                display: 'flex',
+                flexDirection: 'column',
+              }}
             >
-              {content}
-            </Typography>
-            <Typography variant="caption" sx={{ fontSize: '0.9rem' }}>
-              {subtitle}
-            </Typography>
-          </Box>
-        )}
+              <Typography
+                variant="button"
+                sx={{
+                  fontSize: '1.8rem',
+                  fontWeight: 'bold',
+                }}
+              >
+                {content}
+              </Typography>
+              <Typography variant="caption" sx={{ fontSize: '0.9rem' }}>
+                {subtitle}
+              </Typography>
+            </Box>
+          )}
 
-        <Box className="icon">{icon}</Box>
-      </Box>
-    </Paper>
+          <Box>{icon}</Box>
+        </Box>
+      </Paper>
+    </Tooltip>
   );
 };
 
 export default HeaderCards;
-
-/*   onMouseOver={() => {
-        iconAnimation(idx);
-        addCoverEffect(index);
-        let showAddIconCopy = [...showAddIcon];
-        showAddIconCopy.splice(index, 1, false);
-        setShowAddIcon(showAddIconCopy);
-      }}
-      onMouseOut={() => {
-        iconAnimationEnd();
-        removeCoverEffect(index);
-        let showAddIconCopy = [...showAddIcon];
-        showAddIconCopy.splice(index, 1, true);
-        setShowAddIcon(showAddIconCopy);
-      }} */

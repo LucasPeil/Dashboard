@@ -1,8 +1,4 @@
-/* .centralize{
-    border: 1px solid red;
-    width: calc(100% - 14rem);
-  
-} */
+
 .icon-shake{
      animation: shake-icon-animation 0.5s ease-in-out 0.1s; 
 }

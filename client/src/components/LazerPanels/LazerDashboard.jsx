@@ -1,4 +1,10 @@
+import { useTheme } from '@emotion/react';
+import BookOutlinedIcon from '@mui/icons-material/BookOutlined';
 import CelebrationOutlinedIcon from '@mui/icons-material/CelebrationOutlined';
+import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
+import EditTwoToneIcon from '@mui/icons-material/EditTwoTone';
+import GroupsOutlinedIcon from '@mui/icons-material/GroupsOutlined';
+import SportsEsportsOutlinedIcon from '@mui/icons-material/SportsEsportsOutlined';
 import {
   Box,
   Grid,
@@ -7,37 +13,30 @@ import {
   Stack,
   useMediaQuery,
 } from '@mui/material';
-import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
-import EditTwoToneIcon from '@mui/icons-material/EditTwoTone';
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import PaletteOutlinedIcon from '@mui/icons-material/PaletteOutlined';
-import BookOutlinedIcon from '@mui/icons-material/BookOutlined';
-import GroupsOutlinedIcon from '@mui/icons-material/GroupsOutlined';
-import SportsEsportsOutlinedIcon from '@mui/icons-material/SportsEsportsOutlined';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import DataTable from 'react-data-table-component';
-import { customStyles } from '../../styles/stylesConst';
-import { useTheme } from '@emotion/react';
-import SearchBar from '../SearchBar';
-import CategoryCards from '../CategoryCards';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import {
   getAllAtividadesLazer,
   getCulturaQty,
-  getJogosQty,
   getEmGrupoQty,
+  getJogosQty,
   getOutrosQty,
   removeSingleAtividadeLazer,
   resetRegisterLazer,
   resetRemoveLazer,
-  setOpenModalLazer,
 } from '../../features/lazer/lazerSlice';
+import { useNavigate, Outlet } from 'react-router-dom';
 import MotionDiv from '../../MotionDiv';
-import FormAtividade from '../FormAtividade';
+import { customStyles } from '../../styles/stylesConst';
 import SingleAtividade from '../CasaPanels/SingleAtividade';
+import CategoryCards from '../CategoryCards';
 import DashboardsHeaders from '../DashboardsHeaders';
-import ProgressComponent from '../ProgressComponent';
 import NoRecord from '../NoRecord';
+import ProgressComponent from '../ProgressComponent';
+import SearchBar from '../SearchBar';
+import DashboardContainer from '../Container';
 
 const LazerDashboard = ({ open }) => {
   const dispatch = useDispatch();
@@ -62,7 +61,7 @@ const LazerDashboard = ({ open }) => {
     false,
   ]);
   const [categorySelected, setCategorySelected] = useState('');
-
+  const navigate = useNavigate();
   const theme = useTheme();
   const downMd = useMediaQuery(theme.breakpoints.down('md'));
   const downLg = useMediaQuery(theme.breakpoints.down('lg'));
@@ -158,8 +157,7 @@ const LazerDashboard = ({ open }) => {
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
             <IconButton
               onClick={() => {
-                setSelectedRow(row);
-                dispatch(setOpenModalLazer());
+                navigate(`/lazer/nova-atividade/lazer/${row._id}`);
               }}
             >
               <EditTwoToneIcon color="success" />
@@ -199,208 +197,179 @@ const LazerDashboard = ({ open }) => {
 
   return (
     <MotionDiv>
-      <Box sx={{ display: 'flex', justifyContent: 'end' }}>
-        <FormAtividade
-          title={'Nova Atividade De Lazer'}
-          btnColor="#f4b26a"
-          btnHoverColor="#E39F54"
-          categoriaItens={categoriaItens}
-          card={'Lazer'}
-          cleanForm={cleanForm}
-          data={selectedRow}
+      <Outlet />
+      <SingleAtividade
+        rowData={selectedRow}
+        openSingleAtividade={openSingleAtividade}
+        handleCloseSingleAtividade={handleCloseSingleAtividade}
+        iconColor={'#D67F20'}
+      />
+
+      <DashboardContainer>
+        <DashboardsHeaders
+          cleanFilters={cleanFilters}
+          categorySelected={categorySelected}
+          title={'DETALHES SOBRE AS ATIVIDADES DE LAZER'}
         />
 
-        <SingleAtividade
-          rowData={selectedRow}
-          openSingleAtividade={openSingleAtividade}
-          handleCloseSingleAtividade={handleCloseSingleAtividade}
-          iconColor={'#D67F20'}
-        />
-
-        <Box
+        <Stack
+          direction={downLg ? 'column' : 'row'}
+          spacing={downLg ? 2 : 3}
           sx={{
-            transition: 'all 0.5s ease',
-            width: open ? 'calc(100% - 14rem)' : 'calc(100% - 6rem)',
+            justifyContent: `${downLg ? 'center' : 'start'}`,
+            alignItems: `${downLg ? 'center' : 'start'}`,
+            mt: 7,
+            mb: 2,
+            position: 'relative',
+            zIndex: 10,
+            width: '100%',
+            px: 2,
+            boxSizing: 'border-box',
           }}
         >
-          <Paper
-            elevation={6}
+          <CategoryCards
+            idx={0}
+            isSelected={categoryCardSelected[0]}
+            onSelect={handleCardClick}
+            distance={5}
+            classLabel="category-banner-lazer"
+            qty={quantidadeJogos}
+            title="Jogos"
+            description={'Veja os jogos que voce participou...'}
+            bgcolor={'#f4b26a'}
+            Icon={SportsEsportsOutlinedIcon}
+          />
+
+          <CategoryCards
+            idx={1}
+            isSelected={categoryCardSelected[1]}
+            onSelect={handleCardClick}
+            distance={15}
+            classLabel="category-banner-lazer"
+            qty={quantidadeCultura}
+            title="Cultura"
+            description={'As mais variadas atividades culturais...'}
+            bgcolor={'#f4b26a'}
+            Icon={BookOutlinedIcon}
+          />
+
+          <CategoryCards
+            idx={2}
+            isSelected={categoryCardSelected[2]}
+            onSelect={handleCardClick}
+            distance={5}
+            classLabel="category-banner-lazer"
+            qty={quantidadeEmGrupo}
+            title="Em grupo"
+            description={'Eventos sociais em que você marcou presença...'}
+            bgcolor={'#f4b26a'}
+            Icon={GroupsOutlinedIcon}
+          />
+
+          <CategoryCards
+            idx={3}
+            isSelected={categoryCardSelected[3]}
+            onSelect={handleCardClick}
+            distance={5}
+            classLabel="category-banner-lazer"
+            qty={quantidadeOutros}
+            title="Outros"
+            description={'Outras atividades de lazer...'}
+            bgcolor={'#f4b26a'}
+            Icon={CelebrationOutlinedIcon}
+          />
+        </Stack>
+
+        <Grid container>
+          <Grid
             sx={{
-              px: 2,
-              boxSizing: 'border-box',
-              width: 'calc(100% - 4rem)',
-              margin: '2rem auto',
-              minHeight: '90vh',
+              display: 'flex',
               position: 'relative',
+              flexDirection: 'column',
+              justifyContent: 'start',
+              alignItems: 'start',
             }}
-            style={{}}
+            item
+            xs={12}
           >
-            <DashboardsHeaders
-              cleanFilters={cleanFilters}
-              categorySelected={categorySelected}
-              title={'DETALHES SOBRE AS ATIVIDADES DE LAZER'}
-            />
-
-            <Stack
-              direction={downLg ? 'column' : 'row'}
-              spacing={downLg ? 2 : 3}
+            <Box
               sx={{
-                justifyContent: `${downLg ? 'center' : 'start'}`,
-                alignItems: `${downLg ? 'center' : 'start'}`,
-                mt: 7,
-                mb: 2,
-                position: 'relative',
-                zIndex: 10,
-                width: '100%',
-                px: 2,
                 boxSizing: 'border-box',
+                p: 1,
+                height: '53px',
+                display: 'flex',
+                justifyContent: 'space-around',
+                alignItems: 'center',
+                width: '100%',
               }}
-            >
-              <CategoryCards
-                idx={0}
-                isSelected={categoryCardSelected[0]}
-                onSelect={handleCardClick}
-                distance={5}
-                classLabel="category-banner-lazer"
-                qty={quantidadeJogos}
-                title="Jogos"
-                description={'Veja os jogos que voce participou...'}
-                bgcolor={'#f4b26a'}
-                Icon={SportsEsportsOutlinedIcon}
-              />
+            ></Box>
+          </Grid>
 
-              <CategoryCards
-                idx={1}
-                isSelected={categoryCardSelected[1]}
-                onSelect={handleCardClick}
-                distance={15}
-                classLabel="category-banner-lazer"
-                qty={quantidadeCultura}
-                title="Cultura"
-                description={'As mais variadas atividades culturais...'}
-                bgcolor={'#f4b26a'}
-                Icon={BookOutlinedIcon}
-              />
-
-              <CategoryCards
-                idx={2}
-                isSelected={categoryCardSelected[2]}
-                onSelect={handleCardClick}
-                distance={5}
-                classLabel="category-banner-lazer"
-                qty={quantidadeEmGrupo}
-                title="Em grupo"
-                description={'Eventos sociais em que você marcou presença...'}
-                bgcolor={'#f4b26a'}
-                Icon={GroupsOutlinedIcon}
-              />
-
-              <CategoryCards
-                idx={3}
-                isSelected={categoryCardSelected[3]}
-                onSelect={handleCardClick}
-                distance={5}
-                classLabel="category-banner-lazer"
-                qty={quantidadeOutros}
-                title="Outros"
-                description={'Outras atividades de lazer...'}
-                bgcolor={'#f4b26a'}
-                Icon={CelebrationOutlinedIcon}
-              />
-            </Stack>
-
-            <Grid container>
-              <Grid
-                sx={{
-                  display: 'flex',
-                  position: 'relative',
-                  flexDirection: 'column',
-                  justifyContent: 'start',
-                  alignItems: 'start',
-                }}
-                item
-                xs={12}
-              >
-                <Box
-                  sx={{
-                    boxSizing: 'border-box',
-                    p: 1,
-                    height: '53px',
-                    display: 'flex',
-                    justifyContent: 'space-around',
-                    alignItems: 'center',
-                    width: '100%',
-                  }}
-                ></Box>
-              </Grid>
-
-              <Grid item xs={12} sx={{ position: 'relative', px: 2 }}>
-                <DataTable
-                  className="table"
-                  columns={tableColumns}
-                  data={atividadesLazer.documents}
-                  customStyles={customStyles({
-                    backgroundColor: '#FBE9D6',
-                  })}
-                  highlightOnHover
-                  subHeader
-                  noDataComponent={<NoRecord />}
-                  subHeaderComponent={
-                    <SearchBar setFilter={setFilter} filter={filter} />
-                  }
-                  striped
-                  pagination
-                  paginationServer
-                  pointerOnHover
-                  fixedHeader
-                  responsive
-                  progressPending={isLoading}
-                  progressComponent={<ProgressComponent limit={limit} />}
-                  paginationTotalRows={atividadesLazer.total}
-                  onRowClicked={(row) => {
-                    setSelectedRow(row);
-                    setOpenSingleAtividade(true);
-                  }}
-                  paginationComponentOptions={{
-                    rowsPerPageText: 'Itens por página',
-                    rangeSeparatorText: 'de',
-                    selectAllRowsItem: true,
-                    selectAllRowsItemText: 'Todos',
-                  }}
-                  onChangePage={(newPage) => {
-                    dispatch(
-                      getAllAtividadesLazer({
-                        page: newPage,
-                        limit: limit,
-                        prop: prop,
-                        sortDirection: sortDirection,
-                        filter: filter,
-                        categorySelected: categorySelected,
-                        userId: user._id,
-                      })
-                    );
-                    setPage(newPage);
-                  }}
-                  onChangeRowsPerPage={(newLimit) => {
-                    dispatch(
-                      getAllAtividadesLazer({
-                        page: page,
-                        limit: newLimit,
-                        prop: prop,
-                        sortDirection: sortDirection,
-                        filter: filter,
-                        categorySelected: categorySelected,
-                        userId: user._id,
-                      })
-                    );
-                    setLimit(newLimit);
-                  }}
-                />
-              </Grid>
-            </Grid>
-          </Paper>
-        </Box>
-      </Box>
+          <Grid item xs={12} sx={{ position: 'relative', px: 2 }}>
+            <DataTable
+              className="table"
+              columns={tableColumns}
+              data={atividadesLazer.documents}
+              customStyles={customStyles({
+                backgroundColor: '#FBE9D6',
+              })}
+              highlightOnHover
+              subHeader
+              noDataComponent={<NoRecord />}
+              subHeaderComponent={
+                <SearchBar setFilter={setFilter} filter={filter} />
+              }
+              striped
+              pagination
+              paginationServer
+              pointerOnHover
+              fixedHeader
+              responsive
+              progressPending={isLoading}
+              progressComponent={<ProgressComponent limit={limit} />}
+              paginationTotalRows={atividadesLazer.total}
+              onRowClicked={(row) => {
+                setSelectedRow(row);
+                setOpenSingleAtividade(true);
+              }}
+              paginationComponentOptions={{
+                rowsPerPageText: 'Itens por página',
+                rangeSeparatorText: 'de',
+                selectAllRowsItem: true,
+                selectAllRowsItemText: 'Todos',
+              }}
+              onChangePage={(newPage) => {
+                dispatch(
+                  getAllAtividadesLazer({
+                    page: newPage,
+                    limit: limit,
+                    prop: prop,
+                    sortDirection: sortDirection,
+                    filter: filter,
+                    categorySelected: categorySelected,
+                    userId: user._id,
+                  })
+                );
+                setPage(newPage);
+              }}
+              onChangeRowsPerPage={(newLimit) => {
+                dispatch(
+                  getAllAtividadesLazer({
+                    page: page,
+                    limit: newLimit,
+                    prop: prop,
+                    sortDirection: sortDirection,
+                    filter: filter,
+                    categorySelected: categorySelected,
+                    userId: user._id,
+                  })
+                );
+                setLimit(newLimit);
+              }}
+            />
+          </Grid>
+        </Grid>
+      </DashboardContainer>
     </MotionDiv>
   );
 };

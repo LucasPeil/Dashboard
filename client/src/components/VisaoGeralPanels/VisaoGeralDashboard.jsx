@@ -1,19 +1,13 @@
 import { useTheme } from '@emotion/react';
-import AddToPhotosIcon from '@mui/icons-material/AddToPhotos';
-import CelebrationOutlinedIcon from '@mui/icons-material/CelebrationOutlined';
 import ContentPasteSearchOutlinedIcon from '@mui/icons-material/ContentPasteSearchOutlined';
-import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
-import SchoolOutlinedIcon from '@mui/icons-material/SchoolOutlined';
 import {
   Box,
-  Grid,
+  FormControl,
+  MenuItem,
   Paper,
+  Select,
   Stack,
   Typography,
-  Select,
-  MenuItem,
-  InputLabel,
-  FormControl,
   useMediaQuery,
 } from '@mui/material';
 import {
@@ -26,32 +20,19 @@ import {
   Title,
   Tooltip,
 } from 'chart.js';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Bar } from 'react-chartjs-2';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
+import { monthsNames } from '../../../utils/monthsNames';
 import MotionDiv from '../../MotionDiv';
-import {
-  closeModalCasa,
-  resetRegisterCasa,
-  setOpenModalCasa,
-} from '../../features/casa/casaSlice';
-import {
-  closeModalEducacao,
-  resetRegisterEducacao,
-  setOpenModalEducacao,
-} from '../../features/educacao/educacaoSlice';
-import {
-  closeModalLazer,
-  resetRegisterLazer,
-  setOpenModalLazer,
-} from '../../features/lazer/lazerSlice';
+import { resetRegisterCasa } from '../../features/casa/casaSlice';
+import { resetRegisterEducacao } from '../../features/educacao/educacaoSlice';
+import { resetRegisterLazer } from '../../features/lazer/lazerSlice';
 import { getTotalDinheiroGasto } from '../../features/visaoGeral/visaoGeralSlice';
 import '../../index.css';
-import FormAtividade from '../FormAtividade';
-import HeaderCards from '../HeaderCards';
-import { monthsNames } from '../../../utils/monthsNames';
-
+import VisaoGeralHeaderButtons from '../VisaoGeralHeaderButtons';
+import { Outlet } from 'react-router-dom';
 const yearsRange = () => {
   const currentYear = new Date().getFullYear();
   const years = [];
@@ -60,7 +41,7 @@ const yearsRange = () => {
   }
   return years;
 };
-const VisaoGeralDashboard = ({ open, setOpen }) => {
+const VisaoGeralDashboard = () => {
   ChartJS.register(
     CategoryScale,
     LinearScale,
@@ -73,26 +54,17 @@ const VisaoGeralDashboard = ({ open, setOpen }) => {
   const theme = useTheme();
   const dispatch = useDispatch();
   const [ano, setAno] = useState(new Date().getFullYear());
-  const downLg = useMediaQuery(theme.breakpoints.down('lg'));
-  const { openModalLazer } = useSelector((state) => state.atividadesLazer);
   const user = useSelector((state) => state.auth.user);
-  const { openModalEducacao } = useSelector(
-    (state) => state.atividadesEducacao
+  const { dinheiroGasto } = useSelector((state) => state.dinheiroGasto);
+  const { register: registerCasa } = useSelector(
+    (state) => state.atividadesCasa
   );
-  const { dinheiroGasto, isSuccess: dinheiroGastoIsSuccess } = useSelector(
-    (state) => state.dinheiroGasto
-  );
-  const {
-    register: registerCasa,
-    update: updateCasa,
-    atividadesCasa,
-    openModalCasa,
-  } = useSelector((state) => state.atividadesCasa);
-
-  const { register: registerLazer, update: updateLazer } = useSelector(
+  const upMd = useMediaQuery(theme.breakpoints.up('md'));
+  const downMd = useMediaQuery(theme.breakpoints.down('md'));
+  const { register: registerLazer } = useSelector(
     (state) => state.atividadesLazer
   );
-  const { register: registerEducacao, update: updateEducacao } = useSelector(
+  const { register: registerEducacao } = useSelector(
     (state) => state.atividadesEducacao
   );
   const getMonthTotalAmount = (month, area) => {
@@ -123,6 +95,7 @@ const VisaoGeralDashboard = ({ open, setOpen }) => {
       title: { display: true, text: 'Dinheiro investido' },
     },
     maintainAspectRatio: false,
+    height: downMd ? 600 : 460,
     redraw: true,
   };
 
@@ -184,17 +157,6 @@ const VisaoGeralDashboard = ({ open, setOpen }) => {
     registerEducacao.isSuccess,
   ]);
 
-  const cleanForm = (form) => {
-    form.setFieldValue('nomeAtividade', '');
-    form.setFieldValue('categoria', '');
-    form.setFieldValue('descricaoAtividade', '');
-    form.setFieldValue('tempoGasto', '');
-    form.setFieldValue('dinheiroGasto', '');
-    form.setFieldValue('nivelImportancia', '');
-  };
-
-  const [showAddIcon, setShowAddIcon] = useState([true, true, true]);
-
   useEffect(() => {
     if (registerCasa.isSuccess) {
       toast.success(registerCasa.message, {
@@ -218,188 +180,34 @@ const VisaoGeralDashboard = ({ open, setOpen }) => {
 
   return (
     <MotionDiv>
+      <Outlet />
       <Box sx={{ display: 'flex', justifyContent: 'end' }}>
-        <FormAtividade
-          openModal={openModalCasa}
-          handleCloseModal={closeModalCasa}
-          title={'Nova Atividade Doméstica'}
-          btnColor="#0c264e"
-          btnHoverColor="#000000"
-          categoriaItens={['Compras', 'Limpeza', 'Refeições']}
-          card={'Casa'}
-          cleanForm={cleanForm}
-        />
-        <FormAtividade
-          openModal={openModalLazer}
-          handleCloseModal={closeModalLazer}
-          title={'Nova Atividade de Lazer'}
-          btnColor="#f4b26a"
-          btnHoverColor="#E39F54"
-          categoriaItens={['Jogos', 'Cultura', 'Em grupo', 'Outros']}
-          card={'Lazer'}
-          cleanForm={cleanForm}
-        />
-        <FormAtividade
-          openModal={openModalEducacao}
-          handleCloseModal={closeModalEducacao}
-          title={'Nova Atividade de Educação'}
-          btnColor="#648d64"
-          btnHoverColor="#4E7A4E"
-          categoriaItens={['Cursos', 'Livros']}
-          card={'Educação'}
-          cleanForm={cleanForm}
-        />
         <Box
           sx={{
             height: '100vh',
             transition: 'all 0.5s ease',
-            width: open ? 'calc(100% - 14rem)' : 'calc(100% - 6rem)',
+            width: upMd ? 'calc(100% - 6rem)' : '100%',
           }}
         >
-          <Grid container spacing={downLg ? 1 : 10}>
-            <Grid item xs={4} lg={4}>
-              <Box>
-                <HeaderCards
-                  onClickAction={() => dispatch(setOpenModalCasa())}
-                  idx={0}
-                  content={'CASA'}
-                  icon={<HomeOutlinedIcon sx={{ fontSize: '4rem' }} />}
-                  subtitle={'Adicionar nova atividade'}
-                  className_={'icon-container'}
-                  index="0"
-                  setShowAddIcon={setShowAddIcon}
-                  showAddIcon={showAddIcon}
-                  containerDecoration={
-                    <Box
-                      className="casaCard"
-                      id="0"
-                      component={'span'}
-                      sx={{
-                        position: 'absolute',
-                        color: 'white',
-                        backgroundColor: ' #0c264e',
-                        top: '-3.5rem',
-                        left: '-0.8rem',
-                        width: '4rem',
-                        height: '10rem',
-                        transform: 'rotate(40deg)',
-                        display: 'flex',
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        borderRadius: '50%',
-                        transition:
-                          ' width 0.4s ease, height 0.4s ease, top 0.5s ease , left 0.5s ease ',
-                      }}
-                    >
-                      {!downLg && (
-                        <Box sx={{ transform: 'rotate(320deg)', ml: 1 }}>
-                          {showAddIcon[0] && <AddToPhotosIcon />}
-                        </Box>
-                      )}
-                    </Box>
-                  }
-                />
-              </Box>
-            </Grid>
-            <Grid item xs={4} lg={4}>
-              <Box>
-                <HeaderCards
-                  onClickAction={() => dispatch(setOpenModalLazer())}
-                  idx={1}
-                  content={'LAZER'}
-                  icon={<CelebrationOutlinedIcon sx={{ fontSize: '4rem' }} />}
-                  subtitle={'Adicionar nova atividade'}
-                  index="1"
-                  setShowAddIcon={setShowAddIcon}
-                  showAddIcon={showAddIcon}
-                  containerDecoration={
-                    <Box
-                      className="lazerCard"
-                      id="1"
-                      component={'span'}
-                      sx={{
-                        position: 'absolute',
-                        color: 'white',
-                        backgroundColor: '#f4b26a',
-                        borderRadius: '50%',
-                        top: '-3.5rem',
-                        left: '-0.8rem',
-                        width: '4rem',
-                        height: '10rem',
-                        transform: 'rotate(40deg)',
-                        display: 'flex',
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        transition:
-                          ' width 0.4s ease, height 0.4s ease, top 0.5s ease , left 0.5s ease ',
-                      }}
-                    >
-                      <Box sx={{ transform: 'rotate(320deg)', ml: 1 }}>
-                        {showAddIcon[1] && <AddToPhotosIcon />}
-                      </Box>
-                    </Box>
-                  }
-                />
-              </Box>
-            </Grid>
-            <Grid item xs={4} lg={4}>
-              <Box>
-                <HeaderCards
-                  onClickAction={() => dispatch(setOpenModalEducacao())}
-                  idx={2}
-                  content={'EDUCAÇÃO'}
-                  icon={<SchoolOutlinedIcon sx={{ fontSize: '4rem' }} />}
-                  subtitle={'Adicionar nova atividade'}
-                  index="2"
-                  setShowAddIcon={setShowAddIcon}
-                  showAddIcon={showAddIcon}
-                  containerDecoration={
-                    <Box
-                      className="educacaoCard"
-                      id="2"
-                      component={'span'}
-                      sx={{
-                        position: 'absolute',
-                        color: 'white',
-                        backgroundColor: '#648d64',
-                        borderRadius: '50%',
-                        top: '-3.5rem',
-                        left: '-0.8rem',
-                        width: '4rem',
-                        height: '10rem',
-                        transform: 'rotate(40deg)',
-                        display: 'flex',
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        transition:
-                          ' width 0.4s ease, height 0.4s ease, top 0.5s ease , left 0.5s ease ',
-                      }}
-                    >
-                      <Box sx={{ transform: 'rotate(320deg)', ml: 1 }}>
-                        {showAddIcon[2] && <AddToPhotosIcon />}
-                      </Box>
-                    </Box>
-                  }
-                />
-              </Box>
-            </Grid>
-          </Grid>
+          <VisaoGeralHeaderButtons />
 
           <Paper
             elevation={6}
             sx={{
               px: 2,
               boxSizing: 'border-box',
-              width: 'calc(100% - 4rem)',
+              width: upMd ? 'calc(100% - 4rem)' : '100%',
               margin: '2rem auto',
-              minHeight: '70vh',
+              height: downMd ? 'calc(100vh - 15rem)' : '42rem',
             }}
-            style={{}}
           >
             <Stack
               direction={'column'}
               justifyContent={'space-between'}
               alignItems={'space-between'}
+              sx={{
+                height: downMd ? 'calc(100vh - 15rem)' : '41rem',
+              }}
             >
               <Box
                 sx={{
@@ -422,13 +230,14 @@ const VisaoGeralDashboard = ({ open, setOpen }) => {
                 />
               </Box>
               {data && (
-                <Box sx={{ px: 2, position: 'relative' }}>
-                  <Bar
-                    options={barOptions}
-                    data={data}
-                    height={460}
-                    redraw={registerCasa.isLoading}
-                  />
+                <Box
+                  sx={{
+                    px: 2,
+                    position: 'relative',
+                    height: '100%',
+                  }}
+                >
+                  <Bar options={barOptions} data={data} redraw={true} />
                   <Stack
                     direction="row"
                     justifyContent={'end'}

@@ -19,6 +19,9 @@ const authorization = (req, res, next) => {
         throw new Error('Acesso não autorizado');
       }
       break;
+    case 'GET':
+      next();
+      break;
     default:
       res.status(401);
       throw new Error('Acesso não autorizado');

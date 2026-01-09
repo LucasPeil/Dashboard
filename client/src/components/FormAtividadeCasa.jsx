@@ -1,5 +1,12 @@
+import { useEffect, useState, memo } from 'react';
 import KeyboardReturnIcon from '@mui/icons-material/KeyboardReturn';
 import SaveIcon from '@mui/icons-material/Save';
+import { useParams, useNavigate } from 'react-router-dom';
+import {
+  getSingleAtividade,
+  resetRegisterCasa,
+  setNewAtividadeCasa,
+} from '../features/casa/casaSlice';
 import {
   Dialog,
   DialogActions,
@@ -16,24 +23,10 @@ import {
   Select,
   FormHelperText,
 } from '@mui/material';
-import { closeModalCasa } from '../features/casa/casaSlice';
-import { useState, memo } from 'react';
-import { Field, Form, Formik, FormikProvider, useFormik } from 'formik';
+import { Field, Form, FormikProvider, useFormik } from 'formik';
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import * as Yup from 'yup';
-import {
-  resetRegisterCasa,
-  setNewAtividadeCasa,
-} from '../features/casa/casaSlice';
-import {
-  resetRegisterLazer,
-  setNewAtividadeLazer,
-} from '../features/lazer/lazerSlice';
-import {
-  resetRegisterEducacao,
-  setNewAtividadeEducacao,
-} from '../features/educacao/educacaoSlice';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Zoom ref={ref} {...props} />;
@@ -52,16 +45,32 @@ const months = [
   'November',
   'December',
 ];
-const FormAtividade = memo(function FormAtividade({
-  data,
-  title,
-  btnColor,
-  btnHoverColor,
-  categoriaItens,
-  card,
-}) {
+
+const FormAtividadeCasa = memo(function FormAtividadeCasa() {
   const dispatch = useDispatch();
-  const [dataWasSubmitted, setDataWasSubmitted] = useState(false);
+  const params = useParams();
+  const navigate = useNavigate();
+  const { id } = params;
+
+  // Specific Constants for Casa
+  const btnColor = '#0c264e';
+  const btnHoverColor = '#000000';
+  const title = 'Nova Atividade Doméstica';
+  const categoriaItens = ['Compras', 'Limpeza', 'Refeições'];
+
+  const atividadeCasa = useSelector(
+    (state) => state.atividadesCasa.atividadeCasa
+  );
+
+  // Derive data logic
+  const data = id ? atividadeCasa : null;
+
+  useEffect(() => {
+    if (id) {
+      dispatch(getSingleAtividade(id));
+    }
+  }, [id, dispatch]);
+
   const ValidationSchema = Yup.object({
     nomeAtividade: Yup.string()
       .trim()
@@ -85,14 +94,7 @@ const FormAtividade = memo(function FormAtividade({
         (value) => value?.length <= 1000
       ),
   });
-  const cleanForm = (form) => {
-    form.setFieldValue('nomeAtividade', '');
-    form.setFieldValue('categoria', '');
-    form.setFieldValue('descricaoAtividade', '');
-    form.setFieldValue('tempoGasto', '');
-    form.setFieldValue('dinheiroGasto', '');
-    form.setFieldValue('nivelImportância', '');
-  };
+
   const formik = useFormik({
     enableReinitialize: true,
     initialValues: {
@@ -111,34 +113,24 @@ const FormAtividade = memo(function FormAtividade({
     onSubmit: (values) => {
       values.mesInsercao = months[new Date().getMonth()];
       values.anoInsercao = new Date().getFullYear();
-      card == 'Casa'
-        ? dispatch(setNewAtividadeCasa(values))
-        : card == 'Lazer'
-        ? dispatch(setNewAtividadeLazer(values))
-        : dispatch(setNewAtividadeEducacao(values));
-      dispatch(closeModalCasa());
-
-      setDataWasSubmitted(true);
-      dispatch(resetRegisterEducacao());
+      dispatch(setNewAtividadeCasa(values));
+      navigate(-1);
       dispatch(resetRegisterCasa());
-      dispatch(resetRegisterLazer());
       formik.resetForm();
     },
   });
 
-  const openModalCasa = useSelector(
-    (state) => state.atividadesCasa.openModalCasa
-  );
+  const handleClose = () => {
+    navigate(-1);
+    formik.resetForm();
+  };
 
   return (
     <Dialog
-      open={openModalCasa}
+      open={true}
       TransitionComponent={Transition}
       keepMounted
-      onClose={() => {
-        dispatch(closeModalCasa());
-        cleanForm(formik);
-      }}
+      onClose={handleClose}
       fullWidth
       maxWidth={'md'}
     >
@@ -206,35 +198,6 @@ const FormAtividade = memo(function FormAtividade({
                 formik.errors.descricaoAtividade
               }
             />
-
-            {/* {card == 'Educação' && (
-              <FormControl
-                fullWidth
-                style={{ marginTop: 30, marginBottom: 10 }}
-              >
-                <InputLabel id="categoria">Nível de prioridade</InputLabel>
-                <Field
-                  {...formik.getFieldProps('nivelImportancia')}
-                  as={Select}
-                  labelId="categoria"
-                  id="categoria"
-                  label="Categoria"
-                  variant="standard"
-                  error={Boolean(
-                    formik.touched.nivelImportancia &&
-                      formik.errors.nivelImportancia
-                  )}
-                  helperText={
-                    formik.touched.nivelImportancia &&
-                    formik.errors.nivelImportancia
-                  }
-                >
-                  <MenuItem value="Baixa">Baixa</MenuItem>
-                  <MenuItem value="Média">Média</MenuItem>
-                  <MenuItem value="Alta">Alta</MenuItem>
-                </Field>
-              </FormControl>
-            )} */}
 
             <Field
               {...formik.getFieldProps('dinheiroGasto')}
@@ -304,10 +267,7 @@ const FormAtividade = memo(function FormAtividade({
               </IconButton>
 
               <IconButton
-                onClick={() => {
-                  dispatch(closeModalCasa());
-                  cleanForm(formik);
-                }}
+                onClick={handleClose}
                 sx={{
                   backgroundColor: btnColor,
                   borderRadius: 0,
@@ -329,4 +289,4 @@ const FormAtividade = memo(function FormAtividade({
   );
 });
 
-export default FormAtividade;
+export default FormAtividadeCasa;

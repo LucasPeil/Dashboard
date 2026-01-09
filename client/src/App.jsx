@@ -1,37 +1,48 @@
-import {
-  BrowserRouter,
-  Navigate,
-  Route,
-  Router,
-  Routes,
-  useLocation,
-  useParams,
-} from 'react-router-dom';
-import './App.css';
-import VisaoGeralDashboard from './components/VisaoGeralPanels/VisaoGeralDashboard';
-import LazerDashboard from './components/LazerPanels/LazerDashboard';
-import EducacaoDashboard from './components/EducacaoPanels/EducacaoDashboard';
-import VerticalMenu from './components/VerticalMenu';
 import { useState } from 'react';
-import CasaDashboard from './components/CasaPanels/CasaDashboard';
+import { Route, Routes } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
-import Login from './components/Login';
+import './App.css';
+import CasaDashboard from './components/CasaPanels/CasaDashboard';
+import EducacaoDashboard from './components/EducacaoPanels/EducacaoDashboard';
+import LazerDashboard from './components/LazerPanels/LazerDashboard';
+import VerticalMenu from './components/VerticalMenu';
+import VisaoGeralDashboard from './components/VisaoGeralPanels/VisaoGeralDashboard';
+import FormAtividadeCasa from './components/FormAtividadeCasa';
+import FormAtividadeLazer from './components/FormAtividadeLazer';
+import FormAtividadeEducacao from './components/FormAtividadeEducacao';
 
 function App() {
-  const [open, setOpen] = useState(false);
-
   return (
     <>
-      <VerticalMenu open={open} setOpen={setOpen} />
+      <VerticalMenu />
 
       <Routes>
-        <Route
-          path="/"
-          element={<VisaoGeralDashboard open={open} setOpen={setOpen} />}
-        />
-        <Route path="/educacao" element={<EducacaoDashboard open={open} />} />
-        <Route path="/casa" element={<CasaDashboard open={open} />} />
-        <Route path="/lazer" element={<LazerDashboard open={open} />} />
+        <Route path="/" element={<VisaoGeralDashboard />}>
+          <Route path="nova-atividade/casa" element={<FormAtividadeCasa />} />
+          <Route path="nova-atividade/lazer" element={<FormAtividadeLazer />} />
+          <Route
+            path="nova-atividade/educacao"
+            element={<FormAtividadeEducacao />}
+          />
+        </Route>
+        <Route path="/educacao" element={<EducacaoDashboard />}>
+          <Route
+            path="nova-atividade/educacao/:id"
+            element={<FormAtividadeEducacao />}
+          />
+        </Route>
+        <Route path="/casa" element={<CasaDashboard />}>
+          <Route
+            path="nova-atividade/casa/:id"
+            element={<FormAtividadeCasa />}
+          />
+        </Route>
+        <Route path="/lazer" element={<LazerDashboard />}>
+          <Route
+            path="nova-atividade/lazer/:id"
+            element={<FormAtividadeLazer />}
+          />
+        </Route>
       </Routes>
 
       <ToastContainer

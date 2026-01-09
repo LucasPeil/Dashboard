@@ -17,25 +17,25 @@ import DataTable from 'react-data-table-component';
 import { useDispatch, useSelector } from 'react-redux';
 import MotionDiv from '../../MotionDiv';
 import {
-  closeModalEducacao,
   getAllAtividadesEducacao,
   getCursosQty,
   getLivrosQty,
   removeSingleAtividadeEducacao,
   resetRegisterEducacao,
   resetRemoveEducacao,
-  setOpenModalEducacao,
 } from '../../features/educacao/educacaoSlice';
+import { Outlet } from 'react-router-dom';
 import { customStyles } from '../../styles/stylesConst';
 import SingleAtividade from '../CasaPanels/SingleAtividade';
 import CategoryCards from '../CategoryCards';
 import DashboardsHeaders from '../DashboardsHeaders';
-import FormAtividade from '../FormAtividade';
+
 import ProgressComponent from '../ProgressComponent';
 import SearchBar from '../SearchBar';
 import NoRecord from '../NoRecord';
-
-const EducacaoDashboard = ({ open }) => {
+import { useNavigate } from 'react-router-dom';
+import DashboardContainer from '../Container';
+const EducacaoDashboard = () => {
   const dispatch = useDispatch();
   const [openSingleAtividade, setOpenSingleAtividade] = useState(false);
   const user = useSelector((state) => state.auth.user);
@@ -46,7 +46,7 @@ const EducacaoDashboard = ({ open }) => {
 
   const [selectedRow, setSelectedRow] = useState();
   const [categorySelected, setCategorySelected] = useState('');
-
+  const navigate = useNavigate();
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(10);
   const [sortDirection, setSortDirection] = useState(1);
@@ -152,7 +152,7 @@ const EducacaoDashboard = ({ open }) => {
             <IconButton
               onClick={() => {
                 setSelectedRow(row);
-                dispatch(setOpenModalEducacao());
+                navigate(`/educacao/nova-atividade/educacao/${row._id}`);
               }}
             >
               <EditTwoToneIcon color="success" />
@@ -178,192 +178,155 @@ const EducacaoDashboard = ({ open }) => {
 
   return (
     <MotionDiv>
-      <Box sx={{ display: 'flex', justifyContent: 'end' }}>
-        <FormAtividade
-          title={'Nova Atividade Educação'}
-          btnColor="#648d64"
-          btnHoverColor="#4E7A4E"
-          categoriaItens={['Cursos', 'Livros']}
-          card={'Educação'}
-          cleanForm={(form) => {
-            form.setFieldValue('nomeAtividade', '');
-            form.setFieldValue('categoria', '');
-            form.setFieldValue('descricaoAtividade', '');
-            form.setFieldValue('tempoGasto', '');
-            form.setFieldValue('dinheiroGasto', '');
-            form.setFieldValue('nivelImportância', '');
-          }}
-          data={selectedRow}
+      <Outlet />
+      <SingleAtividade
+        rowData={selectedRow}
+        openSingleAtividade={openSingleAtividade}
+        handleCloseSingleAtividade={handleCloseSingleAtividade}
+        iconColor={'#1D791D'}
+        isAtividadeEducacao={true}
+      />
+      <DashboardContainer>
+        <DashboardsHeaders
+          cleanFilters={cleanFilters}
+          categorySelected={categorySelected}
+          title={'DETALHES SOBRE SUA EDUCAÇÃO'}
         />
 
-        <SingleAtividade
-          rowData={selectedRow}
-          openSingleAtividade={openSingleAtividade}
-          handleCloseSingleAtividade={handleCloseSingleAtividade}
-          iconColor={'#1D791D'}
-          isAtividadeEducacao={true}
-        />
-
-        <Box
+        <Stack
+          direction={downMd ? 'column' : 'row'}
+          spacing={downMd ? 2 : 5}
           sx={{
-            transition: 'all 0.5s ease',
-            width: open ? 'calc(100% - 14rem)' : 'calc(100% - 6rem)',
+            justifyContent: 'start',
+            alignItems: `${downMd ? 'center' : 'start'}`,
+            mt: 7,
+            mb: 2,
+            position: 'relative',
+            zIndex: 10,
+            width: '100%',
+            px: 2,
+            boxSizing: 'border-box',
           }}
         >
-          <Paper
-            elevation={6}
+          <CategoryCards
+            idx={0}
+            isSelected={categoryCardSelected[0]}
+            onSelect={handleCardClick}
+            distance={5}
+            classLabel="category-banner-educacao"
+            qty={quantidadeCursos}
+            categorySelected={categorySelected}
+            setCategorySelected={setCategorySelected}
+            title="Cursos"
+            description={'Veja quais cursos você assistiu...'}
+            bgcolor={'#648d64'}
+            Icon={CastForEducationOutlinedIcon}
+          />
+          <CategoryCards
+            idx={1}
+            isSelected={categoryCardSelected[1]}
+            onSelect={handleCardClick}
+            distance={5}
+            classLabel="category-banner-educacao"
+            qty={quantidadeLivros}
+            categorySelected={categorySelected}
+            setCategorySelected={setCategorySelected}
+            title="Livros"
+            description={'Dê uma olhada nos livros lidos nesse mês...'}
+            bgcolor={'#648d64'}
+            Icon={MenuBookOutlinedIcon}
+          />
+        </Stack>
+
+        <Grid container>
+          <Grid
             sx={{
-              px: 2,
-              boxSizing: 'border-box',
-              width: 'calc(100% - 4rem)',
-              margin: '2rem auto',
-              minHeight: '90vh',
+              display: 'flex',
               position: 'relative',
+              flexDirection: 'column',
+              justifyContent: 'start',
+              alignItems: 'start',
             }}
-            style={{}}
+            item
+            xs={12}
           >
-            <DashboardsHeaders
-              cleanFilters={cleanFilters}
-              categorySelected={categorySelected}
-              title={'DETALHES SOBRE SUA EDUCAÇÃO'}
-            />
-
-            <Stack
-              direction={downMd ? 'column' : 'row'}
-              spacing={downMd ? 2 : 5}
+            <Box
               sx={{
-                justifyContent: 'start',
-                alignItems: `${downMd ? 'center' : 'start'}`,
-                mt: 7,
-                mb: 2,
-                position: 'relative',
-                zIndex: 10,
-                width: '100%',
-                px: 2,
                 boxSizing: 'border-box',
+                p: 1,
+                height: '53px',
+                display: 'flex',
+                justifyContent: 'space-around',
+                alignItems: 'center',
+                width: '100%',
               }}
-            >
-              <CategoryCards
-                idx={0}
-                isSelected={categoryCardSelected[0]}
-                onSelect={handleCardClick}
-                distance={5}
-                classLabel="category-banner-educacao"
-                qty={quantidadeCursos}
-                categorySelected={categorySelected}
-                setCategorySelected={setCategorySelected}
-                title="Cursos"
-                description={'Veja quais cursos você assistiu...'}
-                bgcolor={'#648d64'}
-                Icon={CastForEducationOutlinedIcon}
-              />
-              <CategoryCards
-                idx={1}
-                isSelected={categoryCardSelected[1]}
-                onSelect={handleCardClick}
-                distance={5}
-                classLabel="category-banner-educacao"
-                qty={quantidadeLivros}
-                categorySelected={categorySelected}
-                setCategorySelected={setCategorySelected}
-                title="Livros"
-                description={'Dê uma olhada nos livros lidos nesse mês...'}
-                bgcolor={'#648d64'}
-                Icon={MenuBookOutlinedIcon}
-              />
-            </Stack>
-
-            <Grid container>
-              <Grid
-                sx={{
-                  display: 'flex',
-                  position: 'relative',
-                  flexDirection: 'column',
-                  justifyContent: 'start',
-                  alignItems: 'start',
-                }}
-                item
-                xs={12}
-              >
-                <Box
-                  sx={{
-                    boxSizing: 'border-box',
-                    p: 1,
-                    height: '53px',
-                    display: 'flex',
-                    justifyContent: 'space-around',
-                    alignItems: 'center',
-                    width: '100%',
-                  }}
-                ></Box>
-              </Grid>
-              <Grid item xs={12} sx={{ position: 'relative', px: 2 }}>
-                <DataTable
-                  className="table"
-                  columns={tableColumns}
-                  data={atividadesEducacao.documents}
-                  customStyles={customStyles({
-                    backgroundColor: '#CEF4CE',
-                  })}
-                  highlightOnHover
-                  subHeader
-                  noDataComponent={<NoRecord />}
-                  subHeaderComponent={
-                    <SearchBar setFilter={setFilter} filter={filter} />
-                  }
-                  striped
-                  pagination
-                  paginationServer
-                  pointerOnHover
-                  fixedHeader
-                  responsive
-                  progressPending={isLoading}
-                  progressComponent={<ProgressComponent limit={limit} />}
-                  paginationTotalRows={atividadesEducacao.total}
-                  onRowClicked={(row) => {
-                    setSelectedRow(row);
-                    setOpenSingleAtividade(true);
-                  }}
-                  paginationComponentOptions={{
-                    rowsPerPageText: 'Itens por página',
-                    rangeSeparatorText: 'de',
-                    selectAllRowsItem: true,
-                    selectAllRowsItemText: 'Todos',
-                  }}
-                  onChangePage={(newPage) => {
-                    dispatch(
-                      getAllAtividadesEducacao({
-                        page: newPage,
-                        limit: limit,
-                        prop: prop,
-                        sortDirection: sortDirection,
-                        filter: filter,
-                        categorySelected: categorySelected,
-                        userId: user._id,
-                      })
-                    );
-                    setPage(newPage);
-                  }}
-                  onChangeRowsPerPage={(newLimit) => {
-                    dispatch(
-                      getAllAtividadesEducacao({
-                        page: page,
-                        limit: newLimit,
-                        prop: prop,
-                        sortDirection: sortDirection,
-                        filter: filter,
-                        categorySelected: categorySelected,
-                        userId: user._id,
-                      })
-                    );
-                    setLimit(newLimit);
-                  }}
-                />
-              </Grid>
-            </Grid>
-          </Paper>
-        </Box>
-      </Box>
+            ></Box>
+          </Grid>
+          <Grid item xs={12} sx={{ position: 'relative', px: 2 }}>
+            <DataTable
+              className="table"
+              columns={tableColumns}
+              data={atividadesEducacao.documents}
+              customStyles={customStyles({
+                backgroundColor: '#CEF4CE',
+              })}
+              highlightOnHover
+              subHeader
+              noDataComponent={<NoRecord />}
+              subHeaderComponent={
+                <SearchBar setFilter={setFilter} filter={filter} />
+              }
+              striped
+              pagination
+              paginationServer
+              pointerOnHover
+              fixedHeader
+              responsive
+              progressPending={isLoading}
+              progressComponent={<ProgressComponent limit={limit} />}
+              paginationTotalRows={atividadesEducacao.total}
+              onRowClicked={(row) => {
+                setSelectedRow(row);
+                setOpenSingleAtividade(true);
+              }}
+              paginationComponentOptions={{
+                rowsPerPageText: 'Itens por página',
+                rangeSeparatorText: 'de',
+                selectAllRowsItem: true,
+                selectAllRowsItemText: 'Todos',
+              }}
+              onChangePage={(newPage) => {
+                dispatch(
+                  getAllAtividadesEducacao({
+                    page: newPage,
+                    limit: limit,
+                    prop: prop,
+                    sortDirection: sortDirection,
+                    filter: filter,
+                    categorySelected: categorySelected,
+                    userId: user._id,
+                  })
+                );
+                setPage(newPage);
+              }}
+              onChangeRowsPerPage={(newLimit) => {
+                dispatch(
+                  getAllAtividadesEducacao({
+                    page: page,
+                    limit: newLimit,
+                    prop: prop,
+                    sortDirection: sortDirection,
+                    filter: filter,
+                    categorySelected: categorySelected,
+                    userId: user._id,
+                  })
+                );
+                setLimit(newLimit);
+              }}
+            />
+          </Grid>
+        </Grid>
+      </DashboardContainer>
     </MotionDiv>
   );
 };

@@ -15,13 +15,11 @@ import ContentPasteSearchOutlinedIcon from '@mui/icons-material/ContentPasteSear
 import LogoutIcon from '@mui/icons-material/Logout';
 import { useDispatch } from 'react-redux';
 import { logout } from '../features/auth/authSlice';
-const VerticalMenu = ({ open, setOpen }) => {
+const VerticalMenu = () => {
+  const [open, setOpen] = useState(false);
   const theme = useTheme();
-  const downSm = useMediaQuery(theme.breakpoints.down('sm'));
   const upMd = useMediaQuery(theme.breakpoints.up('md'));
-  const upLg = useMediaQuery(theme.breakpoints.up('lg'));
   const location = useLocation();
-  const path = location?.pathname?.split('/')[1];
   const dispatch = useDispatch();
   const menus = [
     {
@@ -88,15 +86,49 @@ const VerticalMenu = ({ open, setOpen }) => {
     width: open ? '14rem' : '6rem',
     backgroundColor: open ? 'white' : theme.palette.greyBlue.contrastText,
     borderRight: '1px solid #C6C6C6',
+    zIndex: 10000,
+  });
+
+  const smStyle = useSpring({
+    position: 'absolute',
+    display: 'flex',
+    zIndex: 10000,
+    flexDirection: 'column',
+    alignItems: 'start',
+    height: '100vh',
+    width: open ? '14rem' : '0',
+    borderRight: '1px solid #C6C6C6',
   });
 
   return (
-    <Paper elevation={8} component={animated.div} style={verticalNavStyle}>
-      <IconButton sx={{ ml: 2 }} onClick={() => setOpen(!open)}>
+    <Paper
+      elevation={8}
+      component={animated.div}
+      style={upMd ? verticalNavStyle : smStyle}
+    >
+      <IconButton
+        sx={{
+          ml: 2,
+          mt: 2,
+          p: 0,
+          borderRadius: '50%',
+          boxSizing: 'border-box',
+          height: '3.5rem',
+          width: '3.5rem',
+          backgroundColor: open ? 'white' : theme.palette.greyBlue.contrastText,
+          '&:hover': {
+            backgroundColor: open
+              ? 'transparent'
+              : theme.palette.greyBlue.contrastText,
+          },
+        }}
+        onClick={() => setOpen(!open)}
+      >
         <Hamburger
           toggled={open}
           toggle={setOpen}
           color={open ? '#000' : '#FFF'}
+          size={22}
         />
       </IconButton>
       {menus.map((menu, index) => (
@@ -104,55 +136,52 @@ const VerticalMenu = ({ open, setOpen }) => {
           key={index}
           component={animated.div}
           style={{
+            overflow: 'hidden',
             textDecoration: 'none',
             marginTop: '4rem',
             display: 'flex',
             maxHeight: '35px',
-            width: open ? '14rem' : '6rem',
+            width: open ? '14rem' : upMd ? '6rem' : '0',
           }}
           to={menu.path}
         >
-          {downSm ? (
-            menu.icon
-          ) : (
-            <Tooltip
-              title={
-                <Typography sx={{ fontSize: '12px', fontWeight: 'bold' }}>
-                  {menu.title}
-                </Typography>
-              }
-              placement="right"
+          <Tooltip
+            title={
+              <Typography sx={{ fontSize: '12px', fontWeight: 'bold' }}>
+                {menu.title}
+              </Typography>
+            }
+            placement="right"
+          >
+            <Box
+              component={motion.div}
+              sx={{
+                display: 'flex',
+                justifyContent: 'start',
+                boxSizing: 'border-box',
+                px: 3,
+                width: open ? '14rem' : '6rem',
+
+                borderLeft:
+                  location.pathname == menu.path
+                    ? open
+                      ? '7px solid black'
+                      : '5px solid white'
+                    : open && '1px solid white',
+
+                transition: 'all 0.2s ease',
+                '&:hover': {
+                  borderLeft: open ? '7px solid black' : '5px solid white',
+                },
+              }}
             >
-              <Box
-                component={motion.div}
-                sx={{
-                  display: 'flex',
-                  justifyContent: 'start',
-                  boxSizing: 'border-box',
-                  px: 3,
-                  width: open ? '14rem' : '6rem',
+              {menu.icon}
 
-                  borderLeft:
-                    location.pathname == menu.path
-                      ? open
-                        ? '7px solid black'
-                        : '5px solid white'
-                      : open && '1px solid white',
-
-                  transition: 'all 0.2s ease',
-                  '&:hover': {
-                    borderLeft: open ? '7px solid black' : '5px solid white',
-                  },
-                }}
-              >
-                {menu.icon}
-
-                <Typography component={animated.div} style={menuIsOpen}>
-                  {menu.title}
-                </Typography>
-              </Box>
-            </Tooltip>
-          )}
+              <Typography component={animated.div} style={menuIsOpen}>
+                {menu.title}
+              </Typography>
+            </Box>
+          </Tooltip>
         </NavLink>
       ))}
 
