@@ -5,17 +5,11 @@ import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
 import EditTwoToneIcon from '@mui/icons-material/EditTwoTone';
 import GroupsOutlinedIcon from '@mui/icons-material/GroupsOutlined';
 import SportsEsportsOutlinedIcon from '@mui/icons-material/SportsEsportsOutlined';
-import {
-  Box,
-  Grid,
-  IconButton,
-  Paper,
-  Stack,
-  useMediaQuery,
-} from '@mui/material';
+import { Box, Grid, IconButton, useMediaQuery } from '@mui/material';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import DataTable from 'react-data-table-component';
 import { useDispatch, useSelector } from 'react-redux';
+import { Outlet, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import {
   getAllAtividadesLazer,
@@ -27,16 +21,16 @@ import {
   resetRegisterLazer,
   resetRemoveLazer,
 } from '../../features/lazer/lazerSlice';
-import { useNavigate, Outlet } from 'react-router-dom';
 import MotionDiv from '../../MotionDiv';
 import { customStyles } from '../../styles/stylesConst';
 import SingleAtividade from '../CasaPanels/SingleAtividade';
 import CategoryCards from '../CategoryCards';
+import DashboardContainer from '../Container';
 import DashboardsHeaders from '../DashboardsHeaders';
 import NoRecord from '../NoRecord';
 import ProgressComponent from '../ProgressComponent';
 import SearchBar from '../SearchBar';
-import DashboardContainer from '../Container';
+import CategoryCardsContainer from '../CategoryCardsContainer';
 
 const LazerDashboard = ({ open }) => {
   const dispatch = useDispatch();
@@ -181,20 +175,6 @@ const LazerDashboard = ({ open }) => {
     [dispatch]
   );
 
-  const categoriaItens = useMemo(
-    () => ['Jogos', 'Cultura', 'Em grupo', 'Outros'],
-    []
-  );
-
-  const cleanForm = useCallback((form) => {
-    form.setFieldValue('nomeAtividade', '');
-    form.setFieldValue('categoria', '');
-    form.setFieldValue('descricaoAtividade', '');
-    form.setFieldValue('tempoGasto', '');
-    form.setFieldValue('dinheiroGasto', '');
-    form.setFieldValue('nivelImportância', '');
-  }, []);
-
   return (
     <MotionDiv>
       <Outlet />
@@ -210,23 +190,10 @@ const LazerDashboard = ({ open }) => {
           cleanFilters={cleanFilters}
           categorySelected={categorySelected}
           title={'DETALHES SOBRE AS ATIVIDADES DE LAZER'}
+          path="nova-atividade/lazer"
         />
 
-        <Stack
-          direction={downLg ? 'column' : 'row'}
-          spacing={downLg ? 2 : 3}
-          sx={{
-            justifyContent: `${downLg ? 'center' : 'start'}`,
-            alignItems: `${downLg ? 'center' : 'start'}`,
-            mt: 7,
-            mb: 2,
-            position: 'relative',
-            zIndex: 10,
-            width: '100%',
-            px: 2,
-            boxSizing: 'border-box',
-          }}
-        >
+        <CategoryCardsContainer minCardWidth={220}>
           <CategoryCards
             idx={0}
             isSelected={categoryCardSelected[0]}
@@ -278,7 +245,7 @@ const LazerDashboard = ({ open }) => {
             bgcolor={'#f4b26a'}
             Icon={CelebrationOutlinedIcon}
           />
-        </Stack>
+        </CategoryCardsContainer>
 
         <Grid container>
           <Grid

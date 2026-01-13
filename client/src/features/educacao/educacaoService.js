@@ -52,6 +52,11 @@ const getLivrosQty = async (token) => {
   const response = await axios.get(API_URL + `/quantidadeLivros`, config);
   return response.data;
 };
+const getSeminariosQty = async (token) => {
+  const config = { headers: { Authorization: `Bearer ${token}` } };
+  const response = await axios.get(API_URL + `/quantidadeSeminarios`, config);
+  return response.data;
+};
 
 const educacaoService = {
   setNewAtividadeEducacao,
@@ -60,6 +65,7 @@ const educacaoService = {
   removeSingleAtividadeEducacao,
   getCursosQty,
   getLivrosQty,
+  getSeminariosQty,
 };
 
 export default educacaoService;

@@ -6,6 +6,7 @@ const initialState = {
   atividadesEducacao: [],
   atividadeEducacao: {},
   quantidadeLivros: 0,
+  quantidadeSeminarios: 0,
   quantidadeCursos: 0,
   isSuccess: false,
   isLoading: false,
@@ -55,6 +56,23 @@ export const getLivrosQty = createAsyncThunk(
     try {
       const token = thunkAPI.getState().auth.user.token;
       return await educacaoService.getLivrosQty(token);
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+export const getSeminariosQty = createAsyncThunk(
+  'atividadesEducacao/getSeminariosQty',
+  async (_, thunkAPI) => {
+    try {
+      const token = thunkAPI.getState().auth.user.token;
+      return await educacaoService.getSeminariosQty(token);
     } catch (error) {
       const message =
         (error.response &&
@@ -203,6 +221,23 @@ export const educacaoSlice = createSlice({
         state.quantidadeCursos = action.payload.cursosQuantidade;
       })
       .addCase(getCursosQty.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isSuccess = false;
+        state.isError = true;
+        state.message = action.payload;
+      })
+      .addCase(getSeminariosQty.pending, (state) => {
+        state.isLoading = true;
+        state.isError = false;
+        state.isSuccess = false;
+      })
+      .addCase(getSeminariosQty.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isError = false;
+        state.isSuccess = true;
+        state.quantidadeSeminarios = action.payload.seminariosQuantidade;
+      })
+      .addCase(getSeminariosQty.rejected, (state, action) => {
         state.isLoading = false;
         state.isSuccess = false;
         state.isError = true;

@@ -19,7 +19,7 @@ const VisaoGeralHeaderButtons = () => {
     <Grid container spacing={downLg ? 1 : 10}>
       <Grid item xs={4} lg={4}>
         <HeaderCards
-          onClickAction={() => navigate('/nova-atividade/casa')}
+          onClickAction={() => navigate('/casa')}
           content={'CASA'}
           icon={<HomeOutlinedIcon sx={{ fontSize: '4rem' }} />}
           subtitle={'Adicionar nova atividade'}
@@ -58,7 +58,7 @@ const VisaoGeralHeaderButtons = () => {
       </Grid>
       <Grid item xs={4} lg={4}>
         <HeaderCards
-          onClickAction={() => navigate('/nova-atividade/lazer')}
+          onClickAction={() => navigate('/lazer')}
           content={'LAZER'}
           icon={<CelebrationOutlinedIcon sx={{ fontSize: '4rem' }} />}
           subtitle={'Adicionar nova atividade'}
@@ -96,7 +96,7 @@ const VisaoGeralHeaderButtons = () => {
       </Grid>
       <Grid item xs={4} lg={4}>
         <HeaderCards
-          onClickAction={() => navigate('/nova-atividade/educacao')}
+          onClickAction={() => navigate('/educacao')}
           content={'EDUCAÇÃO'}
           icon={<SchoolOutlinedIcon sx={{ fontSize: '4rem' }} />}
           subtitle={'Adicionar nova atividade'}

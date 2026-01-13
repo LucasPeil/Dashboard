@@ -30,6 +30,18 @@ const getLivrosQty = asyncHandler(async (req, res) => {
     throw new Error('Erro ao recuperar os dados');
   }
 });
+const getSeminariosQty = asyncHandler(async (req, res) => {
+  const qty = await AtividadesEducacao.countDocuments({
+    categoria: 'Seminários',
+    userId: req.user.id,
+  }).exec();
+  if (typeof qty === 'number') {
+    res.status(200).json({ seminariosQuantidade: qty });
+  } else {
+    res.status(404);
+    throw new Error('Erro ao recuperar os dados');
+  }
+});
 const getSingleAtividadeEducacao = asyncHandler(async (req, res) => {
   const { id } = req.params;
   const atividade = await AtividadesEducacao.findById(id);
@@ -89,4 +101,5 @@ module.exports = {
   deleteAtividadeEducacao,
   getCursosQty,
   getLivrosQty,
+  getSeminariosQty,
 };

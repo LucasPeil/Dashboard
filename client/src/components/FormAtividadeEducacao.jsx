@@ -56,7 +56,7 @@ const FormAtividadeEducacao = memo(function FormAtividadeEducacao() {
   const btnColor = '#648d64';
   const btnHoverColor = '#4E7A4E';
   const title = 'Nova Atividade de Educação';
-  const categoriaItens = ['Cursos', 'Livros'];
+  const categoriaItens = ['Cursos', 'Livros', 'Seminários'];
 
   const atividadeEducacao = useSelector(
     (state) => state.atividadesEducacao.atividadeEducacao

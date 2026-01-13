@@ -17,27 +17,29 @@ function App() {
       <VerticalMenu />
 
       <Routes>
-        <Route path="/" element={<VisaoGeralDashboard />}>
-          <Route path="nova-atividade/casa" element={<FormAtividadeCasa />} />
-          <Route path="nova-atividade/lazer" element={<FormAtividadeLazer />} />
-          <Route
-            path="nova-atividade/educacao"
-            element={<FormAtividadeEducacao />}
-          />
-        </Route>
+        <Route path="/" element={<VisaoGeralDashboard />}></Route>
         <Route path="/educacao" element={<EducacaoDashboard />}>
           <Route
             path="nova-atividade/educacao/:id"
             element={<FormAtividadeEducacao />}
           />
+          <Route
+            path="nova-atividade/educacao/"
+            element={<FormAtividadeEducacao />}
+          />
         </Route>
         <Route path="/casa" element={<CasaDashboard />}>
+          <Route path="nova-atividade/casa" element={<FormAtividadeCasa />} />
           <Route
             path="nova-atividade/casa/:id"
             element={<FormAtividadeCasa />}
           />
         </Route>
         <Route path="/lazer" element={<LazerDashboard />}>
+          <Route
+            path="nova-atividade/lazer/"
+            element={<FormAtividadeLazer />}
+          />
           <Route
             path="nova-atividade/lazer/:id"
             element={<FormAtividadeLazer />}

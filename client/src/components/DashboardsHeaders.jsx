@@ -1,15 +1,15 @@
-import React, { memo } from 'react';
+import AddIcon from '@mui/icons-material/Add';
 import FilterAltOffIcon from '@mui/icons-material/FilterAltOff';
 import { Box, IconButton, Stack, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import Tooltip, { tooltipClasses } from '@mui/material/Tooltip';
-import AddIcon from '@mui/icons-material/Add';
-import { setOpenModalCasa } from '../features/casa/casaSlice';
-import { useDispatch } from 'react-redux';
+import { memo } from 'react';
+import { useNavigate } from 'react-router-dom';
 const DashboardsHeaders = memo(function DashboardsHeaders({
   categorySelected,
   title,
   cleanFilters,
+  path,
 }) {
   const BootstrapTooltip = styled(({ className, ...props }) => (
     <Tooltip {...props} arrow classes={{ popper: className }} />
@@ -18,14 +18,14 @@ const DashboardsHeaders = memo(function DashboardsHeaders({
       fontSize: 13,
     },
   }));
-  const dispatch = useDispatch();
-  const openModal = () => dispatch(setOpenModalCasa());
+
+  const navigate = useNavigate();
   return (
     <Stack
       direction={'column'}
       justifyContent={'space-between'}
       alignItems={'space-between'}
-      sx={{ position: 'relative' }}
+      sx={{ position: 'relative', width: '100%' }}
     >
       <Box
         sx={{
@@ -50,7 +50,7 @@ const DashboardsHeaders = memo(function DashboardsHeaders({
         </Typography>
         <BootstrapTooltip title="Adicionar nova atividade" arrow>
           <IconButton
-            onClick={openModal}
+            onClick={() => navigate(path)}
             sx={{
               position: 'absolute',
               right: '3rem',

@@ -19,6 +19,7 @@ const CategoryCards = React.memo(
     const styles = useMemo(() => {
       const activeStyle = isSelected
         ? {
+            width: '100%',
             cursor: 'pointer',
             transform: 'scale(110%)',
             '.category-banner-casa, .category-banner-lazer, .category-banner-educacao':
@@ -35,7 +36,7 @@ const CategoryCards = React.memo(
 
       const baseStyle = {
         display: 'flex',
-        width: { xs: '100%', sm: '18rem', md: '22rem' },
+        width: '100%',
         minHeight: '9.5rem',
         borderRadius: '0.6rem',
         position: 'relative',
@@ -80,7 +81,7 @@ const CategoryCards = React.memo(
               color: 'white',
             }}
           >
-            <Icon sx={{ position: 'absolute', fontSize: '1.8rem', ml: 2 }} />
+            <Icon sx={{ position: 'absolute', fontSize: '1.1em', ml: 2 }} />
           </Typography>
         </Box>
         <Box

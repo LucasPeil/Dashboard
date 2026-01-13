@@ -6,6 +6,7 @@ const {
   deleteAtividadeEducacao,
   getCursosQty,
   getLivrosQty,
+  getSeminariosQty,
 } = require('../controller/atividadesEducacaoController');
 const router = express.Router();
 const AtividadesEducacao = require('../models/atividadesEducacaoModel');
@@ -31,6 +32,7 @@ router
   .post(protect, authorization, setNewAtividadeEducacao);
 router.route('/quantidadeCursos').get(protect, getCursosQty);
 router.route('/quantidadeLivros').get(protect, getLivrosQty);
+router.route('/quantidadeSeminarios').get(protect, getSeminariosQty);
 
 router
   .route('/:id')

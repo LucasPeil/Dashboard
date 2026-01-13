@@ -20,6 +20,7 @@ import {
   getAllAtividadesEducacao,
   getCursosQty,
   getLivrosQty,
+  getSeminariosQty,
   removeSingleAtividadeEducacao,
   resetRegisterEducacao,
   resetRemoveEducacao,
@@ -35,6 +36,7 @@ import SearchBar from '../SearchBar';
 import NoRecord from '../NoRecord';
 import { useNavigate } from 'react-router-dom';
 import DashboardContainer from '../Container';
+import CategoryCardsContainer from '../CategoryCardsContainer';
 const EducacaoDashboard = () => {
   const dispatch = useDispatch();
   const [openSingleAtividade, setOpenSingleAtividade] = useState(false);
@@ -68,6 +70,7 @@ const EducacaoDashboard = () => {
     remove,
     quantidadeCursos,
     quantidadeLivros,
+    quantidadeSeminarios,
   } = useSelector((state) => state.atividadesEducacao);
 
   const handleCardClick = useCallback((idx, title) => {
@@ -97,6 +100,7 @@ const EducacaoDashboard = () => {
 
     dispatch(getCursosQty());
     dispatch(getLivrosQty());
+    dispatch(getSeminariosQty());
     return () => {
       dispatch(resetRegisterEducacao());
       dispatch(resetRemoveEducacao());
@@ -191,23 +195,10 @@ const EducacaoDashboard = () => {
           cleanFilters={cleanFilters}
           categorySelected={categorySelected}
           title={'DETALHES SOBRE SUA EDUCAÇÃO'}
+          path="nova-atividade/educacao"
         />
 
-        <Stack
-          direction={downMd ? 'column' : 'row'}
-          spacing={downMd ? 2 : 5}
-          sx={{
-            justifyContent: 'start',
-            alignItems: `${downMd ? 'center' : 'start'}`,
-            mt: 7,
-            mb: 2,
-            position: 'relative',
-            zIndex: 10,
-            width: '100%',
-            px: 2,
-            boxSizing: 'border-box',
-          }}
-        >
+        <CategoryCardsContainer minCardWidth={220}>
           <CategoryCards
             idx={0}
             isSelected={categoryCardSelected[0]}
@@ -236,7 +227,21 @@ const EducacaoDashboard = () => {
             bgcolor={'#648d64'}
             Icon={MenuBookOutlinedIcon}
           />
-        </Stack>
+          <CategoryCards
+            idx={2}
+            isSelected={categoryCardSelected[2]}
+            onSelect={handleCardClick}
+            distance={5}
+            classLabel="category-banner-educacao"
+            qty={quantidadeSeminarios}
+            categorySelected={categorySelected}
+            setCategorySelected={setCategorySelected}
+            title="Seminários"
+            description={'Dê uma olhada nos seminários assistidos...'}
+            bgcolor={'#648d64'}
+            Icon={MenuBookOutlinedIcon}
+          />
+        </CategoryCardsContainer>
 
         <Grid container>
           <Grid

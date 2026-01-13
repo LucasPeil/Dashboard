@@ -29,6 +29,7 @@ import {
   resetRemoveCasa,
   setOpenModalCasa,
 } from '../../features/casa/casaSlice';
+import CategoryCardsContainer from '../CategoryCardsContainer';
 import { customStyles } from '../../styles/stylesConst';
 import CategoryCards from '../CategoryCards';
 import DashboardsHeaders from '../DashboardsHeaders';
@@ -60,6 +61,7 @@ const CasaDashboard = () => {
 
   const theme = useTheme();
   const downMd = useMediaQuery(theme.breakpoints.down('md'));
+  const downLg = useMediaQuery(theme.breakpoints.down('lg'));
 
   // Estado dos Cards
   const [categoryCardSelected, setCategoryCardSelected] = useState([
@@ -191,23 +193,10 @@ const CasaDashboard = () => {
           cleanFilters={cleanFilters}
           categorySelected={categorySelected}
           title={'DETALHES SOBRE AS ATIVIDADES DOMÉSTICAS'}
+          path="nova-atividade/casa"
         />
 
-        <Stack
-          direction={downMd ? 'column' : 'row'}
-          spacing={downMd ? 2 : 5}
-          sx={{
-            justifyContent: 'start',
-            alignItems: `${downMd ? 'center' : 'start'}`,
-            mt: 7,
-            mb: 2,
-            position: 'relative',
-            zIndex: 10,
-            width: '100%',
-            px: 2,
-            boxSizing: 'border-box',
-          }}
-        >
+        <CategoryCardsContainer minCardWidth={300}>
           <CategoryCards
             idx={0}
             title="Compras"
@@ -246,7 +235,7 @@ const CasaDashboard = () => {
             isSelected={categoryCardSelected[2]}
             onSelect={handleCardClick}
           />
-        </Stack>
+        </CategoryCardsContainer>
 
         <Grid container>
           <Grid item xs={12} sx={{ position: 'relative', px: 2 }}>

@@ -9,12 +9,16 @@ const DashboardContainer = ({ children }) => {
       <Box
         sx={{
           transition: 'all 0.5s ease',
-          width: upMd ? 'calc(100% - 6rem)' : '100%',
+          margin: !upMd && `auto auto`,
+          width: upMd ? 'calc(100% - 6rem)' : '96%',
         }}
       >
         <Paper
           elevation={6}
           sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
             boxSizing: 'border-box',
             width: downMd ? '100%' : 'calc(100% - 6rem)',
             margin: '2rem auto',
