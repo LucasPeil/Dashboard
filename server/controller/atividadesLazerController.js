@@ -85,7 +85,7 @@ const setNewAtividadeLazer = asyncHandler(async (req, res) => {
     atividadeLazer = await atividadeLazer.save();
     message = 'Aividade registrada com sucesso.';
   }
-  console.log(atividadeLazer);
+
   if (atividadeLazer) {
     res.status(201).json({ atividadeLazer, message });
   } else {
