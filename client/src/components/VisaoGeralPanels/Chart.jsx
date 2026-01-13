@@ -18,7 +18,7 @@ import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
 import { getTotalDinheiroGasto } from '../../features/visaoGeral/visaoGeralSlice';
 import { useEffect, useState } from 'react';
-const Chart = () => {
+const Chart = ({ ano }) => {
   const theme = useTheme();
   ChartJS.register(
     CategoryScale,
@@ -106,7 +106,6 @@ const Chart = () => {
       },
     ],
   };
-  const [ano, setAno] = useState(new Date().getFullYear());
   useEffect(() => {
     dispatch(getTotalDinheiroGasto({ ano, userId: user._id }));
   }, [

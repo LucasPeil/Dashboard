@@ -116,7 +116,7 @@ const VisaoGeralDashboard = () => {
                 }}
               >
                 <Suspense fallback={<div>Loading...</div>}>
-                  <Chart />
+                  <Chart ano={ano} />
                 </Suspense>
                 <Stack
                   direction="row"
