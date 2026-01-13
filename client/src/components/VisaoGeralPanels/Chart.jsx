@@ -13,7 +13,7 @@ import { Bar } from 'react-chartjs-2';
 import { monthsNames } from '../../../utils/monthsNames';
 import '../../index.css';
 import { useTheme } from '@emotion/react';
-import { useMediaQuery } from '@mui/material';
+import { Box, CircularProgress, useMediaQuery } from '@mui/material';
 import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
 import { getTotalDinheiroGasto } from '../../features/visaoGeral/visaoGeralSlice';
@@ -54,7 +54,9 @@ const Chart = ({ ano }) => {
     (state) => state.atividadesEducacao
   );
 
-  const { dinheiroGasto } = useSelector((state) => state.dinheiroGasto);
+  const { dinheiroGasto, isLoading } = useSelector(
+    (state) => state.dinheiroGasto
+  );
   const barOptions = {
     responsive: true,
     plugins: {
@@ -114,6 +116,21 @@ const Chart = ({ ano }) => {
     registerLazer.isSuccess,
     registerEducacao.isSuccess,
   ]);
+
+  if (isLoading) {
+    return (
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          height: '100%',
+        }}
+      >
+        <CircularProgress />
+      </Box>
+    );
+  }
 
   return <Bar options={barOptions} data={data} redraw={true} />;
 };

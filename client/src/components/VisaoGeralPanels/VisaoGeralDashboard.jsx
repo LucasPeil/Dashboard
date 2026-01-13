@@ -10,13 +10,13 @@ import {
   Typography,
   useMediaQuery,
 } from '@mui/material';
-import { Suspense, useEffect, useState } from 'react';
+import { Suspense, useEffect, useState, lazy } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import MotionDiv from '../../MotionDiv';
 import '../../index.css';
 import VisaoGeralHeaderButtons from '../VisaoGeralHeaderButtons';
-import Chart from './Chart';
+const Chart = lazy(() => import('./Chart'));
 const yearsRange = () => {
   const currentYear = new Date().getFullYear();
   const years = [];
