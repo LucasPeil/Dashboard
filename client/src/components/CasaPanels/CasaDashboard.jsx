@@ -11,6 +11,8 @@ import {
   Paper,
   Stack,
   useMediaQuery,
+  Divider,
+  Typography,
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
@@ -46,12 +48,10 @@ const CasaDashboard = () => {
   // Callbacks simples
   const handleCloseSingleAtividade = useCallback(
     () => setOpenSingleAtividade(false),
-    []
+    [],
   );
-
   const [selectedRow, setSelectedRow] = useState();
   const [categorySelected, setCategorySelected] = useState('');
-
   // Paginação e Filtros
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(10);
@@ -60,9 +60,7 @@ const CasaDashboard = () => {
   const [filter, setFilter] = useState('');
 
   const theme = useTheme();
-  const downMd = useMediaQuery(theme.breakpoints.down('md'));
-  const downLg = useMediaQuery(theme.breakpoints.down('lg'));
-
+  const omit = useMediaQuery(theme.breakpoints.down('lg'));
   // Estado dos Cards
   const [categoryCardSelected, setCategoryCardSelected] = useState([
     false,
@@ -71,15 +69,22 @@ const CasaDashboard = () => {
   ]);
 
   const dispatch = useDispatch();
-  const {
-    atividadesCasa,
-    isLoading,
-    register,
-    remove,
-    quantidadeLimpeza,
-    quantidadeCompras,
-    quantidadeRefeicoes,
-  } = useSelector((state) => state.atividadesCasa);
+
+  const atividadesCasa = useSelector(
+    (state) => state.atividadesCasa.atividadesCasa,
+  );
+  const isLoading = useSelector((state) => state.atividadesCasa.isLoading);
+  const register = useSelector((state) => state.atividadesCasa.register);
+  const remove = useSelector((state) => state.atividadesCasa.remove);
+  const quantidadeLimpeza = useSelector(
+    (state) => state.atividadesCasa.quantidadeLimpeza,
+  );
+  const quantidadeCompras = useSelector(
+    (state) => state.atividadesCasa.quantidadeCompras,
+  );
+  const quantidadeRefeicoes = useSelector(
+    (state) => state.atividadesCasa.quantidadeRefeicoes,
+  );
   const handleCardClick = useCallback((idx, title) => {
     setCategorySelected(title);
     setCategoryCardSelected((prev) => {
@@ -120,18 +125,59 @@ const CasaDashboard = () => {
         width: '45%',
         selector: (row) => row.nomeAtividade,
         sortable: true,
+        omit: omit,
       },
       {
         name: 'Descrição',
         width: '45%',
         cell: (row) => row.descricaoAtividade,
         sortable: true,
+        omit: omit,
       },
+      {
+        id: 'all',
+        omit: !omit,
+        grow: 2,
+        cell: (row) => {
+          return (
+            <Box sx={{ pt: 2, width: '100%' }}>
+              <Divider sx={{ fontWeight: 'bold', fontSize: '1.2rem' }}>
+                Nome
+              </Divider>
+              <Typography sx={{ py: 1, textAlign: 'center' }}>
+                {row.nomeAtividade.length > 30
+                  ? `${row.nomeAtividade.slice(0, 30)}...`
+                  : `${row.nomeAtividade} `}
+              </Typography>
+              <Divider sx={{ fontWeight: 'bold', fontSize: '1.2rem' }}>
+                Descrição
+              </Divider>
+              <Typography sx={{ py: 1, textAlign: 'center' }}>
+                {row.descricaoAtividade.length > 30
+                  ? `${row.descricaoAtividade.slice(0, 30)}...`
+                  : `${row.descricaoAtividade} `}
+              </Typography>
+            </Box>
+          );
+        },
+      },
+    ],
+    [dispatch, omit],
+  ); // Dependência apenas no dispatch (que é estável)
+  const buttonColumns = useMemo(() => {
+    return [
       {
         name: 'Ações',
         width: '10%',
+        button: true,
         cell: (row) => (
-          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+          <Box
+            sx={{
+              display: 'flex',
+              flexDirection: { xs: 'column', lg: 'row' },
+              alignItems: 'center',
+            }}
+          >
             <IconButton
               onClick={() => {
                 navigate(`/casa/nova-atividade/casa/${row._id}`);
@@ -142,7 +188,7 @@ const CasaDashboard = () => {
             <IconButton
               onClick={() => {
                 dispatch(
-                  removeSingleAtividade({ id: row._id, userId: row?.userId })
+                  removeSingleAtividade({ id: row._id, userId: row?.userId }),
                 );
               }}
             >
@@ -151,9 +197,8 @@ const CasaDashboard = () => {
           </Box>
         ),
       },
-    ],
-    [dispatch]
-  ); // Dependência apenas no dispatch (que é estável)
+    ];
+  }, [dispatch, omit]);
 
   useEffect(() => {
     dispatch(
@@ -165,7 +210,7 @@ const CasaDashboard = () => {
         filter: filter,
         categorySelected: categorySelected,
         userId: user._id,
-      })
+      }),
     );
   }, [
     remove,
@@ -177,7 +222,6 @@ const CasaDashboard = () => {
     sortDirection,
     dispatch,
   ]);
-  // Adicionei prop e sortDirection nas dependências se eles afetam o fetch
 
   return (
     <MotionDiv>
@@ -197,51 +241,61 @@ const CasaDashboard = () => {
         />
 
         <CategoryCardsContainer minCardWidth={300}>
-          <CategoryCards
-            idx={0}
-            title="Compras"
-            description={'Veja as atividades relacionadas às compras do mês...'}
-            classLabel="category-banner-casa"
-            bgcolor={'#0c264e'}
-            Icon={ShoppingBasketOutlinedIcon}
-            qty={quantidadeCompras}
-            // Novas Props Otimizadas
-            isSelected={categoryCardSelected[0]}
-            onSelect={handleCardClick}
-          />
+          <Box component={'li'}>
+            <CategoryCards
+              idx={0}
+              title="Compras"
+              description={
+                'Veja as atividades relacionadas às compras do mês...'
+              }
+              classLabel="category-banner-casa"
+              bgcolor={'#0c264e'}
+              Icon={ShoppingBasketOutlinedIcon}
+              qty={quantidadeCompras}
+              // Novas Props Otimizadas
+              isSelected={categoryCardSelected[0]}
+              onSelect={handleCardClick}
+            />
+          </Box>
 
-          <CategoryCards
-            idx={1}
-            title="Limpeza"
-            description={
-              'Veja as atividades relacionadas a limpeza do seu lar...'
-            }
-            classLabel="category-banner-casa"
-            bgcolor={'#0c264e'}
-            Icon={LocalLaundryServiceOutlinedIcon}
-            qty={quantidadeLimpeza}
-            isSelected={categoryCardSelected[1]}
-            onSelect={handleCardClick}
-          />
+          <Box component={'li'}>
+            <CategoryCards
+              idx={1}
+              title="Limpeza"
+              description={
+                'Veja as atividades relacionadas a limpeza do seu lar...'
+              }
+              classLabel="category-banner-casa"
+              bgcolor={'#0c264e'}
+              Icon={LocalLaundryServiceOutlinedIcon}
+              qty={quantidadeLimpeza}
+              isSelected={categoryCardSelected[1]}
+              onSelect={handleCardClick}
+            />
+          </Box>
 
-          <CategoryCards
-            idx={2}
-            title="Refeições"
-            description={'Veja as atividades relacionadas a sua alimentação...'}
-            classLabel="category-banner-casa"
-            bgcolor={'#0c264e'}
-            Icon={RamenDiningOutlinedIcon}
-            qty={quantidadeRefeicoes}
-            isSelected={categoryCardSelected[2]}
-            onSelect={handleCardClick}
-          />
+          <Box component={'li'}>
+            <CategoryCards
+              idx={2}
+              title="Refeições"
+              description={
+                'Veja as atividades relacionadas a sua alimentação...'
+              }
+              classLabel="category-banner-casa"
+              bgcolor={'#0c264e'}
+              Icon={RamenDiningOutlinedIcon}
+              qty={quantidadeRefeicoes}
+              isSelected={categoryCardSelected[2]}
+              onSelect={handleCardClick}
+            />
+          </Box>
         </CategoryCardsContainer>
 
-        <Grid container>
+        <Grid component={'section'} container>
           <Grid item xs={12} sx={{ position: 'relative', px: 2 }}>
             <DataTable
               className="table"
-              columns={tableColumns}
+              columns={[...tableColumns, ...buttonColumns]}
               data={atividadesCasa.documents}
               customStyles={customStyles({ backgroundColor: '#D6E8FB' })}
               subHeader
@@ -275,7 +329,7 @@ const CasaDashboard = () => {
                     filter,
                     categorySelected,
                     userId: user._id,
-                  })
+                  }),
                 );
               }}
               onChangeRowsPerPage={(newLimit) => {
@@ -289,7 +343,7 @@ const CasaDashboard = () => {
                     filter,
                     categorySelected,
                     userId: user._id,
-                  })
+                  }),
                 );
               }}
             />

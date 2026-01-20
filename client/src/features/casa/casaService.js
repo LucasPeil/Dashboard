@@ -5,12 +5,12 @@ const API_URL =
     ? 'http://localhost:5101/api/atividades-casa'
     : `${window.location.origin}/api/atividades-casa`;
 
-const setNewAtividadeCasa = async (data, token) => {
+const setNewAtividadeCasa = async (data) => {
   const config = {
     headers: {
       'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`,
     },
+    withCredentials: true,
   };
   const formData = new FormData();
   formData.append('data', data); // Adiciona seus dados ao FormData
@@ -23,41 +23,41 @@ const setNewAtividadeCasa = async (data, token) => {
 
   return response.data;
 };
-const getComprasQty = async (token) => {
-  const config = { headers: { Authorization: `Bearer ${token}` } };
+const getComprasQty = async () => {
+  const config = { withCredentials: true };
   const response = await axios.get(API_URL + `/quantidadeCompras`, config);
   return response.data;
 };
-const getLimpezaQty = async (token) => {
-  const config = { headers: { Authorization: `Bearer ${token}` } };
+const getLimpezaQty = async () => {
+  const config = { withCredentials: true };
   const response = await axios.get(API_URL + `/quantidadeLimpeza`, config);
   return response.data;
 };
-const getRefeicoesQty = async (token) => {
-  const config = { headers: { Authorization: `Bearer ${token}` } };
+const getRefeicoesQty = async () => {
+  const config = { withCredentials: true };
   const response = await axios.get(API_URL + `/quantidadeRefeicoes`, config);
   return response.data;
 };
 
-const getAllAtividadesCasa = async (options, token) => {
+const getAllAtividadesCasa = async (options) => {
   const config = {
     params: { ...options },
-    headers: { Authorization: `Bearer ${token}` },
+    withCredentials: true,
   };
 
   const response = await axios.get(API_URL, config);
   return response.data;
 };
-const getSingleAtividade = async (id, token) => {
-  const config = { headers: { Authorization: `Bearer ${token}` } };
+const getSingleAtividade = async (id) => {
+  const config = { withCredentials: true };
   const response = await axios.get(API_URL + `/${id}`, config);
   return response.data;
 };
 
-const removeSingleAtividade = async ({ id, userId }, token) => {
+const removeSingleAtividade = async ({ id, userId }) => {
   const config = {
-    headers: { Authorization: `Bearer ${token}` },
     params: { userId },
+    withCredentials: true,
   };
   const response = await axios.delete(API_URL + `/${id}`, config);
   return response.data;

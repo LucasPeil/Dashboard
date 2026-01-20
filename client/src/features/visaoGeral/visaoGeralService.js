@@ -4,12 +4,10 @@ const API_URL =
   import.meta.env.VITE_ENV === 'development'
     ? 'http://localhost:5101/api/dinheiroGasto'
     : `${window.location.origin}/api/dinheiroGasto`;
-const getDinheiroGasto = async ({ ano, userId }, token) => {
+const getDinheiroGasto = async ({ ano, userId }) => {
   const config = {
     params: { ano: ano, userId: userId },
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
+    withCredentials: true,
   };
 
   const response = await axios.get(API_URL, config);

@@ -4,12 +4,12 @@ const API_URL =
     ? 'http://localhost:5101/api/atividades-educacao'
     : `${window.location.origin}/api/atividades-educacao`;
 
-const setNewAtividadeEducacao = async (data, token) => {
+const setNewAtividadeEducacao = async (data) => {
   const config = {
     headers: {
       'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`,
     },
+    withCredentials: true,
   };
 
   const formData = new FormData();
@@ -18,42 +18,42 @@ const setNewAtividadeEducacao = async (data, token) => {
   return response.data;
 };
 
-const getAllAtividadesEducacao = async (options, token) => {
+const getAllAtividadesEducacao = async (options) => {
   const config = {
     params: { ...options },
-    headers: { Authorization: `Bearer ${token}` },
+    withCredentials: true,
   };
 
   const response = await axios.get(API_URL, config);
 
   return response.data;
 };
-const getSingleAtividadeEducacao = async (id, token) => {
-  const config = { headers: { Authorization: `Bearer ${token}` } };
+const getSingleAtividadeEducacao = async (id) => {
+  const config = { withCredentials: true };
   const response = await axios.get(API_URL + `/${id}`, config);
   return response.data;
 };
 
-const removeSingleAtividadeEducacao = async ({ id, userId }, token) => {
+const removeSingleAtividadeEducacao = async ({ id, userId }) => {
   const config = {
-    headers: { Authorization: `Bearer ${token}` },
     params: { userId },
+    withCredentials: true,
   };
   const response = await axios.delete(API_URL + `/${id}`, config);
   return response.data;
 };
-const getCursosQty = async (token) => {
-  const config = { headers: { Authorization: `Bearer ${token}` } };
+const getCursosQty = async () => {
+  const config = { withCredentials: true };
   const response = await axios.get(API_URL + `/quantidadeCursos`, config);
   return response.data;
 };
-const getLivrosQty = async (token) => {
-  const config = { headers: { Authorization: `Bearer ${token}` } };
+const getLivrosQty = async () => {
+  const config = { withCredentials: true };
   const response = await axios.get(API_URL + `/quantidadeLivros`, config);
   return response.data;
 };
-const getSeminariosQty = async (token) => {
-  const config = { headers: { Authorization: `Bearer ${token}` } };
+const getSeminariosQty = async () => {
+  const config = { withCredentials: true };
   const response = await axios.get(API_URL + `/quantidadeSeminarios`, config);
   return response.data;
 };

@@ -11,9 +11,8 @@ const initialState = {
 export const getTotalDinheiroGasto = createAsyncThunk(
   'visaoGeral/getTotalDinheiroGasto',
   async ({ ano, userId }, thunkAPI) => {
-    const token = thunkAPI.getState().auth.user.token;
     try {
-      return await visaoGeralService.getDinheiroGasto({ ano, userId }, token);
+      return await visaoGeralService.getDinheiroGasto({ ano, userId });
     } catch (error) {
       const message =
         (error.response &&

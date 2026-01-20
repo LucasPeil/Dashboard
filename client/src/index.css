@@ -1,85 +1,23 @@
 
-.icon-shake{
-     animation: shake-icon-animation 0.5s ease-in-out 0.1s; 
+
+ul{
+    display: inline;
+    padding: 0;
 }
-
-@keyframes shake-icon-animation{
-    0%{transform: rotate(0deg);}
-    16%{transform: rotate(5deg);}
-    32%{transform: rotate(-5deg);}
-    48%{transform: rotate(0deg);}
-    64%{transform: rotate(5deg);}
-    80%{transform: rotate(-5deg);}
-    100%{transform: rotate(0deg);}
+ul >li{
+    display: inline;
 }
+button{
+  border: none; 
+  padding: 0;
 
-
+}
+a{
+    text-decoration: none;
+}
 .icon-container{
     overflow:hidden
 }
-.relatorioButton{
-    position: relative;
-    transition: all 0.2s ease-in-out;
-    background-color: transparent;
-    width: 20%;
-    color: black !important;
-    transition: all 1s ease ;
-    
-}
-
-.relatorioButton::before{
-    content: "";
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    border-top: 2px solid #4b5a50;
-    border-bottom: 2px solid #4b5a50;
-   /*  transform: scaleY(2); */
-    top:0rem;
-    left:0rem;
-    opacity: 0;
-    transition: all 0.2s ease-in-out;
-    
-
-}
-.relatorioButton::after{
-    content: "";
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    background-color: #4b5a50;
-    transform: scale(0);
-    z-index: -1;
-    top:2px;
-    left:0;
-    transition: all 0.2s ease-in-out 0.2s;
-    
-
-}
-
-.relatorioButton:hover:before{
-  transform: scale(1);
-  opacity: 1;
-}
-.relatorioButton:hover:after{
-    transform: scale(1);
-  opacity: 1;
-}
-
-.relatorioButton:hover{
-    color:white!important;
-    font-weight: bold;
-}
-.buttonLabel{
-    font-weight: bold !important;
-}
-.buttonLabel:hover::after{
-    
-    position: absolute;
-    padding-left: 1rem;
-
-}
-
 .coverEffect{
     /* transform: rotate(300deg) !important; */
     height:32rem !important;
@@ -131,16 +69,23 @@ position: relative;
     transition: color 0.3s ease-in-out 0.1s;
 }
 
-/* @media (min-width: 880px) and (max-width: 1150px) {
-    .category-banner-lazer, .category-banner-casa, .category-banner-educacao{
-        width: 35rem;
-    }
-    .category-qty, .title{
-       color: white;
-    }
-} */
-/* @media (min-width: 880px) and (max-width: 1150px) {
-    .category-banner-lazer, .category-banner-casa, .category-banner-educacao{
-        width: 25rem;
-    }
-} */
+.animated-underline {
+  position: relative; 
+  text-decoration: none;
+}
+
+.animated-underline::after {
+  content: '';
+  position: absolute;
+  width: 0; 
+  height: 2px; 
+  display: block;
+  color:white;
+  margin-top: 25px; 
+  background: currentColor;
+  transition: width 0.3s ease-in-out; 
+}
+
+.animated-underline:hover::after {
+  width: 100%; 
+}

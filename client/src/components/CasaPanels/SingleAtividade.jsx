@@ -44,81 +44,83 @@ const SingleAtividade = memo(function SingleAtividade({
     >
       <DialogTitle>{rowData?.nomeAtividade}</DialogTitle>
       <DialogContent dividers>
-        <Box sx={{ borderTop: '1px solid #B9BDBD' }}>
-          <Box className="modal-atividade-container">
-            <Typography
-              variant="caption"
-              component={'span'}
-              className="modal-atividade-label"
-            >
-              Nome da Atividade
-            </Typography>
-            <Stack direction={'row'} justifyContent={'start'}>
-              <TopicOutlinedIcon sx={{ color: iconColor, mr: 1 }} />
-              <Typography>{rowData?.nomeAtividade}</Typography>
-            </Stack>
+        <Box component={'article'}>
+          <Box sx={{ borderTop: '1px solid #B9BDBD' }}>
+            <Box className="modal-atividade-container">
+              <Typography
+                variant="caption"
+                component={'span'}
+                className="modal-atividade-label"
+              >
+                Nome da Atividade
+              </Typography>
+              <Stack direction={'row'} justifyContent={'start'}>
+                <TopicOutlinedIcon sx={{ color: iconColor, mr: 1 }} />
+                <Typography>{rowData?.nomeAtividade}</Typography>
+              </Stack>
+            </Box>
           </Box>
-        </Box>
-        <Box sx={{ borderTop: '1px solid #B9BDBD' }}>
-          <Box className="modal-atividade-container">
-            <Typography
-              variant="caption"
-              component={'span'}
-              className="modal-atividade-label"
-            >
-              Descrição
-            </Typography>
-            <Stack direction={'row'} justifyContent={'start'}>
-              <TextSnippetOutlinedIcon sx={{ color: iconColor, mr: 1 }} />
-              <Typography>{rowData?.descricaoAtividade}</Typography>
-            </Stack>
+          <Box sx={{ borderTop: '1px solid #B9BDBD' }}>
+            <Box className="modal-atividade-container">
+              <Typography
+                variant="caption"
+                component={'span'}
+                className="modal-atividade-label"
+              >
+                Descrição
+              </Typography>
+              <Stack direction={'row'} justifyContent={'start'}>
+                <TextSnippetOutlinedIcon sx={{ color: iconColor, mr: 1 }} />
+                <Typography>{rowData?.descricaoAtividade}</Typography>
+              </Stack>
+            </Box>
           </Box>
-        </Box>
-        <Box sx={{ borderTop: '1px solid #B9BDBD' }}>
-          <Box className="modal-atividade-container">
-            <Typography
-              variant="caption"
-              component={'span'}
-              className="modal-atividade-label"
-            >
-              Dinheiro gasto
-            </Typography>
-            <Stack direction={'row'} justifyContent={'start'}>
-              <AttachMoneyOutlinedIcon sx={{ color: iconColor, mr: 1 }} />
-              <Typography>{`${rowData?.dinheiroGasto} reais`}</Typography>
-            </Stack>
+          <Box sx={{ borderTop: '1px solid #B9BDBD' }}>
+            <Box className="modal-atividade-container">
+              <Typography
+                variant="caption"
+                component={'span'}
+                className="modal-atividade-label"
+              >
+                Dinheiro gasto
+              </Typography>
+              <Stack direction={'row'} justifyContent={'start'}>
+                <AttachMoneyOutlinedIcon sx={{ color: iconColor, mr: 1 }} />
+                <Typography>{`${rowData?.dinheiroGasto} reais`}</Typography>
+              </Stack>
+            </Box>
           </Box>
-        </Box>
-        <Box sx={{ borderTop: '1px solid #B9BDBD' }}>
-          <Box className="modal-atividade-container">
-            <Typography
-              variant="caption"
-              component={'span'}
-              className="modal-atividade-label"
-            >
-              Tempo dedicado à tarefa
-            </Typography>
-            <Stack direction={'row'} justifyContent={'start'}>
-              <AccessTimeOutlinedIcon sx={{ color: iconColor, mr: 1 }} />
-              <Typography>{`${rowData?.tempoGasto} minutos`}</Typography>
-            </Stack>
+          <Box sx={{ borderTop: '1px solid #B9BDBD' }}>
+            <Box className="modal-atividade-container">
+              <Typography
+                variant="caption"
+                component={'span'}
+                className="modal-atividade-label"
+              >
+                Tempo dedicado à tarefa
+              </Typography>
+              <Stack direction={'row'} justifyContent={'start'}>
+                <AccessTimeOutlinedIcon sx={{ color: iconColor, mr: 1 }} />
+                <Typography>{`${rowData?.tempoGasto} minutos`}</Typography>
+              </Stack>
+            </Box>
           </Box>
-        </Box>
-        <Box sx={{ borderTop: '1px solid #B9BDBD' }}>
-          <Box className="modal-atividade-container">
-            <Typography
-              variant="caption"
-              component={'span'}
-              className="modal-atividade-label"
-            >
-              Categoria
-            </Typography>
-            <Stack direction={'row'} justifyContent={'start'}>
-              <ContentPasteSearchOutlinedIcon
-                sx={{ color: iconColor, mr: 1 }}
-              />
-              <Typography>{rowData?.categoria}</Typography>
-            </Stack>
+          <Box sx={{ borderTop: '1px solid #B9BDBD' }}>
+            <Box className="modal-atividade-container">
+              <Typography
+                variant="caption"
+                component={'span'}
+                className="modal-atividade-label"
+              >
+                Categoria
+              </Typography>
+              <Stack direction={'row'} justifyContent={'start'}>
+                <ContentPasteSearchOutlinedIcon
+                  sx={{ color: iconColor, mr: 1 }}
+                />
+                <Typography>{rowData?.categoria}</Typography>
+              </Stack>
+            </Box>
           </Box>
         </Box>
       </DialogContent>

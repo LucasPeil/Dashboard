@@ -65,32 +65,31 @@ const CategoryCards = React.memo(
 
     return (
       <Paper
+        component={'button'}
         style={{ '--banner-color': bgcolor }}
         elevation={5}
         onClick={handleClick}
         sx={styles}
       >
-        <Box className={classLabel}></Box>
-        <Box>
-          <Typography
-            variant="h4"
-            sx={{
-              position: 'absolute',
-              zIndex: 1,
-              top: '0.3rem',
-              color: 'white',
-            }}
-          >
-            <Icon sx={{ position: 'absolute', fontSize: '1.1em', ml: 2 }} />
-          </Typography>
-        </Box>
+        <Typography className={classLabel}></Typography>
+
+        <Icon
+          aria-hidden
+          sx={{
+            position: 'absolute',
+            fontSize: '3.1em',
+            ml: 2,
+            color: 'white',
+            top: '0.3rem',
+          }}
+        />
+
         <Box
           sx={{
             width: '100%',
             display: 'flex',
             flexDirection: 'column',
             justifyContent: 'center',
-
             pl: 1,
             mt: 1,
           }}
@@ -133,7 +132,7 @@ const CategoryCards = React.memo(
         </Box>
       </Paper>
     );
-  }
+  },
 );
 
 export default CategoryCards;

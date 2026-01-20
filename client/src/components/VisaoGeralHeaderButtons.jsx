@@ -6,7 +6,6 @@ import { Box, Grid, useMediaQuery, useTheme } from '@mui/material';
 import '../index.css';
 import HeaderCards from './HeaderCards';
 import { useState } from 'react';
-import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
 const VisaoGeralHeaderButtons = () => {
@@ -16,10 +15,15 @@ const VisaoGeralHeaderButtons = () => {
   const navigate = useNavigate();
 
   return (
-    <Grid container spacing={downLg ? 1 : 10}>
-      <Grid item xs={4} lg={4}>
+    <Grid
+      container
+      spacing={downLg ? 1 : 10}
+      component={'section'}
+      aria-label="Atalhos para cada página"
+    >
+      <Grid item xs={4} lg={4} aria-label="Atalho para página de casa">
         <HeaderCards
-          onClickAction={() => navigate('/casa')}
+          to={'/casa'}
           content={'CASA'}
           icon={<HomeOutlinedIcon sx={{ fontSize: '4rem' }} />}
           subtitle={'Adicionar nova atividade'}
@@ -56,9 +60,9 @@ const VisaoGeralHeaderButtons = () => {
           }
         />
       </Grid>
-      <Grid item xs={4} lg={4}>
+      <Grid item xs={4} lg={4} aria-label="Atalho para página de lazer">
         <HeaderCards
-          onClickAction={() => navigate('/lazer')}
+          to={'/lazer'}
           content={'LAZER'}
           icon={<CelebrationOutlinedIcon sx={{ fontSize: '4rem' }} />}
           subtitle={'Adicionar nova atividade'}
@@ -94,9 +98,9 @@ const VisaoGeralHeaderButtons = () => {
           }
         />
       </Grid>
-      <Grid item xs={4} lg={4}>
+      <Grid item xs={4} lg={4} aria-label="Atalho para página de educação">
         <HeaderCards
-          onClickAction={() => navigate('/educacao')}
+          to={'/educacao'}
           content={'EDUCAÇÃO'}
           icon={<SchoolOutlinedIcon sx={{ fontSize: '4rem' }} />}
           subtitle={'Adicionar nova atividade'}

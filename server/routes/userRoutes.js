@@ -1,4 +1,4 @@
-const express = require("express");
+const express = require('express');
 const router = express.Router();
 
 const {
@@ -9,12 +9,14 @@ const {
   deleteUser,
   verify,
   resetPassword,
-} = require("../controller/userController");
+  logout,
+} = require('../controller/userController');
 
-router.route("/login").post(login);
-router.route("/cadastrar").post(createUser);
-router.route("/reset-password").put(resetPassword);
-router.route("/verify").post(verify);
-router.route("/:id").get(getById).delete(deleteUser).patch(updateUser);
+router.route('/login').post(login);
+router.route('/logout').post(logout);
+router.route('/cadastrar').post(createUser);
+router.route('/reset-password').put(resetPassword);
+router.route('/verify').post(verify);
+router.route('/:id').get(getById).delete(deleteUser).patch(updateUser);
 
 module.exports = router;

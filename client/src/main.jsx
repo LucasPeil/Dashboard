@@ -18,7 +18,7 @@ const theme = createTheme({
       xs: 0,
       sm: 568,
       md: 880,
-      lg: 1024,
+      lg: 1100,
       xl: 1336,
       xxl: 1536,
     },
@@ -79,5 +79,5 @@ ReactDOM.createRoot(document.getElementById('root')).render(
         </ThemeProvider>
       </Provider>
     </StyleSheetManager>
-  </React.StrictMode>
+  </React.StrictMode>,
 );

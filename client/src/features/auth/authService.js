@@ -6,20 +6,21 @@ const API_URL =
     : `${window.location.origin}/api/users`;
 
 const login = async (userData) => {
-  const response = await axios.post(API_URL + '/login', userData);
+  const response = await axios.post(API_URL + '/login', userData, {
+    withCredentials: true,
+  });
   if (response.data) {
     localStorage.setItem('user', JSON.stringify(response.data));
   }
   return response.data;
 };
 
-const resetPassword = async (newPassword, token) => {
+const resetPassword = async (newPassword) => {
   const config = {
     headers: {
       'Content-Type': 'application/json',
-
-      Authorization: 'Bearer ' + token,
     },
+    withCredentials: true,
   };
 
   const response = await axios.put(
@@ -29,7 +30,7 @@ const resetPassword = async (newPassword, token) => {
   );
 
   if (response.data) {
-    localStorage.setItem('user', JSON.stringify('user', response.data));
+    localStorage.setItem('user', JSON.stringify(response.data));
   }
   return response.data;
 };
@@ -78,6 +79,7 @@ const cadastrarUser = async (data) => {
     headers: {
       'Content-Type': 'application/json',
     },
+    withCredentials: true,
   };
 
   const response = await axios.post(
@@ -92,7 +94,8 @@ const cadastrarUser = async (data) => {
 
   return response.data;
 };
-const logout = () => {
+const logout = async () => {
+  await axios.post(API_URL + '/logout', {}, { withCredentials: true });
   localStorage.removeItem('user');
 };
 

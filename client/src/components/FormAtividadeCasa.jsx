@@ -51,7 +51,7 @@ const FormAtividadeCasa = memo(function FormAtividadeCasa() {
   const params = useParams();
   const navigate = useNavigate();
   const { id } = params;
-
+  const [openDialog, setOpenDialog] = useState(true);
   // Specific Constants for Casa
   const btnColor = '#0c264e';
   const btnHoverColor = '#000000';
@@ -121,13 +121,16 @@ const FormAtividadeCasa = memo(function FormAtividadeCasa() {
   });
 
   const handleClose = () => {
-    navigate(-1);
+    setOpenDialog(false);
+    setTimeout(() => {
+      navigate(-1);
+    }, 200);
     formik.resetForm();
   };
 
   return (
     <Dialog
-      open={true}
+      open={openDialog}
       TransitionComponent={Transition}
       keepMounted
       onClose={handleClose}

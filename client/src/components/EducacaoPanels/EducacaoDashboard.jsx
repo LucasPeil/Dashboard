@@ -6,6 +6,8 @@ import {
   IconButton,
   Paper,
   Stack,
+  Divider,
+  Typography,
   useMediaQuery,
 } from '@mui/material';
 import { toast } from 'react-toastify';
@@ -43,7 +45,7 @@ const EducacaoDashboard = () => {
   const user = useSelector((state) => state.auth.user);
   const handleCloseSingleAtividade = useCallback(
     () => setOpenSingleAtividade(false),
-    []
+    [],
   );
 
   const [selectedRow, setSelectedRow] = useState();
@@ -56,8 +58,8 @@ const EducacaoDashboard = () => {
   const [filter, setFilter] = useState('');
 
   const theme = useTheme();
-  const downMd = useMediaQuery(theme.breakpoints.down('md'));
 
+  const omit = useMediaQuery(theme.breakpoints.down('lg'));
   const [categoryCardSelected, setCategoryCardSelected] = useState([
     false,
     false,
@@ -117,7 +119,7 @@ const EducacaoDashboard = () => {
         filter: filter,
         categorySelected: categorySelected,
         userId: user._id,
-      })
+      }),
     );
   }, [
     register,
@@ -130,32 +132,69 @@ const EducacaoDashboard = () => {
     sortDirection,
     dispatch,
   ]);
-
   const tableColumns = useMemo(
     () => [
       {
-        name: 'Título',
+        name: 'Nome da Atividade',
+        width: '45%',
         selector: (row) => row.nomeAtividade,
         sortable: true,
+        omit: omit,
       },
       {
         name: 'Descrição',
-        selector: (row) => row.descricaoAtividade,
+        width: '45%',
+        cell: (row) => row.descricaoAtividade,
         sortable: true,
+        omit: omit,
       },
+      {
+        id: 'all',
+        omit: !omit,
+        grow: 2,
+        cell: (row) => {
+          return (
+            <Box sx={{ pt: 2, width: '100%' }}>
+              <Divider sx={{ fontWeight: 'bold', fontSize: '1.2rem' }}>
+                Nome
+              </Divider>
+              <Typography sx={{ py: 1, textAlign: 'center' }}>
+                {row.nomeAtividade.length > 30
+                  ? `${row.nomeAtividade.slice(0, 30)}...`
+                  : `${row.nomeAtividade} `}
+              </Typography>
+              <Divider sx={{ fontWeight: 'bold', fontSize: '1.2rem' }}>
+                Descrição
+              </Divider>
+              <Typography sx={{ py: 1, textAlign: 'center' }}>
+                {row.descricaoAtividade.length > 30
+                  ? `${row.descricaoAtividade.slice(0, 30)}...`
+                  : `${row.descricaoAtividade} `}
+              </Typography>
+            </Box>
+          );
+        },
+      },
+    ],
+    [dispatch, omit],
+  );
+
+  const buttonColumns = useMemo(() => {
+    return [
       {
         name: 'Ações',
         width: '10%',
+        button: true,
         cell: (row) => (
           <Box
             sx={{
               display: 'flex',
+              flexDirection: { xs: 'column', lg: 'row' },
               alignItems: 'center',
             }}
           >
             <IconButton
               onClick={() => {
-                setSelectedRow(row);
                 navigate(`/educacao/nova-atividade/educacao/${row._id}`);
               }}
             >
@@ -167,7 +206,7 @@ const EducacaoDashboard = () => {
                   removeSingleAtividadeEducacao({
                     id: row._id,
                     userId: row?.userId,
-                  })
+                  }),
                 );
               }}
             >
@@ -176,10 +215,8 @@ const EducacaoDashboard = () => {
           </Box>
         ),
       },
-    ],
-    [dispatch]
-  );
-
+    ];
+  }, [dispatch, omit]);
   return (
     <MotionDiv>
       <Outlet />
@@ -243,34 +280,11 @@ const EducacaoDashboard = () => {
           />
         </CategoryCardsContainer>
 
-        <Grid container>
-          <Grid
-            sx={{
-              display: 'flex',
-              position: 'relative',
-              flexDirection: 'column',
-              justifyContent: 'start',
-              alignItems: 'start',
-            }}
-            item
-            xs={12}
-          >
-            <Box
-              sx={{
-                boxSizing: 'border-box',
-                p: 1,
-                height: '53px',
-                display: 'flex',
-                justifyContent: 'space-around',
-                alignItems: 'center',
-                width: '100%',
-              }}
-            ></Box>
-          </Grid>
+        <Grid component={'section'} container>
           <Grid item xs={12} sx={{ position: 'relative', px: 2 }}>
             <DataTable
               className="table"
-              columns={tableColumns}
+              columns={[...tableColumns, ...buttonColumns]}
               data={atividadesEducacao.documents}
               customStyles={customStyles({
                 backgroundColor: '#CEF4CE',
@@ -284,7 +298,6 @@ const EducacaoDashboard = () => {
               striped
               pagination
               paginationServer
-              pointerOnHover
               fixedHeader
               responsive
               progressPending={isLoading}
@@ -310,7 +323,7 @@ const EducacaoDashboard = () => {
                     filter: filter,
                     categorySelected: categorySelected,
                     userId: user._id,
-                  })
+                  }),
                 );
                 setPage(newPage);
               }}
@@ -324,7 +337,7 @@ const EducacaoDashboard = () => {
                     filter: filter,
                     categorySelected: categorySelected,
                     userId: user._id,
-                  })
+                  }),
                 );
                 setLimit(newLimit);
               }}

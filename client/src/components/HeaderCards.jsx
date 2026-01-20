@@ -2,6 +2,7 @@ import { Box, Paper, Tooltip, Typography, useMediaQuery } from '@mui/material';
 import { useSpring, animated } from '@react-spring/web';
 import '../index.css';
 import { useTheme } from '@emotion/react';
+import { Link } from 'react-router-dom';
 
 const HeaderCards = ({
   content,
@@ -10,7 +11,7 @@ const HeaderCards = ({
   containerDecoration,
   index,
   setShowAddIcon,
-  onClickAction,
+  to,
   bgColor,
 }) => {
   const theme = useTheme();
@@ -37,7 +38,8 @@ const HeaderCards = ({
       }}
     >
       <Paper
-        onClick={onClickAction}
+        component={Link}
+        to={to}
         onMouseOver={() => {
           setShowAddIcon((prev) => {
             return prev.map((listItem, listIdx) => {
@@ -103,6 +105,7 @@ const HeaderCards = ({
             >
               <Typography
                 variant="button"
+                component={'h2'}
                 sx={{
                   fontSize: '1.8rem',
                   fontWeight: 'bold',
@@ -110,7 +113,11 @@ const HeaderCards = ({
               >
                 {content}
               </Typography>
-              <Typography variant="caption" sx={{ fontSize: '0.9rem' }}>
+              <Typography
+                component={'span'}
+                variant="caption"
+                sx={{ fontSize: '0.9rem' }}
+              >
                 {subtitle}
               </Typography>
             </Box>

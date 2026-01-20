@@ -37,9 +37,8 @@ const initialState = {
 export const setNewAtividadeCasa = createAsyncThunk(
   'atividadeCasa/post',
   async (data, thunkAPI) => {
-    const token = thunkAPI.getState().auth.user.token;
     try {
-      return await casaService.setNewAtividadeCasa(data, token);
+      return await casaService.setNewAtividadeCasa(data);
     } catch (error) {
       const message =
         (error.response &&
@@ -54,9 +53,8 @@ export const setNewAtividadeCasa = createAsyncThunk(
 export const getAllAtividadesCasa = createAsyncThunk(
   'atividadesCasa/getAll',
   async (params, thunkAPI) => {
-    const token = thunkAPI.getState().auth.user.token;
     try {
-      return await casaService.getAllAtividadesCasa(params, token);
+      return await casaService.getAllAtividadesCasa(params);
     } catch (error) {
       const message =
         (error.response &&
@@ -72,9 +70,8 @@ export const getAllAtividadesCasa = createAsyncThunk(
 export const getSingleAtividade = createAsyncThunk(
   'atividadesCasa/singleAtividade',
   async (id, thunkAPI) => {
-    const token = thunkAPI.getState().auth.user.token;
     try {
-      return await casaService.getSingleAtividade(id, token);
+      return await casaService.getSingleAtividade(id);
     } catch (error) {
       const message =
         (error.response &&
@@ -89,9 +86,8 @@ export const getSingleAtividade = createAsyncThunk(
 export const removeSingleAtividade = createAsyncThunk(
   'atividadesCasa/remove',
   async ({ id, userId }, thunkAPI) => {
-    const token = thunkAPI.getState().auth.user.token;
     try {
-      return await casaService.removeSingleAtividade({ id, userId }, token);
+      return await casaService.removeSingleAtividade({ id, userId });
     } catch (error) {
       const message =
         (error.response &&
@@ -107,8 +103,7 @@ export const getComprasQty = createAsyncThunk(
   'atividadesCasa/getComprasQty',
   async (_, thunkAPI) => {
     try {
-      const token = thunkAPI.getState().auth.user.token;
-      return await casaService.getComprasQty(token);
+      return await casaService.getComprasQty();
     } catch (error) {
       const message =
         (error.response &&
@@ -124,8 +119,7 @@ export const getLimpezaQty = createAsyncThunk(
   'atividadesCasa/getLimpezaQty',
   async (_, thunkAPI) => {
     try {
-      const token = thunkAPI.getState().auth.user.token;
-      return await casaService.getLimpezaQty(token);
+      return await casaService.getLimpezaQty();
     } catch (error) {
       const message =
         (error.response &&
@@ -141,8 +135,7 @@ export const getRefeicoesQty = createAsyncThunk(
   'atividadesCasa/getRefeicoesQty',
   async (_, thunkAPI) => {
     try {
-      const token = thunkAPI.getState().auth.user.token;
-      return await casaService.getRefeicoesQty(token);
+      return await casaService.getRefeicoesQty();
     } catch (error) {
       const message =
         (error.response &&

@@ -3,12 +3,14 @@ const cors = require('cors');
 const path = require('path');
 const dotenv = require('dotenv').config();
 const bodyParser = require('body-parser');
+const cookieParser = require('cookie-parser');
 const errorHandler = require('./middlewares/errorHandler');
 const connectDb = require('./db');
 const PORT = process.env.PORT || 5030;
 
 connectDb();
 const app = express();
+app.use(cookieParser());
 app.use(
   cors({
     origin: [

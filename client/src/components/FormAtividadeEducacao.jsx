@@ -51,7 +51,7 @@ const FormAtividadeEducacao = memo(function FormAtividadeEducacao() {
   const params = useParams();
   const navigate = useNavigate();
   const { id } = params;
-
+  const [openDialog, setOpenDialog] = useState(true);
   // Specific Constants for Educacao
   const btnColor = '#648d64';
   const btnHoverColor = '#4E7A4E';
@@ -121,13 +121,16 @@ const FormAtividadeEducacao = memo(function FormAtividadeEducacao() {
   });
 
   const handleClose = () => {
-    navigate(-1);
+    setOpenDialog(false);
+    setTimeout(() => {
+      navigate(-1);
+    }, 200);
     formik.resetForm();
   };
 
   return (
     <Dialog
-      open={true}
+      open={openDialog}
       TransitionComponent={Transition}
       keepMounted
       onClose={handleClose}

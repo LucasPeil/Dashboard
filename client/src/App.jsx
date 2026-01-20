@@ -1,20 +1,19 @@
-import { useState } from 'react';
 import { Route, Routes } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import './App.css';
 import CasaDashboard from './components/CasaPanels/CasaDashboard';
 import EducacaoDashboard from './components/EducacaoPanels/EducacaoDashboard';
-import LazerDashboard from './components/LazerPanels/LazerDashboard';
-import VerticalMenu from './components/VerticalMenu';
-import VisaoGeralDashboard from './components/VisaoGeralPanels/VisaoGeralDashboard';
 import FormAtividadeCasa from './components/FormAtividadeCasa';
-import FormAtividadeLazer from './components/FormAtividadeLazer';
 import FormAtividadeEducacao from './components/FormAtividadeEducacao';
+import FormAtividadeLazer from './components/FormAtividadeLazer';
+import LazerDashboard from './components/LazerPanels/LazerDashboard';
+import Navbar from './components/Navbar';
+import VisaoGeralDashboard from './components/VisaoGeralPanels/VisaoGeralDashboard';
 
 function App() {
   return (
     <>
-      <VerticalMenu />
+      <Navbar />
 
       <Routes>
         <Route path="/" element={<VisaoGeralDashboard />}></Route>

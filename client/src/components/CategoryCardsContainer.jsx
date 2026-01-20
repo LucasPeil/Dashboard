@@ -3,6 +3,7 @@ import { Box } from '@mui/material';
 const CategoryCardsContainer = ({ minCardWidth, children }) => {
   return (
     <Box
+      component="ul"
       sx={{
         display: 'grid',
         my: 5,

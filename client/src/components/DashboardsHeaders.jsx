@@ -4,7 +4,7 @@ import { Box, IconButton, Stack, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import Tooltip, { tooltipClasses } from '@mui/material/Tooltip';
 import { memo } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 const DashboardsHeaders = memo(function DashboardsHeaders({
   categorySelected,
   title,
@@ -19,9 +19,9 @@ const DashboardsHeaders = memo(function DashboardsHeaders({
     },
   }));
 
-  const navigate = useNavigate();
   return (
     <Stack
+      component="header"
       direction={'column'}
       justifyContent={'space-between'}
       alignItems={'space-between'}
@@ -48,36 +48,34 @@ const DashboardsHeaders = memo(function DashboardsHeaders({
         >
           {title}
         </Typography>
+
         <BootstrapTooltip title="Adicionar nova atividade" arrow>
-          <IconButton
-            onClick={() => navigate(path)}
-            sx={{
+          <Link
+            to={path}
+            aria-label="Adicionar nova atividade"
+            style={{
               position: 'absolute',
               right: '3rem',
               padding: '0 !important',
               backgroundColor: 'white',
-              bottom: '-1.3rem',
-              transition: 'all 0.5s ease',
-              '&:hover': {
-                backgroundColor: 'white',
-                transform: 'scale(125%)',
-                color: '#ACACAC',
-              },
+              bottom: '-1.5rem',
             }}
           >
             <AddIcon
+              aria-hidden="true"
               sx={{
                 fontSize: '2.6rem',
                 color: '#d8d8d8',
               }}
             />
-          </IconButton>
+          </Link>
         </BootstrapTooltip>
       </Box>
       {categorySelected && (
         <Tooltip title="Limpar filtro">
           <IconButton
             onClick={cleanFilters}
+            aria-label="Limpar filtro"
             sx={{
               position: 'absolute',
               bottom: '-3rem',
@@ -87,7 +85,7 @@ const DashboardsHeaders = memo(function DashboardsHeaders({
               },
             }}
           >
-            <FilterAltOffIcon />
+            <FilterAltOffIcon aria-hidden="true" />
           </IconButton>
         </Tooltip>
       )}

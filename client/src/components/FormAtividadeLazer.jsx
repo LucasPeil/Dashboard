@@ -51,7 +51,7 @@ const FormAtividadeLazer = memo(function FormAtividadeLazer() {
   const params = useParams();
   const navigate = useNavigate();
   const { id } = params;
-
+  const [openDialog, setOpenDialog] = useState(true);
   // Specific Constants for Lazer
   const btnColor = '#f4b26a';
   const btnHoverColor = '#E39F54';
@@ -121,13 +121,16 @@ const FormAtividadeLazer = memo(function FormAtividadeLazer() {
   });
 
   const handleClose = () => {
-    navigate(-1);
+    setOpenDialog(false);
+    setTimeout(() => {
+      navigate(-1);
+    }, 200);
     formik.resetForm();
   };
 
   return (
     <Dialog
-      open={true}
+      open={openDialog}
       TransitionComponent={Transition}
       keepMounted
       onClose={handleClose}

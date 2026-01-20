@@ -11,6 +11,15 @@ const createNewPassword = async (password) => {
   return bcrypt.hash(password, salt);
 };
 
+const setTokenCookie = (res, token) => {
+  res.cookie('jwt', token, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'lax', // Use lax for better compatibility during dev if needed, or strict
+    maxAge: 7 * 24 * 60 * 60 * 1000,
+  });
+};
+
 const createUser = asyncHandler(async (req, res) => {
   const { username, email, password } = req.body;
   const userExists = await User.findOne({ username: username, email: email });
@@ -25,12 +34,12 @@ const createUser = asyncHandler(async (req, res) => {
     password: hashedPassword,
   });
   let token = generateToken(user._id);
+  setTokenCookie(res, token);
 
   if (user) {
     res.status(200).json({
       _id: user._id,
       email: user.email,
-      token: token,
       resetPassword: user.resetPassword,
     });
   } else {
@@ -48,10 +57,11 @@ const login = asyncHandler(async (req, res) => {
   const user = await User.findOne({ email: email }).lean();
 
   if (user && (await bcrypt.compare(password, user.password))) {
+    const token = generateToken(user._id);
+    setTokenCookie(res, token);
     res.status(201).json({
       _id: user._id,
       email: user.email,
-      token: generateToken(user._id),
       resetPassword: user.resetPassword,
     });
   } else {
@@ -74,17 +84,32 @@ const resetPassword = asyncHandler(async (req, res) => {
   ).lean();
 
   if (user) {
-    res.status(201).json({ ...user, token: generateToken(user._id) });
+    const token = generateToken(user._id);
+    setTokenCookie(res, token);
+    res.status(201).json({ ...user });
   } else {
     res.status(400);
     throw new Error('Dados inválidos');
   }
 });
 
+const logout = asyncHandler(async (req, res) => {
+  res.cookie('jwt', '', {
+    httpOnly: true,
+    expires: new Date(0),
+  });
+  res.status(200).json({ message: 'Deslogado com sucesso' });
+});
+
 const verify = asyncHandler(async (req, res) => {
   let token;
   try {
-    token = req.headers.authorization.split(' ')[1];
+    token = req.cookies.jwt;
+
+    if (!token) {
+      res.status(401);
+      throw new Error('Não autorizado, token não encontrado');
+    }
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     req.user = await User.findById(decoded.id).select('-password');
@@ -146,4 +171,5 @@ module.exports = {
   verify,
   login,
   resetPassword,
+  logout,
 };

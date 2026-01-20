@@ -4,12 +4,12 @@ const API_URL =
     ? 'http://localhost:5101/api/atividades-lazer'
     : `${window.location.origin}/api/atividades-lazer`;
 
-const setNewAtividadeLazer = async (data, token) => {
+const setNewAtividadeLazer = async (data) => {
   const config = {
     headers: {
       'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`,
     },
+    withCredentials: true,
   };
 
   const formData = new FormData();
@@ -18,47 +18,47 @@ const setNewAtividadeLazer = async (data, token) => {
   return response.data;
 };
 
-const getAllAtividadesLazer = async (options, token) => {
+const getAllAtividadesLazer = async (options) => {
   const config = {
     params: { ...options },
-    headers: { Authorization: `Bearer ${token}` },
+    withCredentials: true,
   };
 
   const response = await axios.get(API_URL, config);
 
   return response.data;
 };
-const getSingleAtividadeLazer = async (id, token) => {
-  const config = { headers: { Authorization: `Bearer ${token}` } };
+const getSingleAtividadeLazer = async (id) => {
+  const config = { withCredentials: true };
   const response = await axios.get(API_URL + `/${id}`, config);
   return response.data;
 };
 
-const removeSingleAtividadeLazer = async ({ id, userId }, token) => {
+const removeSingleAtividadeLazer = async ({ id, userId }) => {
   const config = {
-    headers: { Authorization: `Bearer ${token}` },
     params: { userId },
+    withCredentials: true,
   };
   const response = await axios.delete(API_URL + `/${id}`, config);
   return response.data;
 };
-const getCulturaQty = async (token) => {
-  const config = { headers: { Authorization: `Bearer ${token}` } };
+const getCulturaQty = async () => {
+  const config = { withCredentials: true };
   const response = await axios.get(API_URL + `/quantidadeCultura`, config);
   return response.data;
 };
-const getEmGrupoQty = async (token) => {
-  const config = { headers: { Authorization: `Bearer ${token}` } };
+const getEmGrupoQty = async () => {
+  const config = { withCredentials: true };
   const response = await axios.get(API_URL + `/quantidadeEmGrupo`, config);
   return response.data;
 };
-const getJogosQty = async (token) => {
-  const config = { headers: { Authorization: `Bearer ${token}` } };
+const getJogosQty = async () => {
+  const config = { withCredentials: true };
   const response = await axios.get(API_URL + `/quantidadeJogos`, config);
   return response.data;
 };
-const getOutrosQty = async (token) => {
-  const config = { headers: { Authorization: `Bearer ${token}` } };
+const getOutrosQty = async () => {
+  const config = { withCredentials: true };
   const response = await axios.get(API_URL + `/quantidadeOutros`, config);
   return response.data;
 };

@@ -13,9 +13,14 @@ const paginationHandler = (model, filter) => {
     } else {
       filter_ = filter;
     }
-
+    console.log({ filter_ });
     const results = {
-      total: await model.countDocuments(filter_).exec(),
+      total: await model
+        .countDocuments({
+          userId: new mongoose.Types.ObjectId(req.user._id),
+          ...filter_,
+        })
+        .exec(),
     };
 
     if (endIndex < results.total) {

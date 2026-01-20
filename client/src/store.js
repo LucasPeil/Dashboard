@@ -16,15 +16,18 @@ const store = configureStore({
   },
 });
 
+axios.defaults.withCredentials = true;
+
 axios.interceptors.response.use(
   (response) => response,
   (error) => {
-    if (error.response.status === 401) {
+    if (error.response && error.response.status === 401) {
       localStorage.removeItem('user');
-      window.location.href = '/login';
-    } else {
-      return Promise.reject(error);
+      if (window.location.pathname !== '/login') {
+        window.location.href = '/login';
+      }
     }
+    return Promise.reject(error);
   }
 );
 export default store;

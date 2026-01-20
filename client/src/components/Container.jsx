@@ -5,7 +5,7 @@ const DashboardContainer = ({ children }) => {
   const upMd = useMediaQuery(theme.breakpoints.up('md'));
   const downMd = useMediaQuery(theme.breakpoints.down('md'));
   return (
-    <Box sx={{ display: 'flex', justifyContent: 'end' }}>
+    <Box component="main" sx={{ display: 'flex', justifyContent: 'end' }}>
       <Box
         sx={{
           transition: 'all 0.5s ease',
