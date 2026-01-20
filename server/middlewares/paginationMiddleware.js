@@ -13,7 +13,7 @@ const paginationHandler = (model, filter) => {
     } else {
       filter_ = filter;
     }
-    console.log({ filter_ });
+
     const results = {
       total: await model
         .countDocuments({
