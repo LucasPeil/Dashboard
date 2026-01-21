@@ -13,13 +13,12 @@ import {
   OutlinedInput,
   Paper,
   Stack,
-  Typography,
-  Alert
+  Alert,
 } from '@mui/material';
 import { motion } from 'framer-motion';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { login, reset } from '../features/auth/authSlice';
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -28,68 +27,76 @@ const Login = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [showError, setShowError] = useState(false);
-  const { user, isSuccess, message, isError } = useSelector(
-    (state) => state.auth
-  );
+  const { user, login: loginState } = useSelector((state) => state.auth);
+  const { isSuccess, message, isError, isLoading } = loginState;
 
   useEffect(() => {
     if (isSuccess) {
-     navigate('/')
+      navigate('/');
     }
     return () => {
-       dispatch(reset());
-     
+      dispatch(reset('login'));
     };
   }, [user, isSuccess]);
 
   useEffect(() => {
-    if(isError){
+    if (isError) {
       setShowError(true);
     }
-   
   }, [user, isError]);
   return (
     <Box
-      component={motion.div}
-      initial={{ opacity: 0, y: 100, transition: { duration: 0.5 } }}
-      animate={{ opacity: 1, y: 0, transition: { duration: 0.5, delay: 0.2 } }}
+      component={motion.main}
+      initial={{ opacity: 0, y: 100, transition: { duration: 0.1 } }}
+      animate={{ opacity: 1, y: 0, transition: { duration: 0.3, delay: 0.2 } }}
       sx={{
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
-
         minHeight: '100vh',
+        px: 2,
       }}
     >
       <Paper
         elevation={6}
         sx={{
-          backgroundColor: 'white',
-          px: 5,
+          p: 5,
           boxSizing: 'border-box',
-          height: '45vh',
-          width: '50vh',
+          width: { xs: '100%', sm: '70%', md: '50%', lg: '30%' },
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          gap: 4,
         }}
       >
-        <Stack direction={'row'} justifyContent={'center'} sx={{ py: 3 }}>
-          <RocketLaunchOutlinedIcon sx={{ fontSize: '3rem' }} />
-        </Stack>
+        <RocketLaunchOutlinedIcon sx={{ fontSize: '3rem' }} />
+
         <Divider
           textAlign="center"
           sx={{
+            width: '100%',
             '&::before, &::after': {
-              borderColor: '#C10FE9',
+              borderColor: '#000000',
             },
           }}
         >
           Dashboard
         </Divider>
 
-        <form onSubmit={(e) => {
-          e.preventDefault(); 
-          dispatch(login({ password: passwordValue, email: loginValue }))
-          }}>
-          <FormControl fullWidth sx={{ mt: 3 }} variant="outlined">
+        <form
+          style={{
+            width: '100%',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: 20,
+          }}
+          onSubmit={(e) => {
+            e.preventDefault();
+            dispatch(login({ password: passwordValue, email: loginValue }));
+          }}
+        >
+          <FormControl fullWidth sx={{}} variant="outlined">
             <InputLabel htmlFor="login">Login </InputLabel>
             <OutlinedInput
               onChange={(e) => setLoginValue(e.target.value)}
@@ -101,11 +108,12 @@ const Login = () => {
                   <PersonIcon />
                 </InputAdornment>
               }
+              autoComplete="username"
               label="Login"
             />
           </FormControl>
 
-          <FormControl fullWidth sx={{ mt: 3, mb: 1 }} variant="outlined">
+          <FormControl fullWidth sx={{}} variant="outlined">
             <InputLabel htmlFor="password">Password </InputLabel>
             <OutlinedInput
               onChange={(e) => setPasswordValue(e.target.value)}
@@ -122,25 +130,25 @@ const Login = () => {
                   </IconButton>
                 </InputAdornment>
               }
+              autoComplete="current-password"
               label="Password"
             />
           </FormControl>
           {showError && (
-              <Alert
-                severity="error"
-                closeText="fechar"
-                onClose={() => setShowError(false)}
-              >
-                {message}
-              </Alert>
-            )}
-            <Button
-            /*  disabled={!loginValue || !passwordValue} */
+            <Alert
+              severity="error"
+              closeText="fechar"
+              onClose={() => setShowError(false)}
+            >
+              {message}
+            </Alert>
+          )}
+          <Button
+            disabled={isLoading}
             type="submit"
             variant="contained"
             sx={{
-              backgroundColor: '#C10FE9',
-              mt: 2,
+              backgroundColor: '#000000',
               width: '100%',
               fontWeight: 'bold',
               letterSpacing: '0.2rem',
@@ -149,32 +157,17 @@ const Login = () => {
             Login
           </Button>
         </form>
-        <Stack
-          direction={'column'}
-          justifyContent={'center'}
-          alignItems={'center'}
+
+        <Link
+          style={{
+            color: '#002486ff',
+            fontWeight: 'semibold',
+            textDecoration: 'underline',
+          }}
+          to={'/cadastrar'}
         >
-        
-          <Button
-            onClick={() => navigate('/cadastrar')}
-            variant="text"
-            sx={{
-              mt: '0.9rem',
-              width: '80%',
-              fontWeight: 'bold',
-              fontSize: '0.7rem',
-              color: '#6A79DB',
-              borderRadius: 0,
-              padding: '0 !important',
-              '&:hover': {
-                borderBottom: '1px solid #6A79DB',
-                backgroundColor: 'transparent',
-              },
-            }}
-          >
-            Não tem uma conta ainda? Cadastre-se aqui
-          </Button>
-        </Stack>
+          Não tem uma conta ainda? Cadastre-se aqui
+        </Link>
       </Paper>
     </Box>
   );

@@ -1,5 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import MailOutlineIcon from '@mui/icons-material/MailOutline';
+import PersonIcon from '@mui/icons-material/Person';
+import RocketLaunchOutlinedIcon from '@mui/icons-material/RocketLaunchOutlined';
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import {
+  Alert,
   Box,
   Button,
   Divider,
@@ -9,19 +14,13 @@ import {
   InputLabel,
   OutlinedInput,
   Paper,
-  Stack,
   TextField,
-  Typography,
 } from '@mui/material';
-import MailOutlineIcon from '@mui/icons-material/MailOutline';
-import { useDispatch, useSelector } from 'react-redux';
 import { motion } from 'framer-motion';
-import { useNavigate } from 'react-router-dom';
-import RocketLaunchOutlinedIcon from '@mui/icons-material/RocketLaunchOutlined';
-import PersonIcon from '@mui/icons-material/Person';
-import Visibility from '@mui/icons-material/Visibility';
-import VisibilityOff from '@mui/icons-material/VisibilityOff';
-import { cadastrar, login, reset } from '../features/auth/authSlice';
+import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { Link, useNavigate } from 'react-router-dom';
+import { cadastrar, reset } from '../features/auth/authSlice';
 
 const Cadastrar = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -31,201 +30,217 @@ const Cadastrar = () => {
   const [usernameValue, setUsernameValue] = useState('');
   const [confirmPasswordValue, setConfirmPasswordValue] = useState('');
 
-  const { user, isSuccess } = useSelector((state) => state.auth);
+  const { user, cadastrar: registrationState } = useSelector(
+    (state) => state.auth,
+  );
+  const { isSuccess, message, isError, isLoading } = registrationState;
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
+  const [showError, setShowError] = useState(false);
   useEffect(() => {
     if (isSuccess) {
       navigate('/');
     }
     return () => {
-      dispatch(reset());
+      dispatch(reset('cadastrar'));
     };
-  }, [user]);
+  }, [user, isSuccess]);
+
+  useEffect(() => {
+    if (isError) {
+      setShowError(true);
+    }
+  }, [user, isError]);
+
   return (
     <Box
       component={motion.div}
-      initial={{ opacity: 0, y: 100, transition: { duration: 0.5 } }}
-      animate={{ opacity: 1, y: 0, transition: { duration: 0.5, delay: 0.2 } }}
+      initial={{ opacity: 0, y: 100, transition: { duration: 0.1 } }}
+      animate={{ opacity: 1, y: 0, transition: { duration: 0.3, delay: 0.2 } }}
       sx={{
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
-
         minHeight: '100vh',
+        px: 2,
       }}
     >
       <Paper
         elevation={6}
         sx={{
-          backgroundColor: 'white',
-          px: 5,
+          p: 5,
           boxSizing: 'border-box',
-          height: '70vh',
-          width: '30vw',
+          width: { xs: '100%', sm: '70%', md: '50%', lg: '30%' },
           display: 'flex',
+          flexDirection: 'column',
           alignItems: 'center',
+          justifyContent: 'center',
+          gap: 4,
         }}
       >
-        <Box sx={{ height: '85%' }}>
-          <Stack direction={'row'} justifyContent={'center'} sx={{ py: 3 }}>
-            <RocketLaunchOutlinedIcon sx={{ fontSize: '3rem' }} />
-          </Stack>
-          <Divider
-            textAlign="center"
+        <RocketLaunchOutlinedIcon sx={{ fontSize: '3rem' }} />
+
+        <Divider
+          textAlign="center"
+          sx={{
+            width: '100%',
+            '&::before, &::after': {
+              borderColor: '#000000',
+            },
+          }}
+        >
+          Dashboard
+        </Divider>
+
+        <form
+          style={{
+            width: '100%',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: 20,
+          }}
+          onSubmit={(e) => {
+            e.preventDefault();
+            dispatch(
+              cadastrar({
+                password: passwordValue,
+                email: emailValue,
+                username: usernameValue,
+              }),
+            );
+          }}
+        >
+          <FormControl fullWidth variant="outlined">
+            <TextField
+              onChange={(e) => setUsernameValue(e.target.value)}
+              value={usernameValue}
+              id="username"
+              type={'text'}
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <PersonIcon />
+                  </InputAdornment>
+                ),
+              }}
+              autoComplete="username"
+              label="Username"
+            />
+          </FormControl>
+
+          <FormControl fullWidth variant="outlined">
+            <TextField
+              onChange={(e) => setEmailValue(e.target.value)}
+              value={emailValue}
+              id="email"
+              type={'text'}
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <MailOutlineIcon />
+                  </InputAdornment>
+                ),
+              }}
+              autoComplete="email"
+              label="E-mail"
+            />
+          </FormControl>
+
+          <FormControl fullWidth variant="outlined">
+            <TextField
+              onChange={(e) => setPasswordValue(e.target.value)}
+              value={passwordValue}
+              id="password"
+              type={showPassword ? 'text' : 'password'}
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton
+                      onClick={() => setShowPassword(!showPassword)}
+                      edge="end"
+                    >
+                      {showPassword ? <VisibilityOff /> : <Visibility />}
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }}
+              autoComplete="new-password"
+              label="Senha"
+            />
+          </FormControl>
+
+          <FormControl fullWidth variant="outlined">
+            <TextField
+              onChange={(e) => setConfirmPasswordValue(e.target.value)}
+              value={confirmPasswordValue}
+              id="confirmPassword"
+              error={passwordValue !== confirmPasswordValue}
+              helperText={
+                passwordValue !== confirmPasswordValue &&
+                'Por favor, repita a mesma senha.'
+              }
+              type={showConfirmPassword ? 'text' : 'password'}
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton
+                      onClick={() =>
+                        setShowConfirmPassword(!showConfirmPassword)
+                      }
+                      edge="end"
+                    >
+                      {showConfirmPassword ? <VisibilityOff /> : <Visibility />}
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }}
+              autoComplete="new-password"
+              label="Confirmar Senha"
+            />
+          </FormControl>
+
+          {showError && (
+            <Alert
+              severity="error"
+              closeText="fechar"
+              onClose={() => setShowError(false)}
+            >
+              {message}
+            </Alert>
+          )}
+
+          <Button
+            type="submit"
+            disabled={
+              isLoading ||
+              !passwordValue ||
+              !emailValue ||
+              !usernameValue ||
+              !confirmPasswordValue ||
+              passwordValue !== confirmPasswordValue
+            }
+            variant="contained"
             sx={{
-              '&::before, &::after': {
-                borderColor: '#C10FE9',
-              },
+              backgroundColor: '#000000',
+              width: '100%',
+              fontWeight: 'bold',
+              letterSpacing: '0.2rem',
             }}
           >
-            Dashboard
-          </Divider>
-          {/* type={showPassword ? "text" : "password"} */}
-          <form>
-            <FormControl fullWidth sx={{ mt: 3 }} variant="outlined">
-              <TextField
-                onChange={(e) => setUsernameValue(e.target.value)}
-                value={usernameValue}
-                id="username"
-                type={'text'}
-                InputProps={{
-                  endAdornment: (
-                    <InputAdornment position="end">
-                      <PersonIcon />
-                    </InputAdornment>
-                  ),
-                }}
-                label="Username"
-              />
-            </FormControl>
-            <FormControl fullWidth sx={{ mt: 3 }} variant="outlined">
-              <TextField
-                onChange={(e) => setEmailValue(e.target.value)}
-                value={emailValue}
-                id="email"
-                type={'text'}
-                InputProps={{
-                  endAdornment: (
-                    <InputAdornment position="end">
-                      <MailOutlineIcon />
-                    </InputAdornment>
-                  ),
-                }}
-                label="E-mail"
-              />
-            </FormControl>
+            Cadastrar-se
+          </Button>
+        </form>
 
-            <FormControl fullWidth sx={{ mt: 3 }} variant="outlined">
-              <TextField
-                onChange={(e) => setPasswordValue(e.target.value)}
-                value={passwordValue}
-                id="password"
-                type={showPassword ? 'text' : 'password'}
-                InputProps={{
-                  endAdornment: (
-                    <InputAdornment position="end">
-                      <IconButton
-                        onClick={() => setShowPassword(!showPassword)}
-                        edge="end"
-                      >
-                        {showPassword ? <VisibilityOff /> : <Visibility />}
-                      </IconButton>
-                    </InputAdornment>
-                  ),
-                }}
-                label="Senha"
-              />
-            </FormControl>
-
-            <FormControl fullWidth sx={{ mt: 3 }} variant="outlined">
-              <TextField
-                onChange={(e) => setConfirmPasswordValue(e.target.value)}
-                value={confirmPasswordValue}
-                id="confirmPassword"
-                error={passwordValue != confirmPasswordValue}
-                helperText={
-                  passwordValue != confirmPasswordValue &&
-                  'Por favor, repita a mesma senha.'
-                }
-                type={showConfirmPassword ? 'text' : 'password'}
-                InputProps={{
-                  endAdornment: (
-                    <InputAdornment position="end">
-                      <IconButton
-                        onClick={() =>
-                          setShowConfirmPassword(!showConfirmPassword)
-                        }
-                        edge="end"
-                      >
-                        {showConfirmPassword ? (
-                          <VisibilityOff />
-                        ) : (
-                          <Visibility />
-                        )}
-                      </IconButton>
-                    </InputAdornment>
-                  ),
-                }}
-                label="Confirmar Senha"
-              />
-            </FormControl>
-            <Button
-              type="button"
-              disabled={
-                !passwordValue ||
-                !emailValue ||
-                !usernameValue ||
-                !confirmPasswordValue
-              }
-              onClick={() => {
-                dispatch(
-                  cadastrar({
-                    password: passwordValue,
-                    email: emailValue,
-                    username: usernameValue,
-                  })
-                );
-              }}
-              variant="contained"
-              sx={{
-                backgroundColor: '#C10FE9',
-                mt: 3,
-                width: '100%',
-                fontWeight: 'bold',
-                letterSpacing: '0.2rem',
-              }}
-            >
-              Cadastrar-se
-            </Button>
-          </form>
-          <Stack
-            direction={'column'}
-            justifyContent={'center'}
-            alignItems={'center'}
-          >
-            <Button
-              onClick={() => navigate('/login')}
-              variant="text"
-              sx={{
-                mt: '2rem',
-                width: '80%',
-                fontWeight: 'bold',
-                fontSize: '0.7rem',
-                color: '#6A79DB',
-                borderRadius: 0,
-                padding: '0 !important',
-                '&:hover': {
-                  borderBottom: '1px solid #6A79DB',
-                  backgroundColor: 'transparent',
-                },
-              }}
-            >
-              Já tem um conta? Faça seu login aqui!
-            </Button>
-          </Stack>
-        </Box>
+        <Link
+          style={{
+            color: '#002486ff',
+            fontWeight: 'semibold',
+            textDecoration: 'underline',
+          }}
+          to={'/login'}
+        >
+          Já tem uma conta? Faça seu login aqui!
+        </Link>
       </Paper>
     </Box>
   );

@@ -8,14 +8,19 @@ import {
   Box,
   Grid,
   IconButton,
-  Paper,
-  Stack,
   useMediaQuery,
   Divider,
   Typography,
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+  lazy,
+  Suspense,
+} from 'react';
 import DataTable from 'react-data-table-component';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify'; // Import movido para cima
@@ -29,7 +34,6 @@ import {
   removeSingleAtividade,
   resetRegisterCasa,
   resetRemoveCasa,
-  setOpenModalCasa,
 } from '../../features/casa/casaSlice';
 import CategoryCardsContainer from '../CategoryCardsContainer';
 import { customStyles } from '../../styles/stylesConst';
@@ -38,10 +42,12 @@ import DashboardsHeaders from '../DashboardsHeaders';
 
 import ProgressComponent from '../ProgressComponent';
 import SearchBar from '../SearchBar';
-import SingleAtividade from './SingleAtividade';
+
 import NoRecord from '../NoRecord';
 import DashboardContainer from '../Container';
+import SingleAtividadeSkeleton from '../SingleAtividadeSkeleton';
 
+const SingleAtividade = lazy(() => import('./SingleAtividade'));
 const CasaDashboard = () => {
   const [openSingleAtividade, setOpenSingleAtividade] = useState(false);
   const user = useSelector((state) => state.auth.user);
@@ -89,7 +95,6 @@ const CasaDashboard = () => {
     setCategorySelected(title);
     setCategoryCardSelected((prev) => {
       const arrayCopy = [...prev].fill(false);
-      // Se já estava ativo, desativa (toggle), senão ativa este índice
       arrayCopy[idx] = !prev[idx];
       return arrayCopy;
     });
@@ -169,7 +174,7 @@ const CasaDashboard = () => {
       {
         name: 'Ações',
         width: '10%',
-        button: true,
+        button: 1,
         cell: (row) => (
           <Box
             sx={{
@@ -226,12 +231,14 @@ const CasaDashboard = () => {
   return (
     <MotionDiv>
       <Outlet />
-      <SingleAtividade
-        rowData={selectedRow}
-        openSingleAtividade={openSingleAtividade}
-        handleCloseSingleAtividade={handleCloseSingleAtividade}
-        iconColor={'#0a1e73'}
-      />
+      <Suspense fallback={<SingleAtividadeSkeleton />}>
+        <SingleAtividade
+          rowData={selectedRow}
+          openSingleAtividade={openSingleAtividade}
+          handleCloseSingleAtividade={handleCloseSingleAtividade}
+          iconColor={'#0a1e73'}
+        />
+      </Suspense>
       <DashboardContainer>
         <DashboardsHeaders
           cleanFilters={cleanFilters}
@@ -309,10 +316,12 @@ const CasaDashboard = () => {
               fixedHeader
               responsive
               highlightOnHover
+              pointerOnHover
               progressPending={isLoading}
               progressComponent={<ProgressComponent limit={limit} />}
               paginationTotalRows={atividadesCasa.total}
               onRowClicked={(row) => {
+                console.log(row);
                 setSelectedRow(row);
                 setOpenSingleAtividade(true);
               }}

@@ -22,8 +22,11 @@ const setTokenCookie = (res, token) => {
 
 const createUser = asyncHandler(async (req, res) => {
   const { username, email, password } = req.body;
-  const userExists = await User.findOne({ username: username, email: email });
+  const userExists = await User.findOne({
+    $or: [{ username: username }, { email: email }],
+  });
   if (userExists) {
+    res.status(400);
     throw new Error('Usuário já existe');
   }
   const hashedPassword = await createNewPassword(password);
@@ -43,7 +46,7 @@ const createUser = asyncHandler(async (req, res) => {
       resetPassword: user.resetPassword,
     });
   } else {
-    res.status(404);
+    res.status(400);
     throw new Error('Dados inválidos');
   }
 });
@@ -65,7 +68,8 @@ const login = asyncHandler(async (req, res) => {
       resetPassword: user.resetPassword,
     });
   } else {
-    res.status(400).json({ message: 'Usuário ou senha inválidos' });
+    res.status(400);
+    throw new Error('Usuário ou senha inválidos');
   }
 });
 
@@ -80,7 +84,7 @@ const resetPassword = asyncHandler(async (req, res) => {
   const user = await User.findByIdAndUpdate(
     req.user._id,
     { password: hashedPassword, resetPassword: false },
-    { new: true }
+    { new: true },
   ).lean();
 
   if (user) {

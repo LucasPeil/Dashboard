@@ -300,6 +300,7 @@ const EducacaoDashboard = () => {
               paginationServer
               fixedHeader
               responsive
+              pointerOnHover
               progressPending={isLoading}
               progressComponent={<ProgressComponent limit={limit} />}
               paginationTotalRows={atividadesEducacao.total}
