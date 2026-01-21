@@ -200,7 +200,7 @@ const EducacaoDashboard = () => {
               responsive
               pointerOnHover
               progressPending={data.isLoading}
-              progressComponent={<ProgressComponent limit={uiStates.limit} />}
+              progressComponent={<ProgressComponent limit={5} />}
               paginationTotalRows={data.atividadesEducacao.total}
               onRowClicked={(row) => actions.handleRowClick(row._id)}
               paginationComponentOptions={{

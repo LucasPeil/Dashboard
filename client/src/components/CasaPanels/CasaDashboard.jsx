@@ -202,7 +202,7 @@ const CasaDashboard = () => {
               highlightOnHover
               pointerOnHover
               progressPending={data.isLoading}
-              progressComponent={<ProgressComponent limit={data.limit} />}
+              progressComponent={<ProgressComponent limit={5} />}
               paginationTotalRows={data.atividadesCasa.total}
               onRowClicked={(row) => actions.handleRowClick(row._id)}
               onChangePage={(newPage) => actions.handlePageChange(newPage)}

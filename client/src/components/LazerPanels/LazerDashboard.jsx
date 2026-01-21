@@ -223,7 +223,7 @@ const LazerDashboard = ({ open }) => {
               fixedHeader
               responsive
               progressPending={data.isLoading}
-              progressComponent={<ProgressComponent limit={uiStates.limit} />}
+              progressComponent={<ProgressComponent limit={5} />}
               paginationTotalRows={data.atividadesLazer.total}
               onRowClicked={(row) => actions.handleRowClick(row._id)}
               paginationComponentOptions={{
