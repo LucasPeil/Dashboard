@@ -36,7 +36,7 @@ const VisaoGeralDashboard = () => {
   const downMd = useMediaQuery(theme.breakpoints.down('md'));
 
   return (
-    <MotionDiv>
+    <Box>
       <Box sx={{ display: 'flex', justifyContent: 'end' }}>
         <Box
           sx={{
@@ -157,7 +157,7 @@ const VisaoGeralDashboard = () => {
           </Paper>
         </Box>
       </Box>
-    </MotionDiv>
+    </Box>
   );
 };
 

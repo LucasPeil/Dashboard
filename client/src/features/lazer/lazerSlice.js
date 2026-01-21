@@ -12,7 +12,12 @@ const initialState = {
   isSuccess: false,
   isLoading: false,
   isError: false,
-  openModalLazer: false,
+  singleAtividadeLazer: {
+    isLoading: false,
+    isError: false,
+    isSuccess: false,
+    message: '',
+  },
   register: {
     isSuccess: false,
     isLoading: false,
@@ -46,7 +51,7 @@ export const getJogosQty = createAsyncThunk(
         error.toString();
       return thunkAPI.rejectWithValue(message);
     }
-  }
+  },
 );
 export const getCulturaQty = createAsyncThunk(
   'atividadesLazer/getCulturaQty',
@@ -62,7 +67,7 @@ export const getCulturaQty = createAsyncThunk(
         error.toString();
       return thunkAPI.rejectWithValue(message);
     }
-  }
+  },
 );
 export const getEmGrupoQty = createAsyncThunk(
   'atividadesLazer/getEmGrupoQty',
@@ -78,7 +83,7 @@ export const getEmGrupoQty = createAsyncThunk(
         error.toString();
       return thunkAPI.rejectWithValue(message);
     }
-  }
+  },
 );
 export const getOutrosQty = createAsyncThunk(
   'atividadesLazer/getOutrosQty',
@@ -94,7 +99,7 @@ export const getOutrosQty = createAsyncThunk(
         error.toString();
       return thunkAPI.rejectWithValue(message);
     }
-  }
+  },
 );
 
 export const getAllAtividadesLazer = createAsyncThunk(
@@ -111,7 +116,7 @@ export const getAllAtividadesLazer = createAsyncThunk(
         error.toString();
       return thunkAPI.rejectWithValue(message);
     }
-  }
+  },
 );
 
 export const setNewAtividadeLazer = createAsyncThunk(
@@ -128,7 +133,7 @@ export const setNewAtividadeLazer = createAsyncThunk(
         error.toString();
       return thunkAPI.rejectWithValue(message);
     }
-  }
+  },
 );
 
 export const getSingleAtividadeLazer = createAsyncThunk(
@@ -145,7 +150,7 @@ export const getSingleAtividadeLazer = createAsyncThunk(
         error.toString();
       return thunkAPI.rejectWithValue(message);
     }
-  }
+  },
 );
 
 export const removeSingleAtividadeLazer = createAsyncThunk(
@@ -162,7 +167,7 @@ export const removeSingleAtividadeLazer = createAsyncThunk(
         error.toString();
       return thunkAPI.rejectWithValue(message);
     }
-  }
+  },
 );
 
 export const lazerSlice = createSlice({
@@ -184,16 +189,16 @@ export const lazerSlice = createSlice({
       state.remove.isLoading = false;
       state.remove.isError = false;
     },
+    resetGetSingleAtividadeLazer(state) {
+      state.singleAtividadeLazer.isSuccess = false;
+      state.singleAtividadeLazer.isLoading = false;
+      state.singleAtividadeLazer.isError = false;
+      state.atividadeLazer = {};
+    },
     reset(state) {
       state.isSuccess = false;
       state.isLoading = false;
       state.isError = false;
-    },
-    setOpenModalLazer(state) {
-      state.openModalLazer = true;
-    },
-    closeModalLazer(state) {
-      state.openModalLazer = false;
     },
   },
   extraReducers: (builder) => {
@@ -302,21 +307,21 @@ export const lazerSlice = createSlice({
       })
 
       .addCase(getSingleAtividadeLazer.pending, (state) => {
-        state.isLoading = true;
-        state.isError = false;
-        state.isSuccess = false;
+        state.singleAtividadeLazer.isLoading = true;
+        state.singleAtividadeLazer.isError = false;
+        state.singleAtividadeLazer.isSuccess = false;
       })
       .addCase(getSingleAtividadeLazer.fulfilled, (state, action) => {
-        state.isLoading = false;
-        state.isError = false;
-        state.isSuccess = true;
+        state.singleAtividadeLazer.isLoading = false;
+        state.singleAtividadeLazer.isError = false;
+        state.singleAtividadeLazer.isSuccess = true;
         state.atividadeLazer = action.payload;
       })
       .addCase(getSingleAtividadeLazer.rejected, (state, action) => {
-        state.isLoading = false;
-        state.isSuccess = false;
-        state.isError = true;
-        state.message = action.payload;
+        state.singleAtividadeLazer.isLoading = false;
+        state.singleAtividadeLazer.isSuccess = false;
+        state.singleAtividadeLazer.isError = true;
+        state.singleAtividadeLazer.message = action.payload;
       })
       .addCase(removeSingleAtividadeLazer.pending, (state) => {
         state.remove.isLoading = true;
@@ -328,7 +333,7 @@ export const lazerSlice = createSlice({
         state.remove.isError = false;
         state.remove.isSuccess = true;
         const idx = state.atividadesLazer.documents.findIndex(
-          (atividade) => atividade._id === action.payload.atividade._id
+          (atividade) => atividade._id === action.payload.atividade._id,
         );
         state.atividadesLazer.documents.splice(idx, 1);
 
@@ -349,6 +354,7 @@ export const {
   resetUpdateLazer,
   setOpenModalLazer,
   closeModalLazer,
+  resetGetSingleAtividadeLazer,
 } = lazerSlice.actions;
 
 export default lazerSlice.reducer;

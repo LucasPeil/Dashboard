@@ -13,16 +13,42 @@ import {
   Zoom,
 } from '@mui/material';
 import React, { memo } from 'react';
+import useGetSingleActivity from '../hooks/useGetSingleActivity';
+import SingleAtividadeSkeleton from './SingleAtividadeSkeleton';
+
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Zoom ref={ref} {...props} />;
 });
+
 const SingleAtividade = memo(function SingleAtividade({
-  rowData,
+  id,
   openSingleAtividade,
   handleCloseSingleAtividade,
   iconColor,
-  isAtividadeEducacao = false,
+  category,
 }) {
+  const { data: rowData, isLoading } = useGetSingleActivity(category, id);
+
+  if (isLoading) {
+    return (
+      <Dialog
+        open={openSingleAtividade}
+        TransitionComponent={Transition}
+        keepMounted
+        onClose={handleCloseSingleAtividade}
+        fullWidth
+        maxWidth={'md'}
+        PaperProps={{
+          sx: {
+            height: '26rem',
+          },
+        }}
+      >
+        <SingleAtividadeSkeleton />
+      </Dialog>
+    );
+  }
+
   return (
     <Dialog
       open={openSingleAtividade}

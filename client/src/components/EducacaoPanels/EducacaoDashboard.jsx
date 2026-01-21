@@ -1,137 +1,38 @@
 import CastForEducationOutlinedIcon from '@mui/icons-material/CastForEducationOutlined';
+import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
+import EditTwoToneIcon from '@mui/icons-material/EditTwoTone';
 import MenuBookOutlinedIcon from '@mui/icons-material/MenuBookOutlined';
 import {
   Box,
+  Divider,
   Grid,
   IconButton,
-  Paper,
-  Stack,
-  Divider,
   Typography,
   useMediaQuery,
 } from '@mui/material';
-import { toast } from 'react-toastify';
-import { useTheme } from '@emotion/react';
-import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
-import EditTwoToneIcon from '@mui/icons-material/EditTwoTone';
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import { useTheme } from '@mui/material/styles';
+import { lazy, Suspense, useMemo } from 'react';
 import DataTable from 'react-data-table-component';
-import { useDispatch, useSelector } from 'react-redux';
-import MotionDiv from '../../MotionDiv';
-import {
-  getAllAtividadesEducacao,
-  getCursosQty,
-  getLivrosQty,
-  getSeminariosQty,
-  removeSingleAtividadeEducacao,
-  resetRegisterEducacao,
-  resetRemoveEducacao,
-} from '../../features/educacao/educacaoSlice';
 import { Outlet } from 'react-router-dom';
+import MotionDiv from '../../MotionDiv';
 import { customStyles } from '../../styles/stylesConst';
-import SingleAtividade from '../CasaPanels/SingleAtividade';
 import CategoryCards from '../CategoryCards';
+import CategoryCardsContainer from '../CategoryCardsContainer';
+import DashboardContainer from '../Container';
 import DashboardsHeaders from '../DashboardsHeaders';
-
+import NoRecord from '../NoRecord';
 import ProgressComponent from '../ProgressComponent';
 import SearchBar from '../SearchBar';
-import NoRecord from '../NoRecord';
-import { useNavigate } from 'react-router-dom';
-import DashboardContainer from '../Container';
-import CategoryCardsContainer from '../CategoryCardsContainer';
+import SingleAtividadeSkeleton from '../SingleAtividadeSkeleton';
+import useEducacao from '../../hooks/useEducacao';
+
+const SingleAtividade = lazy(() => import('../SingleAtividade'));
 const EducacaoDashboard = () => {
-  const dispatch = useDispatch();
-  const [openSingleAtividade, setOpenSingleAtividade] = useState(false);
-  const user = useSelector((state) => state.auth.user);
-  const handleCloseSingleAtividade = useCallback(
-    () => setOpenSingleAtividade(false),
-    [],
-  );
-
-  const [selectedRow, setSelectedRow] = useState();
-  const [categorySelected, setCategorySelected] = useState('');
-  const navigate = useNavigate();
-  const [page, setPage] = useState(1);
-  const [limit, setLimit] = useState(10);
-  const [sortDirection, setSortDirection] = useState(1);
-  const [prop, setProp] = useState('_id');
-  const [filter, setFilter] = useState('');
-
+  const { data, uiStates, actions } = useEducacao();
   const theme = useTheme();
 
   const omit = useMediaQuery(theme.breakpoints.down('lg'));
-  const [categoryCardSelected, setCategoryCardSelected] = useState([
-    false,
-    false,
-  ]);
 
-  const {
-    atividadesEducacao,
-    isLoading,
-    register,
-    remove,
-    quantidadeCursos,
-    quantidadeLivros,
-    quantidadeSeminarios,
-  } = useSelector((state) => state.atividadesEducacao);
-
-  const handleCardClick = useCallback((idx, title) => {
-    setCategorySelected(title);
-    setCategoryCardSelected((prev) => {
-      const arrayCopy = [...prev].fill(false);
-      arrayCopy[idx] = !prev[idx];
-      return arrayCopy;
-    });
-  }, []);
-
-  const cleanFilters = useCallback(() => {
-    setCategorySelected('');
-    setCategoryCardSelected([false, false]);
-  }, []);
-
-  useEffect(() => {
-    if (register.isSuccess) {
-      toast.success(register.message, {
-        position: toast.POSITION.BOTTOM_RIGHT,
-      });
-    } else if (remove.isSuccess) {
-      toast.success(remove.message, {
-        position: toast.POSITION.BOTTOM_RIGHT,
-      });
-    }
-
-    dispatch(getCursosQty());
-    dispatch(getLivrosQty());
-    dispatch(getSeminariosQty());
-    return () => {
-      dispatch(resetRegisterEducacao());
-      dispatch(resetRemoveEducacao());
-    };
-  }, [register, remove, dispatch]);
-
-  useEffect(() => {
-    dispatch(
-      getAllAtividadesEducacao({
-        page: page,
-        limit: limit,
-        prop: prop,
-        sortDirection: sortDirection,
-        filter: filter,
-        categorySelected: categorySelected,
-        userId: user._id,
-      }),
-    );
-  }, [
-    register,
-    remove,
-    filter,
-    categorySelected,
-    page,
-    limit,
-    prop,
-    sortDirection,
-    dispatch,
-  ]);
   const tableColumns = useMemo(
     () => [
       {
@@ -154,7 +55,10 @@ const EducacaoDashboard = () => {
         grow: 2,
         cell: (row) => {
           return (
-            <Box sx={{ pt: 2, width: '100%' }}>
+            <Box
+              onClick={() => actions.handleRowClick(row._id)}
+              sx={{ pt: 2, width: '100%', cursor: 'pointer' }}
+            >
               <Divider sx={{ fontWeight: 'bold', fontSize: '1.2rem' }}>
                 Nome
               </Divider>
@@ -176,7 +80,7 @@ const EducacaoDashboard = () => {
         },
       },
     ],
-    [dispatch, omit],
+    [omit],
   );
 
   const buttonColumns = useMemo(() => {
@@ -193,22 +97,11 @@ const EducacaoDashboard = () => {
               alignItems: 'center',
             }}
           >
-            <IconButton
-              onClick={() => {
-                navigate(`/educacao/nova-atividade/educacao/${row._id}`);
-              }}
-            >
+            <IconButton onClick={() => actions.handleEdit(row._id)}>
               <EditTwoToneIcon color="success" />
             </IconButton>
             <IconButton
-              onClick={() => {
-                dispatch(
-                  removeSingleAtividadeEducacao({
-                    id: row._id,
-                    userId: row?.userId,
-                  }),
-                );
-              }}
+              onClick={() => actions.handleDelete(row._id, row?.userId)}
             >
               <DeleteTwoToneIcon color="error" />
             </IconButton>
@@ -216,21 +109,23 @@ const EducacaoDashboard = () => {
         ),
       },
     ];
-  }, [dispatch, omit]);
+  }, [actions, omit]);
   return (
-    <MotionDiv>
+    <Box>
       <Outlet />
-      <SingleAtividade
-        rowData={selectedRow}
-        openSingleAtividade={openSingleAtividade}
-        handleCloseSingleAtividade={handleCloseSingleAtividade}
-        iconColor={'#1D791D'}
-        isAtividadeEducacao={true}
-      />
+      <Suspense fallback={<SingleAtividadeSkeleton />}>
+        <SingleAtividade
+          id={uiStates.selectedRowId}
+          openSingleAtividade={uiStates.openSingleAtividade}
+          handleCloseSingleAtividade={actions.handleCloseSingleAtividade}
+          iconColor={'#1D791D'}
+          category={'educacao'}
+        />
+      </Suspense>
       <DashboardContainer>
         <DashboardsHeaders
-          cleanFilters={cleanFilters}
-          categorySelected={categorySelected}
+          cleanFilters={actions.cleanFilters}
+          categorySelected={uiStates.categorySelected}
           title={'DETALHES SOBRE SUA EDUCAÇÃO'}
           path="nova-atividade/educacao"
         />
@@ -238,13 +133,13 @@ const EducacaoDashboard = () => {
         <CategoryCardsContainer minCardWidth={220}>
           <CategoryCards
             idx={0}
-            isSelected={categoryCardSelected[0]}
-            onSelect={handleCardClick}
+            isSelected={uiStates.categoryCardSelected[0]}
+            onSelect={actions.handleCardClick}
             distance={5}
             classLabel="category-banner-educacao"
-            qty={quantidadeCursos}
-            categorySelected={categorySelected}
-            setCategorySelected={setCategorySelected}
+            qty={data.quantidadeCursos}
+            categorySelected={uiStates.categorySelected}
+            setCategorySelected={actions.setCategorySelected}
             title="Cursos"
             description={'Veja quais cursos você assistiu...'}
             bgcolor={'#648d64'}
@@ -252,13 +147,13 @@ const EducacaoDashboard = () => {
           />
           <CategoryCards
             idx={1}
-            isSelected={categoryCardSelected[1]}
-            onSelect={handleCardClick}
+            isSelected={uiStates.categoryCardSelected[1]}
+            onSelect={actions.handleCardClick}
             distance={5}
             classLabel="category-banner-educacao"
-            qty={quantidadeLivros}
-            categorySelected={categorySelected}
-            setCategorySelected={setCategorySelected}
+            qty={data.quantidadeLivros}
+            categorySelected={uiStates.categorySelected}
+            setCategorySelected={actions.setCategorySelected}
             title="Livros"
             description={'Dê uma olhada nos livros lidos nesse mês...'}
             bgcolor={'#648d64'}
@@ -266,13 +161,13 @@ const EducacaoDashboard = () => {
           />
           <CategoryCards
             idx={2}
-            isSelected={categoryCardSelected[2]}
-            onSelect={handleCardClick}
+            isSelected={uiStates.categoryCardSelected[2]}
+            onSelect={actions.handleCardClick}
             distance={5}
             classLabel="category-banner-educacao"
-            qty={quantidadeSeminarios}
-            categorySelected={categorySelected}
-            setCategorySelected={setCategorySelected}
+            qty={data.quantidadeSeminarios}
+            categorySelected={uiStates.categorySelected}
+            setCategorySelected={actions.setCategorySelected}
             title="Seminários"
             description={'Dê uma olhada nos seminários assistidos...'}
             bgcolor={'#648d64'}
@@ -285,7 +180,7 @@ const EducacaoDashboard = () => {
             <DataTable
               className="table"
               columns={[...tableColumns, ...buttonColumns]}
-              data={atividadesEducacao.documents}
+              data={data.atividadesEducacao.documents}
               customStyles={customStyles({
                 backgroundColor: '#CEF4CE',
               })}
@@ -293,7 +188,10 @@ const EducacaoDashboard = () => {
               subHeader
               noDataComponent={<NoRecord />}
               subHeaderComponent={
-                <SearchBar setFilter={setFilter} filter={filter} />
+                <SearchBar
+                  setFilter={actions.setFilter}
+                  filter={uiStates.filter}
+                />
               }
               striped
               pagination
@@ -301,52 +199,25 @@ const EducacaoDashboard = () => {
               fixedHeader
               responsive
               pointerOnHover
-              progressPending={isLoading}
-              progressComponent={<ProgressComponent limit={limit} />}
-              paginationTotalRows={atividadesEducacao.total}
-              onRowClicked={(row) => {
-                setSelectedRow(row);
-                setOpenSingleAtividade(true);
-              }}
+              progressPending={data.isLoading}
+              progressComponent={<ProgressComponent limit={uiStates.limit} />}
+              paginationTotalRows={data.atividadesEducacao.total}
+              onRowClicked={(row) => actions.handleRowClick(row._id)}
               paginationComponentOptions={{
                 rowsPerPageText: 'Itens por página',
                 rangeSeparatorText: 'de',
                 selectAllRowsItem: true,
                 selectAllRowsItemText: 'Todos',
               }}
-              onChangePage={(newPage) => {
-                dispatch(
-                  getAllAtividadesEducacao({
-                    page: newPage,
-                    limit: limit,
-                    prop: prop,
-                    sortDirection: sortDirection,
-                    filter: filter,
-                    categorySelected: categorySelected,
-                    userId: user._id,
-                  }),
-                );
-                setPage(newPage);
-              }}
-              onChangeRowsPerPage={(newLimit) => {
-                dispatch(
-                  getAllAtividadesEducacao({
-                    page: page,
-                    limit: newLimit,
-                    prop: prop,
-                    sortDirection: sortDirection,
-                    filter: filter,
-                    categorySelected: categorySelected,
-                    userId: user._id,
-                  }),
-                );
-                setLimit(newLimit);
-              }}
+              onChangePage={(newPage) => actions.handlePageChange(newPage)}
+              onChangeRowsPerPage={(newLimit) =>
+                actions.handleRowsPerPageChange(newLimit)
+              }
             />
           </Grid>
         </Grid>
       </DashboardContainer>
-    </MotionDiv>
+    </Box>
   );
 };
 

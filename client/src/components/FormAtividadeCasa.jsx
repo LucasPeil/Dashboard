@@ -3,7 +3,7 @@ import KeyboardReturnIcon from '@mui/icons-material/KeyboardReturn';
 import SaveIcon from '@mui/icons-material/Save';
 import { useParams, useNavigate } from 'react-router-dom';
 import {
-  getSingleAtividade,
+  getSingleAtividadeCasa,
   resetRegisterCasa,
   setNewAtividadeCasa,
 } from '../features/casa/casaSlice';
@@ -59,7 +59,7 @@ const FormAtividadeCasa = memo(function FormAtividadeCasa() {
   const categoriaItens = ['Compras', 'Limpeza', 'Refeições'];
 
   const atividadeCasa = useSelector(
-    (state) => state.atividadesCasa.atividadeCasa
+    (state) => state.atividadesCasa.atividadeCasa,
   );
 
   // Derive data logic
@@ -67,7 +67,7 @@ const FormAtividadeCasa = memo(function FormAtividadeCasa() {
 
   useEffect(() => {
     if (id) {
-      dispatch(getSingleAtividade(id));
+      dispatch(getSingleAtividadeCasa(id));
     }
   }, [id, dispatch]);
 
@@ -91,7 +91,7 @@ const FormAtividadeCasa = memo(function FormAtividadeCasa() {
       .test(
         'string-length',
         'Máximo de 1000 caracteres',
-        (value) => value?.length <= 1000
+        (value) => value?.length <= 1000,
       ),
   });
 
@@ -149,7 +149,7 @@ const FormAtividadeCasa = memo(function FormAtividadeCasa() {
               variant="standard"
               fullWidth
               error={Boolean(
-                formik.touched.nomeAtividade && formik.errors.nomeAtividade
+                formik.touched.nomeAtividade && formik.errors.nomeAtividade,
               )}
               helperText={
                 formik.touched.nomeAtividade && formik.errors.nomeAtividade
@@ -167,7 +167,7 @@ const FormAtividadeCasa = memo(function FormAtividadeCasa() {
                 label="Categoria"
                 variant="standard"
                 error={Boolean(
-                  formik.touched.categoria && formik.errors.categoria
+                  formik.touched.categoria && formik.errors.categoria,
                 )}
               >
                 {categoriaItens.map((category, idx) => (
@@ -194,7 +194,7 @@ const FormAtividadeCasa = memo(function FormAtividadeCasa() {
               style={{ marginTop: 30, marginBottom: 30 }}
               error={Boolean(
                 formik.touched.descricaoAtividade &&
-                  formik.errors.descricaoAtividade
+                formik.errors.descricaoAtividade,
               )}
               helperText={
                 formik.touched.descricaoAtividade &&
@@ -217,7 +217,7 @@ const FormAtividadeCasa = memo(function FormAtividadeCasa() {
               fullWidth
               style={{ marginTop: 30, marginBottom: 10 }}
               error={Boolean(
-                formik.touched.dinheiroGasto && formik.errors.dinheiroGasto
+                formik.touched.dinheiroGasto && formik.errors.dinheiroGasto,
               )}
               helperText={
                 formik.touched.dinheiroGasto && formik.errors.dinheiroGasto
@@ -235,7 +235,7 @@ const FormAtividadeCasa = memo(function FormAtividadeCasa() {
               fullWidth
               style={{ marginTop: 30, marginBottom: 30 }}
               error={Boolean(
-                formik.touched.tempoGasto && formik.errors.tempoGasto
+                formik.touched.tempoGasto && formik.errors.tempoGasto,
               )}
               helperText={
                 formik.touched.tempoGasto && formik.errors.tempoGasto

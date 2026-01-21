@@ -6,123 +6,31 @@ import RamenDiningOutlinedIcon from '@mui/icons-material/RamenDiningOutlined';
 import ShoppingBasketOutlinedIcon from '@mui/icons-material/ShoppingBasketOutlined';
 import {
   Box,
+  Divider,
   Grid,
   IconButton,
-  useMediaQuery,
-  Divider,
   Typography,
+  useMediaQuery,
 } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
-import React, {
-  useCallback,
-  useEffect,
-  useMemo,
-  useState,
-  lazy,
-  Suspense,
-} from 'react';
+import { lazy, Suspense, useMemo } from 'react';
 import DataTable from 'react-data-table-component';
-import { useDispatch, useSelector } from 'react-redux';
-import { toast } from 'react-toastify'; // Import movido para cima
-import MotionDiv from '../../MotionDiv';
 import { Outlet } from 'react-router-dom';
-import {
-  getAllAtividadesCasa,
-  getComprasQty,
-  getLimpezaQty,
-  getRefeicoesQty,
-  removeSingleAtividade,
-  resetRegisterCasa,
-  resetRemoveCasa,
-} from '../../features/casa/casaSlice';
-import CategoryCardsContainer from '../CategoryCardsContainer';
+import MotionDiv from '../../MotionDiv';
 import { customStyles } from '../../styles/stylesConst';
 import CategoryCards from '../CategoryCards';
+import CategoryCardsContainer from '../CategoryCardsContainer';
+import DashboardContainer from '../Container';
 import DashboardsHeaders from '../DashboardsHeaders';
-
+import NoRecord from '../NoRecord';
 import ProgressComponent from '../ProgressComponent';
 import SearchBar from '../SearchBar';
 
-import NoRecord from '../NoRecord';
-import DashboardContainer from '../Container';
-import SingleAtividadeSkeleton from '../SingleAtividadeSkeleton';
-
-const SingleAtividade = lazy(() => import('./SingleAtividade'));
+import useCasa from '../../hooks/useCasa';
+const SingleAtividade = lazy(() => import('../SingleAtividade'));
 const CasaDashboard = () => {
-  const [openSingleAtividade, setOpenSingleAtividade] = useState(false);
-  const user = useSelector((state) => state.auth.user);
-  // Callbacks simples
-  const handleCloseSingleAtividade = useCallback(
-    () => setOpenSingleAtividade(false),
-    [],
-  );
-  const [selectedRow, setSelectedRow] = useState();
-  const [categorySelected, setCategorySelected] = useState('');
-  // Paginação e Filtros
-  const [page, setPage] = useState(1);
-  const [limit, setLimit] = useState(10);
-  const [sortDirection, setSortDirection] = useState(1);
-  const [prop, setProp] = useState('_id');
-  const [filter, setFilter] = useState('');
-
+  const { data, uiStates, actions } = useCasa();
   const theme = useTheme();
   const omit = useMediaQuery(theme.breakpoints.down('lg'));
-  // Estado dos Cards
-  const [categoryCardSelected, setCategoryCardSelected] = useState([
-    false,
-    false,
-    false,
-  ]);
-
-  const dispatch = useDispatch();
-
-  const atividadesCasa = useSelector(
-    (state) => state.atividadesCasa.atividadesCasa,
-  );
-  const isLoading = useSelector((state) => state.atividadesCasa.isLoading);
-  const register = useSelector((state) => state.atividadesCasa.register);
-  const remove = useSelector((state) => state.atividadesCasa.remove);
-  const quantidadeLimpeza = useSelector(
-    (state) => state.atividadesCasa.quantidadeLimpeza,
-  );
-  const quantidadeCompras = useSelector(
-    (state) => state.atividadesCasa.quantidadeCompras,
-  );
-  const quantidadeRefeicoes = useSelector(
-    (state) => state.atividadesCasa.quantidadeRefeicoes,
-  );
-  const handleCardClick = useCallback((idx, title) => {
-    setCategorySelected(title);
-    setCategoryCardSelected((prev) => {
-      const arrayCopy = [...prev].fill(false);
-      arrayCopy[idx] = !prev[idx];
-      return arrayCopy;
-    });
-  }, []);
-
-  const cleanFilters = useCallback(() => {
-    setCategorySelected('');
-    setCategoryCardSelected([false, false, false]);
-  }, []);
-
-  useEffect(() => {
-    if (register.isSuccess) {
-      toast.success(register.message, {
-        position: toast.POSITION.BOTTOM_RIGHT,
-      });
-    } else if (remove.isSuccess) {
-      toast.success(remove.message, { position: toast.POSITION.BOTTOM_RIGHT });
-    }
-    dispatch(getComprasQty());
-    dispatch(getLimpezaQty());
-    dispatch(getRefeicoesQty());
-    return () => {
-      dispatch(resetRemoveCasa());
-      dispatch(resetRegisterCasa());
-    };
-  }, [register, remove, dispatch]);
-
-  const navigate = useNavigate();
   const tableColumns = useMemo(
     () => [
       {
@@ -145,7 +53,10 @@ const CasaDashboard = () => {
         grow: 2,
         cell: (row) => {
           return (
-            <Box sx={{ pt: 2, width: '100%' }}>
+            <Box
+              onClick={() => actions.handleRowClick(row._id)}
+              sx={{ pt: 2, width: '100%', cursor: 'pointer' }}
+            >
               <Divider sx={{ fontWeight: 'bold', fontSize: '1.2rem' }}>
                 Nome
               </Divider>
@@ -167,8 +78,8 @@ const CasaDashboard = () => {
         },
       },
     ],
-    [dispatch, omit],
-  ); // Dependência apenas no dispatch (que é estável)
+    [actions],
+  );
   const buttonColumns = useMemo(() => {
     return [
       {
@@ -183,19 +94,11 @@ const CasaDashboard = () => {
               alignItems: 'center',
             }}
           >
-            <IconButton
-              onClick={() => {
-                navigate(`/casa/nova-atividade/casa/${row._id}`);
-              }}
-            >
+            <IconButton onClick={() => actions.handleEdit(row._id)}>
               <EditTwoToneIcon color="success" />
             </IconButton>
             <IconButton
-              onClick={() => {
-                dispatch(
-                  removeSingleAtividade({ id: row._id, userId: row?.userId }),
-                );
-              }}
+              onClick={() => actions.handleDelete(row._id, row?.userId)}
             >
               <DeleteTwoToneIcon color="error" />
             </IconButton>
@@ -203,46 +106,24 @@ const CasaDashboard = () => {
         ),
       },
     ];
-  }, [dispatch, omit]);
-
-  useEffect(() => {
-    dispatch(
-      getAllAtividadesCasa({
-        page: 1,
-        limit: limit,
-        prop: prop,
-        sortDirection: sortDirection,
-        filter: filter,
-        categorySelected: categorySelected,
-        userId: user._id,
-      }),
-    );
-  }, [
-    remove,
-    register,
-    filter,
-    categorySelected,
-    limit,
-    prop,
-    sortDirection,
-    dispatch,
-  ]);
+  }, [actions]);
 
   return (
-    <MotionDiv>
+    <Box>
       <Outlet />
-      <Suspense fallback={<SingleAtividadeSkeleton />}>
+      <Suspense fallback={null}>
         <SingleAtividade
-          rowData={selectedRow}
-          openSingleAtividade={openSingleAtividade}
-          handleCloseSingleAtividade={handleCloseSingleAtividade}
+          id={uiStates.selectedRowId}
+          openSingleAtividade={uiStates.openSingleAtividade}
+          handleCloseSingleAtividade={actions.handleCloseSingleAtividade}
           iconColor={'#0a1e73'}
+          category={'casa'}
         />
       </Suspense>
       <DashboardContainer>
         <DashboardsHeaders
-          cleanFilters={cleanFilters}
-          categorySelected={categorySelected}
+          cleanFilters={actions.cleanFilters}
+          categorySelected={uiStates.categorySelected}
           title={'DETALHES SOBRE AS ATIVIDADES DOMÉSTICAS'}
           path="nova-atividade/casa"
         />
@@ -258,10 +139,10 @@ const CasaDashboard = () => {
               classLabel="category-banner-casa"
               bgcolor={'#0c264e'}
               Icon={ShoppingBasketOutlinedIcon}
-              qty={quantidadeCompras}
+              qty={data.quantidadeCompras}
               // Novas Props Otimizadas
-              isSelected={categoryCardSelected[0]}
-              onSelect={handleCardClick}
+              isSelected={uiStates.categoryCardSelected[0]}
+              onSelect={actions.handleCardClick}
             />
           </Box>
 
@@ -275,9 +156,9 @@ const CasaDashboard = () => {
               classLabel="category-banner-casa"
               bgcolor={'#0c264e'}
               Icon={LocalLaundryServiceOutlinedIcon}
-              qty={quantidadeLimpeza}
-              isSelected={categoryCardSelected[1]}
-              onSelect={handleCardClick}
+              qty={data.quantidadeLimpeza}
+              isSelected={uiStates.categoryCardSelected[1]}
+              onSelect={actions.handleCardClick}
             />
           </Box>
 
@@ -291,9 +172,9 @@ const CasaDashboard = () => {
               classLabel="category-banner-casa"
               bgcolor={'#0c264e'}
               Icon={RamenDiningOutlinedIcon}
-              qty={quantidadeRefeicoes}
-              isSelected={categoryCardSelected[2]}
-              onSelect={handleCardClick}
+              qty={data.quantidadeRefeicoes}
+              isSelected={uiStates.categoryCardSelected[2]}
+              onSelect={actions.handleCardClick}
             />
           </Box>
         </CategoryCardsContainer>
@@ -303,12 +184,15 @@ const CasaDashboard = () => {
             <DataTable
               className="table"
               columns={[...tableColumns, ...buttonColumns]}
-              data={atividadesCasa.documents}
+              data={data.atividadesCasa.documents}
               customStyles={customStyles({ backgroundColor: '#D6E8FB' })}
               subHeader
               noDataComponent={<NoRecord />}
               subHeaderComponent={
-                <SearchBar setFilter={setFilter} filter={filter} />
+                <SearchBar
+                  setFilter={actions.setFilter}
+                  filter={uiStates.filter}
+                />
               }
               striped
               pagination
@@ -317,49 +201,19 @@ const CasaDashboard = () => {
               responsive
               highlightOnHover
               pointerOnHover
-              progressPending={isLoading}
-              progressComponent={<ProgressComponent limit={limit} />}
-              paginationTotalRows={atividadesCasa.total}
-              onRowClicked={(row) => {
-                console.log(row);
-                setSelectedRow(row);
-                setOpenSingleAtividade(true);
-              }}
-              // ... restante das props de paginação mantidas ...
-              onChangePage={(newPage) => {
-                setPage(newPage);
-                //dispatch manual ou page no array de dependencias do useEffect
-                dispatch(
-                  getAllAtividadesCasa({
-                    page: newPage,
-                    limit,
-                    prop,
-                    sortDirection,
-                    filter,
-                    categorySelected,
-                    userId: user._id,
-                  }),
-                );
-              }}
-              onChangeRowsPerPage={(newLimit) => {
-                setLimit(newLimit);
-                dispatch(
-                  getAllAtividadesCasa({
-                    page,
-                    limit: newLimit,
-                    prop,
-                    sortDirection,
-                    filter,
-                    categorySelected,
-                    userId: user._id,
-                  }),
-                );
-              }}
+              progressPending={data.isLoading}
+              progressComponent={<ProgressComponent limit={data.limit} />}
+              paginationTotalRows={data.atividadesCasa.total}
+              onRowClicked={(row) => actions.handleRowClick(row._id)}
+              onChangePage={(newPage) => actions.handlePageChange(newPage)}
+              onChangeRowsPerPage={(newLimit) =>
+                actions.handleRowsPerPageChange(newLimit)
+              }
             />
           </Grid>
         </Grid>
       </DashboardContainer>
-    </MotionDiv>
+    </Box>
   );
 };
 

@@ -46,6 +46,13 @@ const paginationHandler = (model, filter) => {
           { $sort: { [prop]: sortDirection } },
           { $skip: startIndex },
           { $limit: limit },
+          {
+            $project: {
+              _id: 1,
+              nomeAtividade: 1,
+              descricaoAtividade: 1,
+            },
+          },
         ])
         .collation({ locale: 'pt', caseLevel: true, strength: 3 });
 

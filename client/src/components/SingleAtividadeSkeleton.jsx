@@ -1,15 +1,21 @@
-import { Skeleton } from '@mui/material';
+import { Box, Divider, Skeleton } from '@mui/material';
+import { useEffect } from 'react';
 
 const SingleAtividadeSkeleton = () => {
-  return new Array(5).map((_, index) => (
-    <Skeleton
-      key={index}
-      animation="wave"
-      variant="rectangular"
-      width={210}
-      height={118}
-    />
-  ));
+  return (
+    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+      <Box sx={{ borderBottom: '1px solid #cacacaff' }}>
+        <Skeleton width="100%" height="90px" />
+      </Box>
+      <Box sx={{}}>
+        <Skeleton width="100%" height="55px" />
+        <Skeleton width="100%" height="55px" />
+        <Skeleton width="100%" height="55px" />
+        <Skeleton width="100%" height="55px" />
+        <Skeleton width="100%" height="55px" />
+      </Box>
+    </Box>
+  );
 };
 
 export default SingleAtividadeSkeleton;

@@ -11,7 +11,12 @@ const initialState = {
   isSuccess: false,
   isLoading: false,
   isError: false,
-  openModalEducacao: false,
+  singleAtividadeEducacao: {
+    isSuccess: false,
+    isLoading: false,
+    isError: false,
+    message: '',
+  },
   register: {
     isSuccess: false,
     isLoading: false,
@@ -47,7 +52,7 @@ export const getCursosQty = createAsyncThunk(
         error.toString();
       return thunkAPI.rejectWithValue(message);
     }
-  }
+  },
 );
 export const getLivrosQty = createAsyncThunk(
   'atividadesEducacao/getLivrosQty',
@@ -63,7 +68,7 @@ export const getLivrosQty = createAsyncThunk(
         error.toString();
       return thunkAPI.rejectWithValue(message);
     }
-  }
+  },
 );
 export const getSeminariosQty = createAsyncThunk(
   'atividadesEducacao/getSeminariosQty',
@@ -79,7 +84,7 @@ export const getSeminariosQty = createAsyncThunk(
         error.toString();
       return thunkAPI.rejectWithValue(message);
     }
-  }
+  },
 );
 export const getAllAtividadesEducacao = createAsyncThunk(
   'atividadesEducacao/get',
@@ -95,7 +100,7 @@ export const getAllAtividadesEducacao = createAsyncThunk(
         error.toString();
       return thunkAPI.rejectWithValue(message);
     }
-  }
+  },
 );
 
 export const setNewAtividadeEducacao = createAsyncThunk(
@@ -112,7 +117,7 @@ export const setNewAtividadeEducacao = createAsyncThunk(
         error.toString();
       return thunkAPI.rejectWithValue(message);
     }
-  }
+  },
 );
 
 export const getSingleAtividadeEducacao = createAsyncThunk(
@@ -129,7 +134,7 @@ export const getSingleAtividadeEducacao = createAsyncThunk(
         error.toString();
       return thunkAPI.rejectWithValue(message);
     }
-  }
+  },
 );
 
 export const removeSingleAtividadeEducacao = createAsyncThunk(
@@ -149,7 +154,7 @@ export const removeSingleAtividadeEducacao = createAsyncThunk(
         error.toString();
       return thunkAPI.rejectWithValue(message);
     }
-  }
+  },
 );
 
 export const educacaoSlice = createSlice({
@@ -171,16 +176,17 @@ export const educacaoSlice = createSlice({
       state.remove.isLoading = false;
       state.remove.isError = false;
     },
+    resetGetSingleAtividadeEducacao(state) {
+      state.singleAtividadeEducacao.isSuccess = false;
+      state.singleAtividadeEducacao.isLoading = false;
+      state.singleAtividadeEducacao.isError = false;
+      state.singleAtividadeEducacao.message = '';
+      state.atividadeEducacao = {};
+    },
     resetEducacao(state) {
       state.isSuccess = false;
       state.isLoading = false;
       state.isError = false;
-    },
-    setOpenModalEducacao(state) {
-      state.openModalEducacao = true;
-    },
-    closeModalEducacao(state) {
-      state.openModalEducacao = false;
     },
   },
   extraReducers: (builder) => {
@@ -272,21 +278,21 @@ export const educacaoSlice = createSlice({
       })
 
       .addCase(getSingleAtividadeEducacao.pending, (state) => {
-        state.isLoading = true;
-        state.isError = false;
-        state.isSuccess = false;
+        state.singleAtividadeEducacao.isLoading = true;
+        state.singleAtividadeEducacao.isError = false;
+        state.singleAtividadeEducacao.isSuccess = false;
       })
       .addCase(getSingleAtividadeEducacao.fulfilled, (state, action) => {
-        state.isLoading = false;
-        state.isError = false;
-        state.isSuccess = true;
+        state.singleAtividadeEducacao.isLoading = false;
+        state.singleAtividadeEducacao.isError = false;
+        state.singleAtividadeEducacao.isSuccess = true;
         state.atividadeEducacao = action.payload;
       })
       .addCase(getSingleAtividadeEducacao.rejected, (state, action) => {
-        state.isLoading = false;
-        state.isSuccess = false;
-        state.isError = true;
-        state.message = action.payload;
+        state.singleAtividadeEducacao.isLoading = false;
+        state.singleAtividadeEducacao.isSuccess = false;
+        state.singleAtividadeEducacao.isError = true;
+        state.singleAtividadeEducacao.message = action.payload;
       })
       .addCase(removeSingleAtividadeEducacao.pending, (state) => {
         state.remove.isLoading = true;
@@ -298,7 +304,7 @@ export const educacaoSlice = createSlice({
         state.remove.isError = false;
         state.remove.isSuccess = true;
         const idx = state.atividadesEducacao.documents.findIndex(
-          (atividade) => atividade._id === action.payload.atividade._id
+          (atividade) => atividade._id === action.payload.atividade._id,
         );
         state.atividadesEducacao.documents.splice(idx, 1);
 
@@ -319,6 +325,7 @@ export const {
   resetUpdateEducacao,
   setOpenModalEducacao,
   closeModalEducacao,
+  resetGetSingleAtividadeEducacao,
 } = educacaoSlice.actions;
 
 export default educacaoSlice.reducer;

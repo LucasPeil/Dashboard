@@ -18,7 +18,7 @@ const setNewAtividadeCasa = async (data) => {
   const response = await axios.post(
     API_URL + '/newAtividade',
     { data: JSON.stringify(data) },
-    config
+    config,
   );
 
   return response.data;
@@ -48,13 +48,13 @@ const getAllAtividadesCasa = async (options) => {
   const response = await axios.get(API_URL, config);
   return response.data;
 };
-const getSingleAtividade = async (id) => {
+const getSingleAtividadeCasa = async (id) => {
   const config = { withCredentials: true };
   const response = await axios.get(API_URL + `/${id}`, config);
   return response.data;
 };
 
-const removeSingleAtividade = async ({ id, userId }) => {
+const removeSingleAtividadeCasa = async ({ id, userId }) => {
   const config = {
     params: { userId },
     withCredentials: true,
@@ -65,8 +65,8 @@ const removeSingleAtividade = async ({ id, userId }) => {
 const casaService = {
   setNewAtividadeCasa,
   getAllAtividadesCasa,
-  getSingleAtividade,
-  removeSingleAtividade,
+  getSingleAtividadeCasa,
+  removeSingleAtividadeCasa,
   getComprasQty,
   getLimpezaQty,
   getRefeicoesQty,

@@ -11,7 +11,7 @@ import {
   removeSingleAtividadeLazer,
   resetRegisterLazer,
   resetRemoveLazer,
-} from '../../features/lazer/lazerSlice';
+} from '../features/lazer/lazerSlice';
 
 export default function useLazer() {
   const dispatch = useDispatch();
@@ -31,7 +31,7 @@ export default function useLazer() {
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(10);
   const [filter, setFilter] = useState('');
-  const [selectedRow, setSelectedRow] = useState();
+  const [selectedRowId, setSelectedRowId] = useState();
   const [categoryCardSelected, setCategoryCardSelected] = useState([
     false,
     false,
@@ -40,48 +40,63 @@ export default function useLazer() {
   ]);
   const [categorySelected, setCategorySelected] = useState('');
 
-  const handleCloseSingleAtividade = useCallback(
-    () => setOpenSingleAtividade(false),
-    [],
-  );
   const cleanFilters = useCallback(() => {
     setCategorySelected('');
     setCategoryCardSelected([false, false, false, false]);
   }, []);
 
-  const handleCardClick = useCallback((idx, title) => {
-    setCategorySelected(title);
-    setCategoryCardSelected((prev) => {
-      const arrayCopy = [...prev].fill(false);
-      arrayCopy[idx] = !prev[idx];
-      if (arrayCopy[idx] === false) {
-        cleanFilters();
-      }
-      return arrayCopy;
-    });
+  const handleCloseSingleAtividade = useCallback(
+    () => setOpenSingleAtividade(false),
+    [],
+  );
+
+  const handleCardClick = useCallback(
+    (idx, title) => {
+      setCategorySelected(title);
+      setCategoryCardSelected((prev) => {
+        const arrayCopy = [...prev].fill(false);
+        arrayCopy[idx] = !prev[idx];
+        if (arrayCopy[idx] === false) {
+          cleanFilters();
+        }
+        return arrayCopy;
+      });
+    },
+    [cleanFilters],
+  );
+
+  const handleRowClick = useCallback((id) => {
+    setSelectedRowId(id);
+    setOpenSingleAtividade(true);
   }, []);
 
-  const handleRowClick = (row) => {
-    setSelectedRow(row);
-    setOpenSingleAtividade(true);
-  };
-  const handleDelete = (id, userId) => {
-    dispatch(
-      removeSingleAtividadeLazer({
-        id,
-        userId,
-      }),
-    );
-  };
-  const handleEdit = (id) => {
-    navigate(`/lazer/nova-atividade/lazer/${id}`);
-  };
-  const handlePageChange = (newPage) => {
+  const handleDelete = useCallback(
+    (id, userId) => {
+      dispatch(
+        removeSingleAtividadeLazer({
+          id,
+          userId,
+        }),
+      );
+    },
+    [dispatch],
+  );
+
+  const handleEdit = useCallback(
+    (id) => {
+      navigate(`/lazer/nova-atividade/lazer/${id}`);
+    },
+    [navigate],
+  );
+
+  const handlePageChange = useCallback((newPage) => {
     setPage(newPage);
-  };
-  const handleRowsPerPageChange = (newLimit) => {
+  }, []);
+
+  const handleRowsPerPageChange = useCallback((newLimit) => {
     setLimit(newLimit);
-  };
+  }, []);
+
   //Side Effects
   useEffect(() => {
     if (register.isSuccess) {
@@ -114,26 +129,33 @@ export default function useLazer() {
         userId: user._id,
       }),
     );
-  }, [register, remove, filter, categorySelected, page, limit, dispatch]);
+  }, [
+    register,
+    remove,
+    filter,
+    categorySelected,
+    page,
+    limit,
+    dispatch,
+    user._id,
+  ]);
 
   return {
     data: {
       atividadesLazer,
       isLoading,
-      quantities: {
-        quantidadeJogos,
-        quantidadeOutros,
-        quantidadeCultura,
-        quantidadeEmGrupo,
-      },
+      quantidadeJogos,
+      quantidadeOutros,
+      quantidadeCultura,
+      quantidadeEmGrupo,
+      limit,
     },
     uiStates: {
       openSingleAtividade,
-      selectedRow,
+      selectedRowId,
       categoryCardSelected,
       categorySelected,
       filter,
-      limit,
     },
     actions: {
       setFilter,

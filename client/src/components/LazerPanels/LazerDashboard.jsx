@@ -10,7 +10,7 @@ import DataTable from 'react-data-table-component';
 import { Outlet } from 'react-router-dom';
 import MotionDiv from '../../MotionDiv';
 import { customStyles } from '../../styles/stylesConst';
-import SingleAtividade from '../CasaPanels/SingleAtividade';
+import SingleAtividade from '../SingleAtividade';
 import CategoryCards from '../CategoryCards';
 import CategoryCardsContainer from '../CategoryCardsContainer';
 import DashboardContainer from '../Container';
@@ -18,7 +18,7 @@ import DashboardsHeaders from '../DashboardsHeaders';
 import NoRecord from '../NoRecord';
 import ProgressComponent from '../ProgressComponent';
 import SearchBar from '../SearchBar';
-import useLazer from './useLazer';
+import useLazer from '../../hooks/useLazer';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import Divider from '@mui/material/Divider';
@@ -49,7 +49,10 @@ const LazerDashboard = ({ open }) => {
         grow: 2,
         cell: (row) => {
           return (
-            <Box sx={{ pt: 2, width: '100%' }}>
+            <Box
+              onClick={() => actions.handleRowClick(row._id)}
+              sx={{ pt: 2, width: '100%', cursor: 'pointer' }}
+            >
               <Divider sx={{ fontWeight: 'bold', fontSize: '1.2rem' }}>
                 Nome
               </Divider>
@@ -101,13 +104,14 @@ const LazerDashboard = ({ open }) => {
     ];
   }, [actions, omit]);
   return (
-    <MotionDiv>
+    <Box>
       <Outlet />
       <SingleAtividade
-        rowData={uiStates.selectedRow}
+        id={uiStates.selectedRowId}
         openSingleAtividade={uiStates.openSingleAtividade}
         handleCloseSingleAtividade={actions.handleCloseSingleAtividade}
         iconColor={'#D67F20'}
+        category={'lazer'}
       />
 
       <DashboardContainer>
@@ -124,7 +128,7 @@ const LazerDashboard = ({ open }) => {
             onSelect={actions.handleCardClick}
             distance={5}
             classLabel="category-banner-lazer"
-            qty={data.quantities.quantidadeJogos}
+            qty={data.quantidadeJogos}
             title="Jogos"
             description={'Veja os jogos que voce participou...'}
             bgcolor={'#f4b26a'}
@@ -137,7 +141,7 @@ const LazerDashboard = ({ open }) => {
             onSelect={actions.handleCardClick}
             distance={15}
             classLabel="category-banner-lazer"
-            qty={data.quantities.quantidadeCultura}
+            qty={data.quantidadeCultura}
             title="Cultura"
             description={'As mais variadas atividades culturais...'}
             bgcolor={'#f4b26a'}
@@ -150,7 +154,7 @@ const LazerDashboard = ({ open }) => {
             onSelect={actions.handleCardClick}
             distance={5}
             classLabel="category-banner-lazer"
-            qty={data.quantities.quantidadeEmGrupo}
+            qty={data.quantidadeEmGrupo}
             title="Em grupo"
             description={'Eventos sociais em que você marcou presença...'}
             bgcolor={'#f4b26a'}
@@ -163,7 +167,7 @@ const LazerDashboard = ({ open }) => {
             onSelect={actions.handleCardClick}
             distance={5}
             classLabel="category-banner-lazer"
-            qty={data.quantities.quantidadeOutros}
+            qty={data.quantidadeOutros}
             title="Outros"
             description={'Outras atividades de lazer...'}
             bgcolor={'#f4b26a'}
@@ -221,7 +225,7 @@ const LazerDashboard = ({ open }) => {
               progressPending={data.isLoading}
               progressComponent={<ProgressComponent limit={uiStates.limit} />}
               paginationTotalRows={data.atividadesLazer.total}
-              onRowClicked={(row) => actions.handleRowClick(row)}
+              onRowClicked={(row) => actions.handleRowClick(row._id)}
               paginationComponentOptions={{
                 rowsPerPageText: 'Itens por página',
                 rangeSeparatorText: 'de',
@@ -236,7 +240,7 @@ const LazerDashboard = ({ open }) => {
           </Grid>
         </Grid>
       </DashboardContainer>
-    </MotionDiv>
+    </Box>
   );
 };
 

@@ -11,7 +11,12 @@ const initialState = {
   isSuccess: false,
   isLoading: false,
   isError: false,
-  openModalCasa: false,
+  singleAtividadeCasa: {
+    isLoading: false,
+    isError: false,
+    isSuccess: false,
+    message: '',
+  },
   register: {
     isSuccess: false,
     isLoading: false,
@@ -48,7 +53,7 @@ export const setNewAtividadeCasa = createAsyncThunk(
         error.toString();
       return thunkAPI.rejectWithValue(message);
     }
-  }
+  },
 );
 export const getAllAtividadesCasa = createAsyncThunk(
   'atividadesCasa/getAll',
@@ -64,14 +69,14 @@ export const getAllAtividadesCasa = createAsyncThunk(
         error.toString();
       return thunkAPI.rejectWithValue(message);
     }
-  }
+  },
 );
 
-export const getSingleAtividade = createAsyncThunk(
-  'atividadesCasa/singleAtividade',
+export const getSingleAtividadeCasa = createAsyncThunk(
+  'atividadesCasa/getId',
   async (id, thunkAPI) => {
     try {
-      return await casaService.getSingleAtividade(id);
+      return await casaService.getSingleAtividadeCasa(id);
     } catch (error) {
       const message =
         (error.response &&
@@ -81,13 +86,13 @@ export const getSingleAtividade = createAsyncThunk(
         error.toString();
       return thunkAPI.rejectWithValue(message);
     }
-  }
+  },
 );
-export const removeSingleAtividade = createAsyncThunk(
+export const removeSingleAtividadeCasa = createAsyncThunk(
   'atividadesCasa/remove',
   async ({ id, userId }, thunkAPI) => {
     try {
-      return await casaService.removeSingleAtividade({ id, userId });
+      return await casaService.removeSingleAtividadeCasa({ id, userId });
     } catch (error) {
       const message =
         (error.response &&
@@ -97,7 +102,7 @@ export const removeSingleAtividade = createAsyncThunk(
         error.toString();
       return thunkAPI.rejectWithValue(message);
     }
-  }
+  },
 );
 export const getComprasQty = createAsyncThunk(
   'atividadesCasa/getComprasQty',
@@ -113,7 +118,7 @@ export const getComprasQty = createAsyncThunk(
         error.toString();
       return thunkAPI.rejectWithValue(message);
     }
-  }
+  },
 );
 export const getLimpezaQty = createAsyncThunk(
   'atividadesCasa/getLimpezaQty',
@@ -129,7 +134,7 @@ export const getLimpezaQty = createAsyncThunk(
         error.toString();
       return thunkAPI.rejectWithValue(message);
     }
-  }
+  },
 );
 export const getRefeicoesQty = createAsyncThunk(
   'atividadesCasa/getRefeicoesQty',
@@ -145,7 +150,7 @@ export const getRefeicoesQty = createAsyncThunk(
         error.toString();
       return thunkAPI.rejectWithValue(message);
     }
-  }
+  },
 );
 export const casaSlice = createSlice({
   name: 'casaSlice',
@@ -166,16 +171,16 @@ export const casaSlice = createSlice({
       state.remove.isLoading = false;
       state.remove.isError = false;
     },
+    resetGetSingleAtividadeCasa(state) {
+      state.singleAtividadeCasa.isSuccess = false;
+      state.singleAtividadeCasa.isLoading = false;
+      state.singleAtividadeCasa.isError = false;
+      state.atividadeCasa = {};
+    },
     reset(state) {
       state.isSuccess = false;
       state.isLoading = false;
       state.isError = false;
-    },
-    setOpenModalCasa(state) {
-      state.openModalCasa = true;
-    },
-    closeModalCasa(state) {
-      state.openModalCasa = false;
     },
   },
   extraReducers: (builder) => {
@@ -216,22 +221,22 @@ export const casaSlice = createSlice({
         state.message = action.payload;
       })
 
-      .addCase(getSingleAtividade.pending, (state) => {
-        state.isLoading = true;
-        state.isError = false;
-        state.isSuccess = false;
+      .addCase(getSingleAtividadeCasa.pending, (state) => {
+        state.singleAtividadeCasa.isLoading = true;
+        state.singleAtividadeCasa.isError = false;
+        state.singleAtividadeCasa.isSuccess = false;
       })
-      .addCase(getSingleAtividade.fulfilled, (state, action) => {
-        state.isLoading = false;
-        state.isError = false;
-        state.isSuccess = true;
+      .addCase(getSingleAtividadeCasa.fulfilled, (state, action) => {
+        state.singleAtividadeCasa.isLoading = false;
+        state.singleAtividadeCasa.isError = false;
+        state.singleAtividadeCasa.isSuccess = true;
         state.atividadeCasa = action.payload;
       })
-      .addCase(getSingleAtividade.rejected, (state, action) => {
-        state.isLoading = false;
-        state.isSuccess = false;
-        state.isError = true;
-        state.message = action.payload;
+      .addCase(getSingleAtividadeCasa.rejected, (state, action) => {
+        state.singleAtividadeCasa.isLoading = false;
+        state.singleAtividadeCasa.isSuccess = false;
+        state.singleAtividadeCasa.isError = true;
+        state.singleAtividadeCasa.message = action.payload;
       })
       .addCase(getComprasQty.pending, (state) => {
         state.isLoading = true;
@@ -284,24 +289,24 @@ export const casaSlice = createSlice({
         state.isError = true;
         state.message = action.payload;
       })
-      .addCase(removeSingleAtividade.pending, (state) => {
+      .addCase(removeSingleAtividadeCasa.pending, (state) => {
         state.remove.isLoading = true;
         state.remove.isError = false;
         state.remove.isSuccess = false;
       })
-      .addCase(removeSingleAtividade.fulfilled, (state, action) => {
+      .addCase(removeSingleAtividadeCasa.fulfilled, (state, action) => {
         state.remove.isLoading = false;
         state.remove.isError = false;
         state.remove.isSuccess = true;
 
         const idx = state.atividadesCasa.documents.findIndex(
-          (atividade) => atividade._id === action.payload.atividade._id
+          (atividade) => atividade._id === action.payload.atividade._id,
         );
         state.atividadesCasa.documents.splice(idx, 1);
 
         state.remove.message = action.payload.message;
       })
-      .addCase(removeSingleAtividade.rejected, (state, action) => {
+      .addCase(removeSingleAtividadeCasa.rejected, (state, action) => {
         state.remove.isLoading = false;
         state.remove.isSuccess = false;
         state.remove.isError = true;
@@ -316,6 +321,7 @@ export const {
   resetUpdateCasa,
   setOpenModalCasa,
   closeModalCasa,
+  resetGetSingleAtividadeCasa,
 } = casaSlice.actions;
 
 export default casaSlice.reducer;
