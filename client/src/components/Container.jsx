@@ -19,12 +19,15 @@ const DashboardContainer = ({ children }) => {
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
+            justifyContent: 'space-between',
             boxSizing: 'border-box',
             width: downMd ? '100%' : 'calc(100% - 6rem)',
             margin: '2rem auto',
-            minHeight: '90vh',
+            height: { xs: '60rem', xxl: '55rem' },
             position: 'relative',
             px: 2,
+            py: 1,
+            overflow: 'hidden',
           }}
         >
           {children}

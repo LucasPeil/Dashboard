@@ -121,65 +121,66 @@ const CasaDashboard = () => {
         />
       </Suspense>
       <DashboardContainer>
-        <DashboardsHeaders
-          cleanFilters={actions.cleanFilters}
-          categorySelected={uiStates.categorySelected}
-          title={'DETALHES SOBRE AS ATIVIDADES DOMÉSTICAS'}
-          path="nova-atividade/casa"
-        />
+        <Box sx={{ width: '100%' }}>
+          <DashboardsHeaders
+            cleanFilters={actions.cleanFilters}
+            categorySelected={uiStates.categorySelected}
+            title={'DETALHES SOBRE AS ATIVIDADES DOMÉSTICAS'}
+            path="nova-atividade/casa"
+          />
 
-        <CategoryCardsContainer minCardWidth={300}>
-          <Box component={'li'}>
-            <CategoryCards
-              idx={0}
-              title="Compras"
-              description={
-                'Veja as atividades relacionadas às compras do mês...'
-              }
-              classLabel="category-banner-casa"
-              bgcolor={'#0c264e'}
-              Icon={ShoppingBasketOutlinedIcon}
-              qty={data.quantidadeCompras}
-              // Novas Props Otimizadas
-              isSelected={uiStates.categoryCardSelected[0]}
-              onSelect={actions.handleCardClick}
-            />
-          </Box>
+          <CategoryCardsContainer minCardWidth={300}>
+            <Box component={'li'}>
+              <CategoryCards
+                idx={0}
+                title="Compras"
+                description={
+                  'Veja as atividades relacionadas às compras do mês...'
+                }
+                classLabel="category-banner-casa"
+                bgcolor={'#0c264e'}
+                Icon={ShoppingBasketOutlinedIcon}
+                qty={data.quantidadeCompras}
+                // Novas Props Otimizadas
+                isSelected={uiStates.categoryCardSelected[0]}
+                onSelect={actions.handleCardClick}
+              />
+            </Box>
 
-          <Box component={'li'}>
-            <CategoryCards
-              idx={1}
-              title="Limpeza"
-              description={
-                'Veja as atividades relacionadas a limpeza do seu lar...'
-              }
-              classLabel="category-banner-casa"
-              bgcolor={'#0c264e'}
-              Icon={LocalLaundryServiceOutlinedIcon}
-              qty={data.quantidadeLimpeza}
-              isSelected={uiStates.categoryCardSelected[1]}
-              onSelect={actions.handleCardClick}
-            />
-          </Box>
+            <Box component={'li'}>
+              <CategoryCards
+                idx={1}
+                title="Limpeza"
+                description={
+                  'Veja as atividades relacionadas a limpeza do seu lar...'
+                }
+                classLabel="category-banner-casa"
+                bgcolor={'#0c264e'}
+                Icon={LocalLaundryServiceOutlinedIcon}
+                qty={data.quantidadeLimpeza}
+                isSelected={uiStates.categoryCardSelected[1]}
+                onSelect={actions.handleCardClick}
+              />
+            </Box>
 
-          <Box component={'li'}>
-            <CategoryCards
-              idx={2}
-              title="Refeições"
-              description={
-                'Veja as atividades relacionadas a sua alimentação...'
-              }
-              classLabel="category-banner-casa"
-              bgcolor={'#0c264e'}
-              Icon={RamenDiningOutlinedIcon}
-              qty={data.quantidadeRefeicoes}
-              isSelected={uiStates.categoryCardSelected[2]}
-              onSelect={actions.handleCardClick}
-            />
-          </Box>
-        </CategoryCardsContainer>
-
-        <Grid component={'section'} container>
+            <Box component={'li'}>
+              <CategoryCards
+                idx={2}
+                title="Refeições"
+                description={
+                  'Veja as atividades relacionadas a sua alimentação...'
+                }
+                classLabel="category-banner-casa"
+                bgcolor={'#0c264e'}
+                Icon={RamenDiningOutlinedIcon}
+                qty={data.quantidadeRefeicoes}
+                isSelected={uiStates.categoryCardSelected[2]}
+                onSelect={actions.handleCardClick}
+              />
+            </Box>
+          </CategoryCardsContainer>
+        </Box>
+        <Grid component={'section'} container sx={{ height: '100%' }}>
           <Grid item xs={12} sx={{ position: 'relative', px: 2 }}>
             <DataTable
               className="table"
@@ -187,7 +188,7 @@ const CasaDashboard = () => {
               data={data.atividadesCasa.documents}
               customStyles={customStyles({ backgroundColor: '#D6E8FB' })}
               subHeader
-              noDataComponent={<NoRecord />}
+              noDataComponent={!data.isLoading && <NoRecord />}
               subHeaderComponent={
                 <SearchBar
                   setFilter={actions.setFilter}
@@ -202,7 +203,7 @@ const CasaDashboard = () => {
               highlightOnHover
               pointerOnHover
               progressPending={data.isLoading}
-              progressComponent={<ProgressComponent limit={5} />}
+              progressComponent={<ProgressComponent limit={10} />}
               paginationTotalRows={data.atividadesCasa.total}
               onRowClicked={(row) => actions.handleRowClick(row._id)}
               onChangePage={(newPage) => actions.handlePageChange(newPage)}

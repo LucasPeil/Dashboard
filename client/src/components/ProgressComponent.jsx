@@ -1,19 +1,19 @@
-import React from "react";
-import { Box, Skeleton } from "@mui/material";
+import React from 'react';
+import { Box, Skeleton } from '@mui/material';
 const ProgressComponent = ({ limit }) => {
   return (
     <Box
-      component={"div"}
+      component={'div'}
       sx={{
-        display: "flex",
-        flexDirection: "column",
-        width: "100%",
+        display: 'flex',
+        flexDirection: 'column',
+        width: '100%',
       }}
     >
       {[...Array(limit)].map((_, idx) => (
         <Box
           key={idx}
-          sx={{ display: "flex", justifyContent: "space-between" }}
+          sx={{ display: 'flex', justifyContent: 'space-between' }}
         >
           <Skeleton width="100%" height="50px" />
         </Box>

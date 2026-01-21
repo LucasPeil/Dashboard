@@ -123,59 +123,60 @@ const EducacaoDashboard = () => {
         />
       </Suspense>
       <DashboardContainer>
-        <DashboardsHeaders
-          cleanFilters={actions.cleanFilters}
-          categorySelected={uiStates.categorySelected}
-          title={'DETALHES SOBRE SUA EDUCAÇÃO'}
-          path="nova-atividade/educacao"
-        />
+        <Box sx={{ width: '100%' }}>
+          <DashboardsHeaders
+            cleanFilters={actions.cleanFilters}
+            categorySelected={uiStates.categorySelected}
+            title={'DETALHES SOBRE SUA EDUCAÇÃO'}
+            path="nova-atividade/educacao"
+          />
 
-        <CategoryCardsContainer minCardWidth={220}>
-          <CategoryCards
-            idx={0}
-            isSelected={uiStates.categoryCardSelected[0]}
-            onSelect={actions.handleCardClick}
-            distance={5}
-            classLabel="category-banner-educacao"
-            qty={data.quantidadeCursos}
-            categorySelected={uiStates.categorySelected}
-            setCategorySelected={actions.setCategorySelected}
-            title="Cursos"
-            description={'Veja quais cursos você assistiu...'}
-            bgcolor={'#648d64'}
-            Icon={CastForEducationOutlinedIcon}
-          />
-          <CategoryCards
-            idx={1}
-            isSelected={uiStates.categoryCardSelected[1]}
-            onSelect={actions.handleCardClick}
-            distance={5}
-            classLabel="category-banner-educacao"
-            qty={data.quantidadeLivros}
-            categorySelected={uiStates.categorySelected}
-            setCategorySelected={actions.setCategorySelected}
-            title="Livros"
-            description={'Dê uma olhada nos livros lidos nesse mês...'}
-            bgcolor={'#648d64'}
-            Icon={MenuBookOutlinedIcon}
-          />
-          <CategoryCards
-            idx={2}
-            isSelected={uiStates.categoryCardSelected[2]}
-            onSelect={actions.handleCardClick}
-            distance={5}
-            classLabel="category-banner-educacao"
-            qty={data.quantidadeSeminarios}
-            categorySelected={uiStates.categorySelected}
-            setCategorySelected={actions.setCategorySelected}
-            title="Seminários"
-            description={'Dê uma olhada nos seminários assistidos...'}
-            bgcolor={'#648d64'}
-            Icon={MenuBookOutlinedIcon}
-          />
-        </CategoryCardsContainer>
-
-        <Grid component={'section'} container>
+          <CategoryCardsContainer minCardWidth={220}>
+            <CategoryCards
+              idx={0}
+              isSelected={uiStates.categoryCardSelected[0]}
+              onSelect={actions.handleCardClick}
+              distance={5}
+              classLabel="category-banner-educacao"
+              qty={data.quantidadeCursos}
+              categorySelected={uiStates.categorySelected}
+              setCategorySelected={actions.setCategorySelected}
+              title="Cursos"
+              description={'Veja quais cursos você assistiu...'}
+              bgcolor={'#648d64'}
+              Icon={CastForEducationOutlinedIcon}
+            />
+            <CategoryCards
+              idx={1}
+              isSelected={uiStates.categoryCardSelected[1]}
+              onSelect={actions.handleCardClick}
+              distance={5}
+              classLabel="category-banner-educacao"
+              qty={data.quantidadeLivros}
+              categorySelected={uiStates.categorySelected}
+              setCategorySelected={actions.setCategorySelected}
+              title="Livros"
+              description={'Dê uma olhada nos livros lidos nesse mês...'}
+              bgcolor={'#648d64'}
+              Icon={MenuBookOutlinedIcon}
+            />
+            <CategoryCards
+              idx={2}
+              isSelected={uiStates.categoryCardSelected[2]}
+              onSelect={actions.handleCardClick}
+              distance={5}
+              classLabel="category-banner-educacao"
+              qty={data.quantidadeSeminarios}
+              categorySelected={uiStates.categorySelected}
+              setCategorySelected={actions.setCategorySelected}
+              title="Seminários"
+              description={'Dê uma olhada nos seminários assistidos...'}
+              bgcolor={'#648d64'}
+              Icon={MenuBookOutlinedIcon}
+            />
+          </CategoryCardsContainer>
+        </Box>
+        <Grid component={'section'} container sx={{ height: '100%' }}>
           <Grid item xs={12} sx={{ position: 'relative', px: 2 }}>
             <DataTable
               className="table"
@@ -186,7 +187,7 @@ const EducacaoDashboard = () => {
               })}
               highlightOnHover
               subHeader
-              noDataComponent={<NoRecord />}
+              noDataComponent={!data.isLoading && <NoRecord />}
               subHeaderComponent={
                 <SearchBar
                   setFilter={actions.setFilter}
@@ -200,7 +201,7 @@ const EducacaoDashboard = () => {
               responsive
               pointerOnHover
               progressPending={data.isLoading}
-              progressComponent={<ProgressComponent limit={5} />}
+              progressComponent={<ProgressComponent limit={10} />}
               paginationTotalRows={data.atividadesEducacao.total}
               onRowClicked={(row) => actions.handleRowClick(row._id)}
               paginationComponentOptions={{

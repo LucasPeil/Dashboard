@@ -115,90 +115,68 @@ const LazerDashboard = ({ open }) => {
       />
 
       <DashboardContainer>
-        <DashboardsHeaders
-          cleanFilters={actions.cleanFilters}
-          categorySelected={uiStates.categorySelected}
-          title={'DETALHES SOBRE AS ATIVIDADES DE LAZER'}
-          path="nova-atividade/lazer"
-        />
-        <CategoryCardsContainer minCardWidth={220}>
-          <CategoryCards
-            idx={0}
-            isSelected={uiStates.categoryCardSelected[0]}
-            onSelect={actions.handleCardClick}
-            distance={5}
-            classLabel="category-banner-lazer"
-            qty={data.quantidadeJogos}
-            title="Jogos"
-            description={'Veja os jogos que voce participou...'}
-            bgcolor={'#f4b26a'}
-            Icon={SportsEsportsOutlinedIcon}
+        <Box sx={{ width: '100%' }}>
+          <DashboardsHeaders
+            cleanFilters={actions.cleanFilters}
+            categorySelected={uiStates.categorySelected}
+            title={'DETALHES SOBRE AS ATIVIDADES DE LAZER'}
+            path="nova-atividade/lazer"
           />
+          <CategoryCardsContainer minCardWidth={220}>
+            <CategoryCards
+              idx={0}
+              isSelected={uiStates.categoryCardSelected[0]}
+              onSelect={actions.handleCardClick}
+              distance={5}
+              classLabel="category-banner-lazer"
+              qty={data.quantidadeJogos}
+              title="Jogos"
+              description={'Veja os jogos que voce participou...'}
+              bgcolor={'#f4b26a'}
+              Icon={SportsEsportsOutlinedIcon}
+            />
 
-          <CategoryCards
-            idx={1}
-            isSelected={uiStates.categoryCardSelected[1]}
-            onSelect={actions.handleCardClick}
-            distance={15}
-            classLabel="category-banner-lazer"
-            qty={data.quantidadeCultura}
-            title="Cultura"
-            description={'As mais variadas atividades culturais...'}
-            bgcolor={'#f4b26a'}
-            Icon={BookOutlinedIcon}
-          />
+            <CategoryCards
+              idx={1}
+              isSelected={uiStates.categoryCardSelected[1]}
+              onSelect={actions.handleCardClick}
+              distance={15}
+              classLabel="category-banner-lazer"
+              qty={data.quantidadeCultura}
+              title="Cultura"
+              description={'As mais variadas atividades culturais...'}
+              bgcolor={'#f4b26a'}
+              Icon={BookOutlinedIcon}
+            />
 
-          <CategoryCards
-            idx={2}
-            isSelected={uiStates.categoryCardSelected[2]}
-            onSelect={actions.handleCardClick}
-            distance={5}
-            classLabel="category-banner-lazer"
-            qty={data.quantidadeEmGrupo}
-            title="Em grupo"
-            description={'Eventos sociais em que você marcou presença...'}
-            bgcolor={'#f4b26a'}
-            Icon={GroupsOutlinedIcon}
-          />
+            <CategoryCards
+              idx={2}
+              isSelected={uiStates.categoryCardSelected[2]}
+              onSelect={actions.handleCardClick}
+              distance={5}
+              classLabel="category-banner-lazer"
+              qty={data.quantidadeEmGrupo}
+              title="Em grupo"
+              description={'Eventos sociais em que você marcou presença...'}
+              bgcolor={'#f4b26a'}
+              Icon={GroupsOutlinedIcon}
+            />
 
-          <CategoryCards
-            idx={3}
-            isSelected={uiStates.categoryCardSelected[3]}
-            onSelect={actions.handleCardClick}
-            distance={5}
-            classLabel="category-banner-lazer"
-            qty={data.quantidadeOutros}
-            title="Outros"
-            description={'Outras atividades de lazer...'}
-            bgcolor={'#f4b26a'}
-            Icon={CelebrationOutlinedIcon}
-          />
-        </CategoryCardsContainer>
-        <Grid container>
-          <Grid
-            sx={{
-              display: 'flex',
-              position: 'relative',
-              flexDirection: 'column',
-              justifyContent: 'start',
-              alignItems: 'start',
-            }}
-            item
-            xs={12}
-          >
-            <Box
-              sx={{
-                boxSizing: 'border-box',
-                p: 1,
-                height: '53px',
-                display: 'flex',
-                justifyContent: 'space-around',
-                alignItems: 'center',
-                width: '100%',
-              }}
-            ></Box>
-          </Grid>
-
+            <CategoryCards
+              idx={3}
+              isSelected={uiStates.categoryCardSelected[3]}
+              onSelect={actions.handleCardClick}
+              distance={5}
+              classLabel="category-banner-lazer"
+              qty={data.quantidadeOutros}
+              title="Outros"
+              description={'Outras atividades de lazer...'}
+              bgcolor={'#f4b26a'}
+              Icon={CelebrationOutlinedIcon}
+            />
+          </CategoryCardsContainer>
+        </Box>
+        <Grid component={'section'} container sx={{ height: '100%' }}>
           <Grid item xs={12} sx={{ position: 'relative', px: 2 }}>
             <DataTable
               className="table"
@@ -209,7 +187,7 @@ const LazerDashboard = ({ open }) => {
               })}
               highlightOnHover
               subHeader
-              noDataComponent={<NoRecord />}
+              noDataComponent={!data.isLoading && <NoRecord />}
               subHeaderComponent={
                 <SearchBar
                   setFilter={actions.setFilter}
@@ -223,7 +201,7 @@ const LazerDashboard = ({ open }) => {
               fixedHeader
               responsive
               progressPending={data.isLoading}
-              progressComponent={<ProgressComponent limit={5} />}
+              progressComponent={<ProgressComponent limit={10} />}
               paginationTotalRows={data.atividadesLazer.total}
               onRowClicked={(row) => actions.handleRowClick(row._id)}
               paginationComponentOptions={{
