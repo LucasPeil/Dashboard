@@ -4,8 +4,9 @@ ul{
     display: inline;
     padding: 0;
 }
-ul >li{
+li{
     display: inline;
+   
 }
 button{
   border: none; 
@@ -30,7 +31,7 @@ a{
 .category-banner-lazer, .category-banner-casa, .category-banner-educacao{
   width: 15rem;
   height: 15rem;
-  transform: translate(-6.5rem,-70%) rotate(356deg);
+  transform: translate(-8rem,-70%) rotate(356deg);
   position: absolute;
   top: 0;
   border-radius: 10rem;

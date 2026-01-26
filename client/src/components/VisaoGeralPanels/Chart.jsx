@@ -26,13 +26,13 @@ const Chart = ({ ano }) => {
     BarElement,
     Title,
     Tooltip,
-    Legend
+    Legend,
   );
   ChartJS.register(ArcElement, Tooltip, Legend);
   const dispatch = useDispatch();
   const getMonthTotalAmount = (month, area) => {
     const dinheiroGastoMes = dinheiroGasto?.[area]?.find(
-      (item) => item._id.mes == month
+      (item) => item._id.mes == month,
     )?.totalAmount;
 
     if (dinheiroGastoMes) {
@@ -44,20 +44,21 @@ const Chart = ({ ano }) => {
   const downMd = useMediaQuery(theme.breakpoints.down('md'));
   const user = useSelector((state) => state.auth.user);
   const { register: registerCasa } = useSelector(
-    (state) => state.atividadesCasa
+    (state) => state.atividadesCasa,
   );
 
   const { register: registerLazer } = useSelector(
-    (state) => state.atividadesLazer
+    (state) => state.atividadesLazer,
   );
   const { register: registerEducacao } = useSelector(
-    (state) => state.atividadesEducacao
+    (state) => state.atividadesEducacao,
   );
 
   const { dinheiroGasto, isLoading } = useSelector(
-    (state) => state.dinheiroGasto
+    (state) => state.dinheiroGasto,
   );
   const barOptions = {
+    indexAxis: downMd ? 'y' : 'x',
     responsive: true,
     plugins: {
       legend: { position: 'top' },
@@ -88,21 +89,21 @@ const Chart = ({ ano }) => {
       {
         label: 'CASA',
         data: monthsNames.map((month) =>
-          getMonthTotalAmount(month, 'dinheiroCasaMes')
+          getMonthTotalAmount(month, 'dinheiroCasaMes'),
         ),
         backgroundColor: '#0c264e',
       },
       {
         label: 'LAZER',
         data: monthsNames.map((month) =>
-          getMonthTotalAmount(month, 'dinheiroLazerMes')
+          getMonthTotalAmount(month, 'dinheiroLazerMes'),
         ),
         backgroundColor: '#f4b26a',
       },
       {
         label: 'EDUCAÇÃO',
         data: monthsNames.map((month) =>
-          getMonthTotalAmount(month, 'dinheiroEducacaoMes')
+          getMonthTotalAmount(month, 'dinheiroEducacaoMes'),
         ),
         backgroundColor: '#648d64',
       },

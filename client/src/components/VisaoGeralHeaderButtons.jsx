@@ -6,24 +6,25 @@ import { Box, Grid, useMediaQuery, useTheme } from '@mui/material';
 import '../index.css';
 import HeaderCards from './HeaderCards';
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 
 const VisaoGeralHeaderButtons = () => {
   const theme = useTheme();
-  const downLg = useMediaQuery(theme.breakpoints.down('lg'));
   const [showAddIcon, setShowAddIcon] = useState([true, true, true]);
-  const navigate = useNavigate();
 
   return (
-    <Grid
-      container
-      spacing={downLg ? 1 : 10}
-      component={'section'}
-      aria-label="Atalhos para cada página"
-    >
-      <Grid item xs={4} lg={4} aria-label="Atalho para página de casa">
+    <Grid container component={'section'} aria-label="Atalhos para cada página">
+      <Grid
+        item
+        xs={4}
+        lg={4}
+        sx={{
+          py: 2,
+          px: 4,
+        }}
+        aria-label="Atalho para página de casa"
+      >
         <HeaderCards
-          to={'/casa'}
+          to={'/casa/nova-atividade/casa'}
           content={'CASA'}
           icon={<HomeOutlinedIcon sx={{ fontSize: '4rem' }} />}
           subtitle={'Adicionar nova atividade'}
@@ -60,9 +61,18 @@ const VisaoGeralHeaderButtons = () => {
           }
         />
       </Grid>
-      <Grid item xs={4} lg={4} aria-label="Atalho para página de lazer">
+      <Grid
+        item
+        xs={4}
+        lg={4}
+        sx={{
+          py: 2,
+          px: 4,
+        }}
+        aria-label="Atalho para página de lazer"
+      >
         <HeaderCards
-          to={'/lazer'}
+          to={'/lazer/nova-atividade/lazer'}
           content={'LAZER'}
           icon={<CelebrationOutlinedIcon sx={{ fontSize: '4rem' }} />}
           subtitle={'Adicionar nova atividade'}
@@ -98,9 +108,18 @@ const VisaoGeralHeaderButtons = () => {
           }
         />
       </Grid>
-      <Grid item xs={4} lg={4} aria-label="Atalho para página de educação">
+      <Grid
+        item
+        xs={4}
+        lg={4}
+        sx={{
+          py: 2,
+          px: 4,
+        }}
+        aria-label="Atalho para página de educação"
+      >
         <HeaderCards
-          to={'/educacao'}
+          to={'/educacao/nova-atividade/educacao'}
           content={'EDUCAÇÃO'}
           icon={<SchoolOutlinedIcon sx={{ fontSize: '4rem' }} />}
           subtitle={'Adicionar nova atividade'}

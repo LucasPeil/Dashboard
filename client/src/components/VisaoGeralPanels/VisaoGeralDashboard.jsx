@@ -16,6 +16,7 @@ import '../../index.css';
 import VisaoGeralHeaderButtons from '../VisaoGeralHeaderButtons';
 import useVisaoGeral from './useVisaoGeral';
 import { visuallyHidden } from '@mui/utils';
+import VisaoGeralBreadcrumbs from '../VisaoGeralBreadcrumbs';
 
 const Chart = lazy(() => import('./Chart'));
 const yearsRange = () => {
@@ -33,130 +34,123 @@ const VisaoGeralDashboard = () => {
     actions: { setAno },
   } = useVisaoGeral();
   const upMd = useMediaQuery(theme.breakpoints.up('md'));
-  const downMd = useMediaQuery(theme.breakpoints.down('md'));
-
+  const upXl = useMediaQuery(theme.breakpoints.up('xl'));
   return (
-    <Box>
-      <Box sx={{ display: 'flex', justifyContent: 'end' }}>
+    <Box
+      sx={{
+        width: '100%',
+        display: 'flex',
+        flexDirection: 'column',
+        height: upMd ? '100%' : 'calc(100vh - 3.5rem)',
+        boxSizing: 'border-box',
+        px: upMd ? '2rem' : '0.5rem',
+        pb: 1,
+      }}
+    >
+      {upMd && <VisaoGeralHeaderButtons />}
+
+      <Paper
+        elevation={6}
+        component={'main'}
+        sx={{
+          p: 2,
+          boxSizing: 'border-box',
+          width: '100%',
+          height: '100%',
+          overflow: 'auto',
+        }}
+      >
         <Box
+          component={'header'}
           sx={{
-            height: '100vh',
-            transition: 'all 0.5s ease',
-            margin: !upMd && `auto auto`,
-            width: upMd ? 'calc(100% - 6rem)' : '96%',
+            borderBottom: '1px solid #D8D8D8',
+            pb: 1,
+            pt: 3,
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            position: 'relative',
           }}
         >
-          <VisaoGeralHeaderButtons />
-
-          <Paper
-            elevation={6}
-            component={'main'}
+          {!upMd && <VisaoGeralBreadcrumbs />}
+          <Typography
+            component="h1"
             sx={{
-              px: 2,
-              boxSizing: 'border-box',
-              width: upMd ? 'calc(100% - 4rem)' : '100%',
-              margin: '2rem auto',
-              height: downMd ? 'calc(100vh - 15rem)' : '42rem',
+              fontWeight: 600,
+              color: '#D8D8D8',
+              fontSize: { xs: '1.4rem', sm: '2.1rem', md: '2.4rem' },
             }}
           >
-            <Stack
-              component={'section'}
-              direction={'column'}
-              justifyContent={'space-between'}
-              alignItems={'space-between'}
+            VISÃO GERAL
+          </Typography>
+
+          <ContentPasteSearchOutlinedIcon
+            aria-hidden
+            sx={{
+              fontSize: { xs: '1.5rem', sm: '2rem', md: '2.5rem' },
+              color: '#d8d8d8',
+            }}
+          />
+
+          <Box
+            sx={{
+              position: 'absolute',
+              bottom: '-2.2em',
+              right: 0,
+              display: 'flex',
+              alignItems: 'center',
+            }}
+          >
+            <FormControl
+              variant="standard"
               sx={{
-                height: downMd ? 'calc(100vh - 15rem)' : '41rem',
+                m: 1,
+                zIndex: 10,
               }}
             >
-              <Box
-                component={'header'}
-                sx={{
-                  borderBottom: '1px solid #D8D8D8',
-                  pb: 1,
-                  pt: 3,
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                  position: 'relative',
-                }}
+              <Select
+                labelId="ano"
+                id="ano"
+                value={ano}
+                onChange={(event) => setAno(event.target.value)}
+                label="Ano"
+                sx={{ fontSize: '0.8em' }}
               >
-                <Typography
-                  component="h1"
-                  sx={{
-                    fontWeight: 600,
-                    color: '#D8D8D8',
-                    fontSize: '2.4rem',
-                  }}
-                >
-                  VISÃO GERAL
-                </Typography>
-
-                <ContentPasteSearchOutlinedIcon
-                  aria-hidden
-                  sx={{ fontSize: '2.5rem', color: '#d8d8d8' }}
-                />
-
-                <Box
-                  sx={{
-                    position: 'absolute',
-                    bottom: '-2.2em',
-                    right: 0,
-                    display: 'flex',
-                    alignItems: 'center',
-                  }}
-                >
-                  <Typography component={'span'} variant="subtitle2">
-                    Ano
-                  </Typography>
-                  <FormControl
-                    variant="standard"
-                    sx={{
-                      m: 1,
-                      zIndex: 10,
-                    }}
-                  >
-                    <Select
-                      labelId="ano"
-                      id="ano"
-                      value={ano}
-                      onChange={(event) => setAno(event.target.value)}
-                      label="Ano"
-                      sx={{ fontSize: '0.8em' }}
-                    >
-                      {yearsRange()?.map((year) => (
-                        <MenuItem
-                          key={year}
-                          sx={{ fontSize: '0.8em' }}
-                          value={year}
-                        >
-                          {year}
-                        </MenuItem>
-                      ))}
-                    </Select>
-                  </FormControl>
-                </Box>
-              </Box>
-
-              <Box
-                component={'figure'}
-                sx={{
-                  px: 2,
-                  position: 'relative',
-                  height: '100%',
-                }}
-              >
-                <Suspense fallback={<div>Loading...</div>}>
-                  <Chart ano={ano} />
-                </Suspense>
-                <Typography component={'figcaption'} sx={visuallyHidden}>
-                  Gráfico do dinheiro investido em cada atividade ao decorrer do
-                  ano
-                </Typography>
-              </Box>
-            </Stack>
-          </Paper>
+                {yearsRange()?.map((year) => (
+                  <MenuItem key={year} sx={{ fontSize: '0.8em' }} value={year}>
+                    {year}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </Box>
         </Box>
-      </Box>
+        <Stack
+          component={'section'}
+          sx={{
+            height: '85%',
+          }}
+        >
+          <Box
+            component={'figure'}
+            sx={{
+              position: 'relative',
+              height: '100%',
+
+              width: '100%',
+
+              m: 0,
+            }}
+          >
+            <Suspense fallback={<div>Loading...</div>}>
+              <Chart ano={ano} />
+            </Suspense>
+            <Typography component={'figcaption'} sx={visuallyHidden}>
+              Gráfico do dinheiro investido em cada atividade ao decorrer do ano
+            </Typography>
+          </Box>
+        </Stack>
+      </Paper>
     </Box>
   );
 };

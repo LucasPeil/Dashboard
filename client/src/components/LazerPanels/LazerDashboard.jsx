@@ -4,7 +4,7 @@ import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
 import EditTwoToneIcon from '@mui/icons-material/EditTwoTone';
 import GroupsOutlinedIcon from '@mui/icons-material/GroupsOutlined';
 import SportsEsportsOutlinedIcon from '@mui/icons-material/SportsEsportsOutlined';
-import { Box, Grid, IconButton } from '@mui/material';
+import { Box, IconButton, Stack } from '@mui/material';
 import { useMemo } from 'react';
 import DataTable from 'react-data-table-component';
 import { Outlet } from 'react-router-dom';
@@ -19,6 +19,7 @@ import NoRecord from '../NoRecord';
 import ProgressComponent from '../ProgressComponent';
 import SearchBar from '../SearchBar';
 import useLazer from '../../hooks/useLazer';
+import MobileCategoryCards from '../MobileCategoryCards';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import Divider from '@mui/material/Divider';
@@ -26,7 +27,9 @@ import Typography from '@mui/material/Typography';
 const LazerDashboard = ({ open }) => {
   const { data, uiStates, actions } = useLazer();
   const theme = useTheme();
+  const upSm = useMediaQuery(theme.breakpoints.up('sm'));
   const omit = useMediaQuery(theme.breakpoints.down('lg'));
+  const upMd = useMediaQuery(theme.breakpoints.up('md'));
   const tableColumns = useMemo(
     () => [
       {
@@ -79,7 +82,7 @@ const LazerDashboard = ({ open }) => {
   const buttonColumns = useMemo(() => {
     return [
       {
-        name: 'Ações',
+        name: upMd ? 'Ações' : '',
         width: '10%',
         button: 1,
         cell: (row) => (
@@ -104,7 +107,16 @@ const LazerDashboard = ({ open }) => {
     ];
   }, [actions, omit]);
   return (
-    <Box>
+    <Box
+      sx={{
+        width: '100%',
+        display: 'flex',
+        justifyContent: 'end',
+        height: upMd ? '100%' : 'calc(100vh - 3.5rem)',
+        p: upMd ? '0.5rem' : '0',
+        boxSizing: 'border-box',
+      }}
+    >
       <Outlet />
       <SingleAtividade
         id={uiStates.selectedRowId}
@@ -115,69 +127,122 @@ const LazerDashboard = ({ open }) => {
       />
 
       <DashboardContainer>
-        <Box sx={{ width: '100%' }}>
-          <DashboardsHeaders
-            cleanFilters={actions.cleanFilters}
-            categorySelected={uiStates.categorySelected}
-            title={'DETALHES SOBRE AS ATIVIDADES DE LAZER'}
-            path="nova-atividade/lazer"
-          />
-          <CategoryCardsContainer minCardWidth={220}>
-            <CategoryCards
-              idx={0}
-              isSelected={uiStates.categoryCardSelected[0]}
-              onSelect={actions.handleCardClick}
-              distance={5}
-              classLabel="category-banner-lazer"
-              qty={data.quantidadeJogos}
-              title="Jogos"
-              description={'Veja os jogos que voce participou...'}
-              bgcolor={'#f4b26a'}
-              Icon={SportsEsportsOutlinedIcon}
+        <Stack
+          spacing={2}
+          sx={{
+            width: '100%',
+            height: '100%',
+            boxSizing: 'border-box',
+            overflow: 'auto',
+            p: '0.5rem 0.8rem',
+          }}
+        >
+          <Box sx={{ flexShrink: 0 }}>
+            <DashboardsHeaders
+              cleanFilters={actions.cleanFilters}
+              categorySelected={uiStates.categorySelected}
+              title={'DETALHES SOBRE AS ATIVIDADES DE LAZER'}
+              path="nova-atividade/lazer"
             />
+          </Box>
+          <Box sx={{ width: '100%', flexShrink: 1 }}>
+            {upSm ? (
+              <CategoryCardsContainer minCardWidth={220}>
+                <CategoryCards
+                  idx={0}
+                  isSelected={uiStates.categoryCardSelected[0]}
+                  onSelect={actions.handleCardClick}
+                  distance={5}
+                  classLabel="category-banner-lazer"
+                  qty={data.quantidadeJogos}
+                  title="Jogos"
+                  description={'Veja os jogos que voce participou...'}
+                  bgcolor={'#f4b26a'}
+                  Icon={SportsEsportsOutlinedIcon}
+                />
 
-            <CategoryCards
-              idx={1}
-              isSelected={uiStates.categoryCardSelected[1]}
-              onSelect={actions.handleCardClick}
-              distance={15}
-              classLabel="category-banner-lazer"
-              qty={data.quantidadeCultura}
-              title="Cultura"
-              description={'As mais variadas atividades culturais...'}
-              bgcolor={'#f4b26a'}
-              Icon={BookOutlinedIcon}
-            />
+                <CategoryCards
+                  idx={1}
+                  isSelected={uiStates.categoryCardSelected[1]}
+                  onSelect={actions.handleCardClick}
+                  distance={15}
+                  classLabel="category-banner-lazer"
+                  qty={data.quantidadeCultura}
+                  title="Cultura"
+                  description={'As mais variadas atividades culturais...'}
+                  bgcolor={'#f4b26a'}
+                  Icon={BookOutlinedIcon}
+                />
 
-            <CategoryCards
-              idx={2}
-              isSelected={uiStates.categoryCardSelected[2]}
-              onSelect={actions.handleCardClick}
-              distance={5}
-              classLabel="category-banner-lazer"
-              qty={data.quantidadeEmGrupo}
-              title="Em grupo"
-              description={'Eventos sociais em que você marcou presença...'}
-              bgcolor={'#f4b26a'}
-              Icon={GroupsOutlinedIcon}
-            />
+                <CategoryCards
+                  idx={2}
+                  isSelected={uiStates.categoryCardSelected[2]}
+                  onSelect={actions.handleCardClick}
+                  distance={5}
+                  classLabel="category-banner-lazer"
+                  qty={data.quantidadeEmGrupo}
+                  title="Em grupo"
+                  description={'Eventos sociais em que você marcou presença...'}
+                  bgcolor={'#f4b26a'}
+                  Icon={GroupsOutlinedIcon}
+                />
 
-            <CategoryCards
-              idx={3}
-              isSelected={uiStates.categoryCardSelected[3]}
-              onSelect={actions.handleCardClick}
-              distance={5}
-              classLabel="category-banner-lazer"
-              qty={data.quantidadeOutros}
-              title="Outros"
-              description={'Outras atividades de lazer...'}
-              bgcolor={'#f4b26a'}
-              Icon={CelebrationOutlinedIcon}
-            />
-          </CategoryCardsContainer>
-        </Box>
-        <Grid component={'section'} container sx={{ height: '100%' }}>
-          <Grid item xs={12} sx={{ position: 'relative', px: 2 }}>
+                <CategoryCards
+                  idx={3}
+                  isSelected={uiStates.categoryCardSelected[3]}
+                  onSelect={actions.handleCardClick}
+                  distance={5}
+                  classLabel="category-banner-lazer"
+                  qty={data.quantidadeOutros}
+                  title="Outros"
+                  description={'Outras atividades de lazer...'}
+                  bgcolor={'#f4b26a'}
+                  Icon={CelebrationOutlinedIcon}
+                />
+              </CategoryCardsContainer>
+            ) : (
+              <Stack component={'ul'} spacing={1}>
+                <Box component={'li'}>
+                  <MobileCategoryCards
+                    title="Jogos"
+                    Icon={SportsEsportsOutlinedIcon}
+                    qty={data.quantidadeJogos}
+                    color={'#f4b26a'}
+                  />
+                </Box>
+                <Box component={'li'}>
+                  <MobileCategoryCards
+                    title="Cultura"
+                    Icon={BookOutlinedIcon}
+                    qty={data.quantidadeCultura}
+                    color={'#f4b26a'}
+                  />
+                </Box>
+                <Box component={'li'}>
+                  <MobileCategoryCards
+                    title="Em grupo"
+                    Icon={GroupsOutlinedIcon}
+                    qty={data.quantidadeEmGrupo}
+                    color={'#f4b26a'}
+                  />
+                </Box>
+                <Box component={'li'}>
+                  <MobileCategoryCards
+                    title="Outros"
+                    Icon={CelebrationOutlinedIcon}
+                    qty={data.quantidadeOutros}
+                    color={'#f4b26a'}
+                  />
+                </Box>
+              </Stack>
+            )}
+          </Box>
+          <Box
+            sx={{
+              width: '100%',
+              height: '100%',
+            }}
+          >
             <DataTable
               className="table"
               columns={[...tableColumns, ...buttonColumns]}
@@ -215,8 +280,8 @@ const LazerDashboard = ({ open }) => {
                 actions.handleRowsPerPageChange(newLimit)
               }
             />
-          </Grid>
-        </Grid>
+          </Box>
+        </Stack>
       </DashboardContainer>
     </Box>
   );

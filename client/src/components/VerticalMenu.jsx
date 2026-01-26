@@ -35,7 +35,7 @@ const VerticalMenu = ({ menus }) => {
     zIndex: 10000,
   });
   const verticalNavStyle = useSpring({
-    position: 'fixed',
+    position: 'relative',
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'start',
@@ -76,7 +76,11 @@ const VerticalMenu = ({ menus }) => {
             size={22}
           />
         </IconButton>
-        <Box component={'nav'} aria-label="Menu">
+        <Box
+          component={'nav'}
+          aria-label="Menu"
+          sx={{ width: open ? '14rem' : '6rem' }}
+        >
           <Box component={'ul'}>
             {menus.map((menu, index) => (
               <Box key={index} component={'li'}>

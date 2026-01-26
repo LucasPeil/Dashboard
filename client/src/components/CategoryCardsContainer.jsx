@@ -6,12 +6,13 @@ const CategoryCardsContainer = ({ minCardWidth, children }) => {
       component="ul"
       sx={{
         display: 'grid',
-        my: 5,
+        my: { xs: 2, md: 5 },
         width: '96%',
         gridTemplateColumns: `repeat(auto-fit, minmax(${minCardWidth}px, 0.8fr))`,
         justifyContent: 'center',
         alignItems: 'center',
         gap: 4,
+        height: '50%',
       }}
     >
       {children}

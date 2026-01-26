@@ -16,12 +16,13 @@ const CategoryCards = React.memo(
     onSelect,
   }) => {
     const theme = useTheme();
+    const upMd = useMediaQuery(theme.breakpoints.up('md'));
     const styles = useMemo(() => {
       const activeStyle = isSelected
         ? {
             width: '100%',
             cursor: 'pointer',
-            transform: 'scale(110%)',
+            transform: 'scale(104%)',
             '.category-banner-casa, .category-banner-lazer, .category-banner-educacao':
               {
                 transform: 'translate(0,0) rotate(360deg)',
@@ -33,28 +34,28 @@ const CategoryCards = React.memo(
             '.category-qty': { color: 'white' },
           }
         : {};
-
+      const hoverStyle = {
+        transform: 'scale(104%)',
+        '.category-banner-casa, .category-banner-lazer, .category-banner-educacao':
+          {
+            transform: 'translate(0,0) rotate(360deg)',
+            width: '100%',
+            borderRadius: 0,
+          },
+        '.title': { color: 'white' },
+        '.description': { color: 'white' },
+        '.category-qty': { color: 'white' },
+      };
       const baseStyle = {
         display: 'flex',
         width: '100%',
-        minHeight: '9.5rem',
+        minHeight: '8rem',
         borderRadius: '0.6rem',
         position: 'relative',
         overflow: 'hidden',
         transition: 'all 0.3s ease-in-out',
-        '&:hover': {
-          cursor: 'pointer',
-          transform: 'scale(110%)',
-          '.category-banner-casa, .category-banner-lazer, .category-banner-educacao':
-            {
-              transform: 'translate(0,0) rotate(360deg)',
-              width: '100%',
-              borderRadius: 0,
-            },
-          '.title': { color: 'white' },
-          '.description': { color: 'white' },
-          '.category-qty': { color: 'white' },
-        },
+        cursor: 'pointer',
+        '&:hover': upMd ? hoverStyle : {},
       };
 
       return { ...baseStyle, ...activeStyle };

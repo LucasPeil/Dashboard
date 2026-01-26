@@ -58,6 +58,7 @@ const HorizontalMenu = ({ menus }) => {
       aria-label="Menu"
       sx={{
         backgroundColor: 'black',
+        height: '3.5rem',
       }}
     >
       <Container maxWidth="xl">
@@ -69,6 +70,7 @@ const HorizontalMenu = ({ menus }) => {
             position: 'relative',
             justifyContent: 'space-between',
             zIndex: 5,
+            height: '100%',
           }}
         >
           <Box ref={hamburgerRef}>
@@ -95,7 +97,7 @@ const HorizontalMenu = ({ menus }) => {
             width: '100%',
             overflow: 'auto',
             transition: 'all 0.5s ease-in-out',
-            zIndex: open ? 10 : -1,
+            zIndex: open ? 11 : -1,
             backgroundColor: 'white',
             display: { xs: 'flex', sm: 'none', md: 'none' },
             flexDirection: 'column',

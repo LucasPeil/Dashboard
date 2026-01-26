@@ -114,7 +114,7 @@ const FormAtividadeCasa = memo(function FormAtividadeCasa() {
       values.mesInsercao = months[new Date().getMonth()];
       values.anoInsercao = new Date().getFullYear();
       dispatch(setNewAtividadeCasa(values));
-      navigate(-1);
+      navigate('/casa');
       dispatch(resetRegisterCasa());
       formik.resetForm();
     },
@@ -123,7 +123,7 @@ const FormAtividadeCasa = memo(function FormAtividadeCasa() {
   const handleClose = () => {
     setOpenDialog(false);
     setTimeout(() => {
-      navigate(-1);
+      navigate('/casa');
     }, 200);
     formik.resetForm();
   };

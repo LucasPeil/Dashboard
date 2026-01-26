@@ -5,8 +5,8 @@ import MenuBookOutlinedIcon from '@mui/icons-material/MenuBookOutlined';
 import {
   Box,
   Divider,
-  Grid,
   IconButton,
+  Stack,
   Typography,
   useMediaQuery,
 } from '@mui/material';
@@ -25,13 +25,15 @@ import ProgressComponent from '../ProgressComponent';
 import SearchBar from '../SearchBar';
 import SingleAtividadeSkeleton from '../SingleAtividadeSkeleton';
 import useEducacao from '../../hooks/useEducacao';
+import MobileCategoryCards from '../MobileCategoryCards';
 
 const SingleAtividade = lazy(() => import('../SingleAtividade'));
 const EducacaoDashboard = () => {
   const { data, uiStates, actions } = useEducacao();
   const theme = useTheme();
-
+  const upSm = useMediaQuery(theme.breakpoints.up('sm'));
   const omit = useMediaQuery(theme.breakpoints.down('lg'));
+  const upMd = useMediaQuery(theme.breakpoints.up('md'));
 
   const tableColumns = useMemo(
     () => [
@@ -86,7 +88,7 @@ const EducacaoDashboard = () => {
   const buttonColumns = useMemo(() => {
     return [
       {
-        name: 'Ações',
+        name: upMd ? 'Ações' : '',
         width: '10%',
         button: true,
         cell: (row) => (
@@ -111,7 +113,16 @@ const EducacaoDashboard = () => {
     ];
   }, [actions, omit]);
   return (
-    <Box>
+    <Box
+      sx={{
+        width: '100%',
+        display: 'flex',
+        justifyContent: 'end',
+        height: upMd ? '100%' : 'calc(100vh - 3.5rem)',
+        p: upMd ? '0.5rem' : '0',
+        boxSizing: 'border-box',
+      }}
+    >
       <Outlet />
       <Suspense fallback={<SingleAtividadeSkeleton />}>
         <SingleAtividade
@@ -123,61 +134,106 @@ const EducacaoDashboard = () => {
         />
       </Suspense>
       <DashboardContainer>
-        <Box sx={{ width: '100%' }}>
-          <DashboardsHeaders
-            cleanFilters={actions.cleanFilters}
-            categorySelected={uiStates.categorySelected}
-            title={'DETALHES SOBRE SUA EDUCAÇÃO'}
-            path="nova-atividade/educacao"
-          />
+        <Stack
+          spacing={2}
+          sx={{
+            width: '100%',
+            height: '100%',
+            boxSizing: 'border-box',
+            overflow: 'auto',
+            p: '0.5rem 0.8rem',
+          }}
+        >
+          <Box sx={{ flexShrink: 0 }}>
+            <DashboardsHeaders
+              cleanFilters={actions.cleanFilters}
+              categorySelected={uiStates.categorySelected}
+              title={'DETALHES SOBRE SUA EDUCAÇÃO'}
+              path="nova-atividade/educacao"
+            />
+          </Box>
 
-          <CategoryCardsContainer minCardWidth={220}>
-            <CategoryCards
-              idx={0}
-              isSelected={uiStates.categoryCardSelected[0]}
-              onSelect={actions.handleCardClick}
-              distance={5}
-              classLabel="category-banner-educacao"
-              qty={data.quantidadeCursos}
-              categorySelected={uiStates.categorySelected}
-              setCategorySelected={actions.setCategorySelected}
-              title="Cursos"
-              description={'Veja quais cursos você assistiu...'}
-              bgcolor={'#648d64'}
-              Icon={CastForEducationOutlinedIcon}
-            />
-            <CategoryCards
-              idx={1}
-              isSelected={uiStates.categoryCardSelected[1]}
-              onSelect={actions.handleCardClick}
-              distance={5}
-              classLabel="category-banner-educacao"
-              qty={data.quantidadeLivros}
-              categorySelected={uiStates.categorySelected}
-              setCategorySelected={actions.setCategorySelected}
-              title="Livros"
-              description={'Dê uma olhada nos livros lidos nesse mês...'}
-              bgcolor={'#648d64'}
-              Icon={MenuBookOutlinedIcon}
-            />
-            <CategoryCards
-              idx={2}
-              isSelected={uiStates.categoryCardSelected[2]}
-              onSelect={actions.handleCardClick}
-              distance={5}
-              classLabel="category-banner-educacao"
-              qty={data.quantidadeSeminarios}
-              categorySelected={uiStates.categorySelected}
-              setCategorySelected={actions.setCategorySelected}
-              title="Seminários"
-              description={'Dê uma olhada nos seminários assistidos...'}
-              bgcolor={'#648d64'}
-              Icon={MenuBookOutlinedIcon}
-            />
-          </CategoryCardsContainer>
-        </Box>
-        <Grid component={'section'} container sx={{ height: '100%' }}>
-          <Grid item xs={12} sx={{ position: 'relative', px: 2 }}>
+          <Box sx={{ width: '100%', flexShrink: 1 }}>
+            {upSm ? (
+              <CategoryCardsContainer minCardWidth={220}>
+                <CategoryCards
+                  idx={0}
+                  isSelected={uiStates.categoryCardSelected[0]}
+                  onSelect={actions.handleCardClick}
+                  distance={5}
+                  classLabel="category-banner-educacao"
+                  qty={data.quantidadeCursos}
+                  categorySelected={uiStates.categorySelected}
+                  setCategorySelected={actions.setCategorySelected}
+                  title="Cursos"
+                  description={'Veja quais cursos você assistiu...'}
+                  bgcolor={'#648d64'}
+                  Icon={CastForEducationOutlinedIcon}
+                />
+                <CategoryCards
+                  idx={1}
+                  isSelected={uiStates.categoryCardSelected[1]}
+                  onSelect={actions.handleCardClick}
+                  distance={5}
+                  classLabel="category-banner-educacao"
+                  qty={data.quantidadeLivros}
+                  categorySelected={uiStates.categorySelected}
+                  setCategorySelected={actions.setCategorySelected}
+                  title="Livros"
+                  description={'Dê uma olhada nos livros lidos nesse mês...'}
+                  bgcolor={'#648d64'}
+                  Icon={MenuBookOutlinedIcon}
+                />
+                <CategoryCards
+                  idx={2}
+                  isSelected={uiStates.categoryCardSelected[2]}
+                  onSelect={actions.handleCardClick}
+                  distance={5}
+                  classLabel="category-banner-educacao"
+                  qty={data.quantidadeSeminarios}
+                  categorySelected={uiStates.categorySelected}
+                  setCategorySelected={actions.setCategorySelected}
+                  title="Seminários"
+                  description={'Dê uma olhada nos seminários assistidos...'}
+                  bgcolor={'#648d64'}
+                  Icon={MenuBookOutlinedIcon}
+                />
+              </CategoryCardsContainer>
+            ) : (
+              <Stack component={'ul'} spacing={1}>
+                <Box component={'li'}>
+                  <MobileCategoryCards
+                    title="Cursos"
+                    Icon={CastForEducationOutlinedIcon}
+                    qty={data.quantidadeCursos}
+                    color={'#648d64'}
+                  />
+                </Box>
+                <Box component={'li'}>
+                  <MobileCategoryCards
+                    title="Livros"
+                    Icon={MenuBookOutlinedIcon}
+                    qty={data.quantidadeLivros}
+                    color={'#648d64'}
+                  />
+                </Box>
+                <Box component={'li'}>
+                  <MobileCategoryCards
+                    title="Seminários"
+                    Icon={MenuBookOutlinedIcon}
+                    qty={data.quantidadeSeminarios}
+                    color={'#648d64'}
+                  />
+                </Box>
+              </Stack>
+            )}
+          </Box>
+          <Box
+            sx={{
+              width: '100%',
+              height: '100%',
+            }}
+          >
             <DataTable
               className="table"
               columns={[...tableColumns, ...buttonColumns]}
@@ -215,8 +271,8 @@ const EducacaoDashboard = () => {
                 actions.handleRowsPerPageChange(newLimit)
               }
             />
-          </Grid>
-        </Grid>
+          </Box>
+        </Stack>
       </DashboardContainer>
     </Box>
   );

@@ -2,7 +2,8 @@ export const customStyles = (highlightOnHover) => ({
   table: {
     style: {
       overflow: 'auto',
-      height: '40vh',
+      flexGrow: 1,
+      height: '100%',
     },
   },
   rows: {
@@ -45,8 +46,6 @@ export const customStyles = (highlightOnHover) => ({
   pagination: {
     style: {
       position: 'relative',
-      bottom: 0,
-      left: 0,
     },
   },
 });

@@ -59,7 +59,7 @@ const FormAtividadeLazer = memo(function FormAtividadeLazer() {
   const categoriaItens = ['Jogos', 'Cultura', 'Em grupo', 'Outros'];
 
   const atividadeLazer = useSelector(
-    (state) => state.atividadesLazer.atividadeLazer
+    (state) => state.atividadesLazer.atividadeLazer,
   );
 
   // Derive data logic
@@ -91,7 +91,7 @@ const FormAtividadeLazer = memo(function FormAtividadeLazer() {
       .test(
         'string-length',
         'Máximo de 1000 caracteres',
-        (value) => value?.length <= 1000
+        (value) => value?.length <= 1000,
       ),
   });
 
@@ -114,7 +114,7 @@ const FormAtividadeLazer = memo(function FormAtividadeLazer() {
       values.mesInsercao = months[new Date().getMonth()];
       values.anoInsercao = new Date().getFullYear();
       dispatch(setNewAtividadeLazer(values));
-      navigate(-1);
+      navigate('/lazer');
       dispatch(resetRegisterLazer());
       formik.resetForm();
     },
@@ -123,7 +123,7 @@ const FormAtividadeLazer = memo(function FormAtividadeLazer() {
   const handleClose = () => {
     setOpenDialog(false);
     setTimeout(() => {
-      navigate(-1);
+      navigate('/lazer');
     }, 200);
     formik.resetForm();
   };
@@ -149,7 +149,7 @@ const FormAtividadeLazer = memo(function FormAtividadeLazer() {
               variant="standard"
               fullWidth
               error={Boolean(
-                formik.touched.nomeAtividade && formik.errors.nomeAtividade
+                formik.touched.nomeAtividade && formik.errors.nomeAtividade,
               )}
               helperText={
                 formik.touched.nomeAtividade && formik.errors.nomeAtividade
@@ -167,7 +167,7 @@ const FormAtividadeLazer = memo(function FormAtividadeLazer() {
                 label="Categoria"
                 variant="standard"
                 error={Boolean(
-                  formik.touched.categoria && formik.errors.categoria
+                  formik.touched.categoria && formik.errors.categoria,
                 )}
               >
                 {categoriaItens.map((category, idx) => (
@@ -194,7 +194,7 @@ const FormAtividadeLazer = memo(function FormAtividadeLazer() {
               style={{ marginTop: 30, marginBottom: 30 }}
               error={Boolean(
                 formik.touched.descricaoAtividade &&
-                  formik.errors.descricaoAtividade
+                formik.errors.descricaoAtividade,
               )}
               helperText={
                 formik.touched.descricaoAtividade &&
@@ -217,7 +217,7 @@ const FormAtividadeLazer = memo(function FormAtividadeLazer() {
               fullWidth
               style={{ marginTop: 30, marginBottom: 10 }}
               error={Boolean(
-                formik.touched.dinheiroGasto && formik.errors.dinheiroGasto
+                formik.touched.dinheiroGasto && formik.errors.dinheiroGasto,
               )}
               helperText={
                 formik.touched.dinheiroGasto && formik.errors.dinheiroGasto
@@ -235,7 +235,7 @@ const FormAtividadeLazer = memo(function FormAtividadeLazer() {
               fullWidth
               style={{ marginTop: 30, marginBottom: 30 }}
               error={Boolean(
-                formik.touched.tempoGasto && formik.errors.tempoGasto
+                formik.touched.tempoGasto && formik.errors.tempoGasto,
               )}
               helperText={
                 formik.touched.tempoGasto && formik.errors.tempoGasto

@@ -16,7 +16,7 @@ const HeaderCards = ({
 }) => {
   const theme = useTheme();
   const downMd = useMediaQuery(theme.breakpoints.down('md'));
-  const downXl = useMediaQuery(theme.breakpoints.down('xl'));
+  const upMd = useMediaQuery(theme.breakpoints.up('md'));
   const decorationExpand = {
     height: '32rem !important',
     width: '32rem !important',
@@ -63,20 +63,18 @@ const HeaderCards = ({
         elevation={4}
         sx={{
           position: 'relative',
-          mt: 5,
-          mx: 4,
-          height: downMd ? '4.5rem' : '11rem',
+          height: '11rem',
           borderRadius: '1rem',
           boxSizing: 'border-box',
-          px: downXl ? 0 : '2.5rem',
+          px: '2.5rem',
           cursor: 'pointer',
           display: 'flex',
           flexDirection: 'column',
           justifyContent: 'center',
           transition: 'all 0.4s ease ',
           overflow: 'hidden',
-          backgroundColor: downMd ? bgColor : 'white',
-          color: downMd ? 'white' : 'black',
+          backgroundColor: 'white',
+          color: 'black',
           '&:hover': {
             '.casaCard': content == 'CASA' && decorationExpand,
             '.lazerCard': content == 'LAZER' && decorationExpand,
@@ -87,41 +85,40 @@ const HeaderCards = ({
           },
         }}
       >
-        {!downMd && containerDecoration}
+        {containerDecoration}
         <Box
           sx={{
             display: 'flex',
-            flexDirection: downXl ? 'column-reverse' : 'row',
-            justifyContent: downMd ? 'center' : 'space-between',
-            alignItems: downXl ? 'center' : 'space-between',
+            flexDirection: 'column-reverse',
+            justifyContent: 'space-around',
+            alignItems: 'center',
           }}
         >
-          {!downMd && (
-            <Box
+          <Box
+            sx={{
+              display: 'flex',
+              flexDirection: 'column',
+            }}
+          >
+            <Typography
+              variant="button"
+              component={'h2'}
               sx={{
-                display: 'flex',
-                flexDirection: 'column',
+                fontSize: '1.8rem',
+                fontWeight: 'bold',
+                textAlign: 'center',
               }}
             >
-              <Typography
-                variant="button"
-                component={'h2'}
-                sx={{
-                  fontSize: '1.8rem',
-                  fontWeight: 'bold',
-                }}
-              >
-                {content}
-              </Typography>
-              <Typography
-                component={'span'}
-                variant="caption"
-                sx={{ fontSize: '0.9rem' }}
-              >
-                {subtitle}
-              </Typography>
-            </Box>
-          )}
+              {content}
+            </Typography>
+            <Typography
+              component={'span'}
+              variant="caption"
+              sx={{ fontSize: '0.9rem', textAlign: 'center' }}
+            >
+              {subtitle}
+            </Typography>
+          </Box>
 
           <Box>{icon}</Box>
         </Box>
