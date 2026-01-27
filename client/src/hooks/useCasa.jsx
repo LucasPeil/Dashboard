@@ -34,6 +34,7 @@ export default function useCasa() {
   const isLoading = useSelector((state) => state.atividadesCasa.isLoading);
   const register = useSelector((state) => state.atividadesCasa.register);
   const remove = useSelector((state) => state.atividadesCasa.remove);
+  const update = useSelector((state) => state.atividadesCasa.update);
   const quantidadeLimpeza = useSelector(
     (state) => state.atividadesCasa.quantidadeLimpeza,
   );
@@ -100,25 +101,36 @@ export default function useCasa() {
     setLimit(newLimit);
   }, []);
 
-  // SideEffects
+  // Unmount Cleanup
+  useEffect(() => {
+    return () => {
+      dispatch(resetRemoveCasa());
+      dispatch(resetRegisterCasa());
+    };
+  }, [dispatch]);
 
-  // Toasts
+  // SideEffects
   useEffect(() => {
     if (register.isSuccess) {
       toast.success(register.message, {
         position: toast.POSITION.BOTTOM_RIGHT,
       });
-    } else if (remove.isSuccess) {
+      dispatch(resetRegisterCasa());
+    }
+    if (remove.isSuccess) {
       toast.success(remove.message, { position: toast.POSITION.BOTTOM_RIGHT });
+      dispatch(resetRemoveCasa());
     }
     dispatch(getComprasQty());
     dispatch(getLimpezaQty());
     dispatch(getRefeicoesQty());
-    return () => {
-      dispatch(resetRemoveCasa());
-      dispatch(resetRegisterCasa());
-    };
-  }, [register, remove, dispatch]);
+  }, [
+    register.isSuccess,
+    remove.isSuccess,
+    register.message,
+    remove.message,
+    dispatch,
+  ]);
 
   // Data Fetching
   useEffect(() => {
@@ -132,8 +144,8 @@ export default function useCasa() {
       }),
     );
   }, [
-    remove,
-    register,
+    register.isSuccess,
+    remove.isSuccess,
     filter,
     categorySelected,
     limit,
@@ -146,6 +158,9 @@ export default function useCasa() {
     data: {
       atividadesCasa,
       isLoading,
+      removeIsLoading: remove.isLoading,
+      registerIsLoading: register.isLoading,
+      updateIsLoading: update.isLoading,
       quantidadeLimpeza,
       quantidadeCompras,
       quantidadeRefeicoes,

@@ -205,6 +205,8 @@ export const lazerSlice = createSlice({
     builder
       .addCase(setNewAtividadeLazer.pending, (state) => {
         state.register.isLoading = true;
+        state.register.isError = false;
+        state.register.isSuccess = false;
       })
       .addCase(setNewAtividadeLazer.fulfilled, (state, action) => {
         state.register.isError = false;
@@ -329,9 +331,9 @@ export const lazerSlice = createSlice({
         state.remove.isSuccess = false;
       })
       .addCase(removeSingleAtividadeLazer.fulfilled, (state, action) => {
-        state.remove.isLoading = false;
         state.remove.isError = false;
         state.remove.isSuccess = true;
+        state.remove.isLoading = false;
         const idx = state.atividadesLazer.documents.findIndex(
           (atividade) => atividade._id === action.payload.atividade._id,
         );
@@ -339,6 +341,7 @@ export const lazerSlice = createSlice({
 
         state.remove.message = action.payload.message;
       })
+
       .addCase(removeSingleAtividadeLazer.rejected, (state, action) => {
         state.remove.isLoading = false;
         state.remove.isSuccess = false;

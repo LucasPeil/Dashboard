@@ -23,6 +23,7 @@ export default function useEducacao() {
     isLoading,
     register,
     remove,
+    update,
     quantidadeCursos,
     quantidadeLivros,
     quantidadeSeminarios,
@@ -101,26 +102,39 @@ export default function useEducacao() {
     setLimit(newLimit);
   }, []);
 
+  // Unmount Cleanup
+  useEffect(() => {
+    return () => {
+      dispatch(resetRegisterEducacao());
+      dispatch(resetRemoveEducacao());
+    };
+  }, [dispatch]);
+
   // Side Effects
   useEffect(() => {
     if (register.isSuccess) {
       toast.success(register.message, {
         position: toast.POSITION.BOTTOM_RIGHT,
       });
-    } else if (remove.isSuccess) {
+      dispatch(resetRegisterEducacao());
+    }
+    if (remove.isSuccess) {
       toast.success(remove.message, {
         position: toast.POSITION.BOTTOM_RIGHT,
       });
+      dispatch(resetRemoveEducacao());
     }
 
     dispatch(getCursosQty());
     dispatch(getLivrosQty());
     dispatch(getSeminariosQty());
-    return () => {
-      dispatch(resetRegisterEducacao());
-      dispatch(resetRemoveEducacao());
-    };
-  }, [register, remove, dispatch]);
+  }, [
+    register.isSuccess,
+    remove.isSuccess,
+    register.message,
+    remove.message,
+    dispatch,
+  ]);
 
   useEffect(() => {
     dispatch(
@@ -135,8 +149,8 @@ export default function useEducacao() {
       }),
     );
   }, [
-    register,
-    remove,
+    register.isSuccess,
+    remove.isSuccess,
     filter,
     categorySelected,
     page,
@@ -151,6 +165,9 @@ export default function useEducacao() {
     data: {
       atividadesEducacao,
       isLoading,
+      removeIsLoading: remove.isLoading,
+      registerIsLoading: register.isLoading,
+      updateIsLoading: update.isLoading,
       quantidadeCursos,
       quantidadeLivros,
       quantidadeSeminarios,

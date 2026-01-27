@@ -51,6 +51,7 @@ const paginationHandler = (model, filter) => {
               _id: 1,
               nomeAtividade: 1,
               descricaoAtividade: 1,
+              userId: 1,
             },
           },
         ])

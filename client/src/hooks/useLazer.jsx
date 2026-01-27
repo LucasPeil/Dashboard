@@ -22,6 +22,7 @@ export default function useLazer() {
     isLoading,
     register,
     remove,
+    update,
     quantidadeJogos,
     quantidadeOutros,
     quantidadeCultura,
@@ -97,29 +98,42 @@ export default function useLazer() {
     setLimit(newLimit);
   }, []);
 
+  // Unmount Cleanup
+  useEffect(() => {
+    return () => {
+      dispatch(resetRemoveLazer());
+      dispatch(resetRegisterLazer());
+    };
+  }, [dispatch]);
+
   //Side Effects
   useEffect(() => {
     if (register.isSuccess) {
       toast.success(register.message, {
         position: toast.POSITION.BOTTOM_RIGHT,
       });
+      dispatch(resetRegisterLazer());
     }
     if (remove.isSuccess) {
       toast.success(remove.message, {
         position: toast.POSITION.BOTTOM_RIGHT,
       });
+      dispatch(resetRemoveLazer());
     }
     dispatch(getCulturaQty());
     dispatch(getEmGrupoQty());
     dispatch(getJogosQty());
     dispatch(getOutrosQty());
-    return () => {
-      dispatch(resetRemoveLazer());
-      dispatch(resetRegisterLazer());
-    };
-  }, [register, remove, dispatch]);
+  }, [
+    register.isSuccess,
+    remove.isSuccess,
+    register.message,
+    remove.message,
+    dispatch,
+  ]);
 
   useEffect(() => {
+    console.log('recarregado');
     dispatch(
       getAllAtividadesLazer({
         page: page,
@@ -130,8 +144,8 @@ export default function useLazer() {
       }),
     );
   }, [
-    register,
-    remove,
+    register.isSuccess,
+    remove.isSuccess,
     filter,
     categorySelected,
     page,
@@ -144,6 +158,9 @@ export default function useLazer() {
     data: {
       atividadesLazer,
       isLoading,
+      removeIsLoading: remove.isLoading,
+      registerIsLoading: register.isLoading,
+      updateIsLoading: update.isLoading,
       quantidadeJogos,
       quantidadeOutros,
       quantidadeCultura,

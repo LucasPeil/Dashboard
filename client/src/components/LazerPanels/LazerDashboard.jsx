@@ -265,7 +265,12 @@ const LazerDashboard = ({ open }) => {
               pointerOnHover
               fixedHeader
               responsive
-              progressPending={data.isLoading}
+              progressPending={
+                data.isLoading ||
+                data.removeIsLoading ||
+                data.updateIsLoading ||
+                data.registerIsLoading
+              }
               progressComponent={<ProgressComponent limit={10} />}
               paginationTotalRows={data.atividadesLazer.total}
               onRowClicked={(row) => actions.handleRowClick(row._id)}

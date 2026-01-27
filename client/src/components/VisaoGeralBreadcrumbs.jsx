@@ -7,7 +7,6 @@ import { Box } from '@mui/material';
 import { NavLink, useLocation } from 'react-router-dom';
 const VisaoGeralBreadcrumbs = () => {
   const pathname = useLocation();
-  console.log(pathname);
   return (
     <Box
       sx={{

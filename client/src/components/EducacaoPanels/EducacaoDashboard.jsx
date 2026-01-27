@@ -256,7 +256,12 @@ const EducacaoDashboard = () => {
               fixedHeader
               responsive
               pointerOnHover
-              progressPending={data.isLoading}
+              progressPending={
+                data.isLoading ||
+                data.removeIsLoading ||
+                data.updateIsLoading ||
+                data.registerIsLoading
+              }
               progressComponent={<ProgressComponent limit={10} />}
               paginationTotalRows={data.atividadesEducacao.total}
               onRowClicked={(row) => actions.handleRowClick(row._id)}

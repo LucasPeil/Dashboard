@@ -27,6 +27,8 @@ import { Field, Form, FormikProvider, useFormik } from 'formik';
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import * as Yup from 'yup';
+import { useTheme } from '@mui/material/styles';
+import { useMediaQuery } from '@mui/material';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Zoom ref={ref} {...props} />;
@@ -52,6 +54,8 @@ const FormAtividadeLazer = memo(function FormAtividadeLazer() {
   const navigate = useNavigate();
   const { id } = params;
   const [openDialog, setOpenDialog] = useState(true);
+  const theme = useTheme();
+  const upLg = useMediaQuery(theme.breakpoints.up('lg'));
   // Specific Constants for Lazer
   const btnColor = '#f4b26a';
   const btnHoverColor = '#E39F54';
@@ -115,7 +119,6 @@ const FormAtividadeLazer = memo(function FormAtividadeLazer() {
       values.anoInsercao = new Date().getFullYear();
       dispatch(setNewAtividadeLazer(values));
       navigate('/lazer');
-      dispatch(resetRegisterLazer());
       formik.resetForm();
     },
   });
@@ -135,7 +138,7 @@ const FormAtividadeLazer = memo(function FormAtividadeLazer() {
       keepMounted
       onClose={handleClose}
       fullWidth
-      maxWidth={'md'}
+      maxWidth={upLg ? 'md' : 'sm'}
     >
       <DialogTitle>{title}</DialogTitle>
       <DialogContent dividers>
@@ -170,8 +173,8 @@ const FormAtividadeLazer = memo(function FormAtividadeLazer() {
                   formik.touched.categoria && formik.errors.categoria,
                 )}
               >
-                {categoriaItens.map((category, idx) => (
-                  <MenuItem key={idx} value={category}>
+                {categoriaItens.map((category) => (
+                  <MenuItem key={category} value={category}>
                     {category}
                   </MenuItem>
                 ))}

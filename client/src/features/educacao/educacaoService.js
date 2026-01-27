@@ -39,6 +39,7 @@ const removeSingleAtividadeEducacao = async ({ id, userId }) => {
     params: { userId },
     withCredentials: true,
   };
+
   const response = await axios.delete(API_URL + `/${id}`, config);
   return response.data;
 };
