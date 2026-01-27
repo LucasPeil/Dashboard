@@ -30,12 +30,11 @@ npm run both
 
 ### :white_check_mark: Últimas atualizações
 
-- [x] Correção do roteamento;
+- [x] Ajustar responsividade.
 
 ### :pencil: Pendências
 
 - [ ] Implementar opção de visualizar o gráfico principal por recursos financeiros gastos.
-- [ ] Ajustar responsividade.
 - [ ] Refatorar partes do código para melhorar a legibilidade e performance
 
 
